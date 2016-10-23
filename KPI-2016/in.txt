@@ -1,0 +1,35 @@
+func int rang(int a, int b)
+[
+	int result : 1;
+	int i : 0;
+	while(i<b)
+	[
+		result:result*a;
+		i : i + 1
+	]
+	return result;
+]
+begin
+[
+	int kpi1 : 1920;
+	int kpi2 : 1080;
+	str kpi3 : `qwerty`;
+	str kpi4 : `йцукен`;
+	bool kpi5 : false;
+	bool kpi6 : true;
+	int z: rang(2, 5);
+	if (z = 32)
+	[
+		sout `Верно`;
+	]
+	while(z>36)
+	[
+		sout z;
+		z : z+1;
+	]
+	int a : 0;
+	sin a;
+	sqrt(a);
+	sout a;
+	return 0;
+]
