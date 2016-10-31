@@ -17,10 +17,14 @@ int _tmain(int argc, _TCHAR* argv[])
 		in_file.dev = In::DivideWord(in_file.in);
 		Log::WriteIn(log, in_file.in);
 		LA::LexAnaliz Lex = LA::LexicalAnaliz(in_file.dev, log, parm);
+		MFST::MfstState *state = new MFST::MfstState;
 		MFST::Rule *rule = new MFST::Rule;
-		SA::syntacticAnalyzer(Lex, *rule, log, parm);
+		std::stack<MFST::MfstState> storestate;
+		SA::syntacticAnalyzer(Lex, storestate, log, parm);
+		Gen::Generator(parm, Lex, storestate);
 		/*PN::PolishNotation(Lex, log);
 		LT::ShowLT(Lex.l, parm, log);*/
+		WinExec("C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat", 1);
 		Log::Close(log);
 		return 0;
 	}

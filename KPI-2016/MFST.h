@@ -98,7 +98,7 @@ namespace MFST
 		bool savediagnosis(
 			RC_STEP pprc_step // код завершения шага
 		);
-		void printrules(Log::LOG log, Parm::PARM param, Rule &ruleStract); // ввести последовательность правил
+		void printrules(Log::LOG log, Parm::PARM param, std::stack<MFST::MfstState>& state); // ввести последовательность правил
 
 		struct Deducation // вывод
 		{

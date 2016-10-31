@@ -29,3 +29,4 @@ using namespace std;
 #include "MFST.h"
 #include "PolishNotation.h"
 #include "SyntacticAnalyzer.h"
+#include "Generator.h"

@@ -233,17 +233,18 @@ namespace MFST
 		return rc;
 	}
 
-	void Mfst::printrules(Log::LOG log, Parm::PARM param, Rule &ruleStract)
+	void Mfst::printrules(Log::LOG log, Parm::PARM param, std::stack<MFST::MfstState>& nstate)
 	{
 		(*log.stream) << "Синтаксический анализ - Выполнен" << endl;
 		if(param.R) cout << "Синтаксический анализ - Выполнен" << endl;
 		MfstState state;
+		nstate = storestate;
 		GRB::Rule rule;
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 			state = storestate._Get_container()[k];
+			cout <<"Номер правила: "<< state.lenta_position<< endl;
 			rule = grebach.getRule(state.nrule);
-			strcpy(ruleStract.rule[ruleStract.count++], rule.getCRule(rbuf, state.nrulechain));
 			if(param.R) CON_MFST_TRACE7
 			MFST_TRACE7
 		}

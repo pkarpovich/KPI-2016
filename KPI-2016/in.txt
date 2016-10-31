@@ -1,36 +1,6 @@
-func int rang(int a, int b)
-[
-	int nResult : 1;
-	int i : 0;
-	while(i<b)
-	[
-		nResult:nResult*a;
-		i : i + 1;
-	]
-	return nResult;
-];
-
 begin
 [
-	int kPione : 1920;
-	int kpiTwo : 1080 + 2;
-	str kpi : `qwerty`;
-	str kp : `йцукен`;
-	bool kpiThree : false;
-	bool kpiFour : true;
-	int z: rang(2, 5);
-	if (z = 32)
-	[
-		sout `Верно`;
-	]
-	while(z>36)
-	[
-		sout z;
-		z : z+1;
-	]
-	int a : 0;
-	sin a;
-	rang(a);
-	sout a;
+	sout `Hello world !`;
+	sout `I am first programm`;
 	return 0;
 ]
