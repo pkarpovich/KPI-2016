@@ -17,17 +17,19 @@ int _tmain(int argc, _TCHAR* argv[])
 		in_file.dev = In::DivideWord(in_file.in);
 		Log::WriteIn(log, in_file.in);
 		LA::LexAnaliz Lex = LA::LexicalAnaliz(in_file.dev, log, parm);
-		/*MFST_TRACE_START;
-		MFST::Mfst mfst(Lex.l, GRB::getGreibach());
-		mfst.start();
-		mfst.printrules();
-		PN::PolishNotation(Lex, log);
+		MFST::Rule *rule = new MFST::Rule;
+		SA::syntacticAnalyzer(Lex, *rule, log, parm);
+		/*PN::PolishNotation(Lex, log);
 		LT::ShowLT(Lex.l, parm, log);*/
 		Log::Close(log);
 		return 0;
 	}
+	catch (Error::ERROR_MESSAGE em)
+	{
+		Log::WriteError(log, em);
+	}
 	catch (Error::ERRORS e)
 	{
-		Log::WriteError(log, e);
+		Log::WriteErrors(log, e);
 	}
 };

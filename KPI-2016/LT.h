@@ -10,7 +10,7 @@
 #define LEX_LITERAL			'l'				// лексема для литерала
 #define LEX_BOOL_LITERAL	'l'				// лексема для bool литерала
 #define LEX_FUNCTION		'f'				// лексема для function
-#define LEX_BEGIN_FUNCTION	'b'				// Лексема для begin
+#define LEX_BEGIN_FUNCTION	'm'				// Лексема для begin
 #define LEX_CIRCLE			'c'				// лексема для циклов
 #define LEX_CONDITION		'i'
 #define LEX_DECLARE			'd'				// лексема для declare

@@ -18,11 +18,12 @@ namespace In
 
 		ifstream inFile;
 		inFile.open(infile);
+		bool inComment = 0;
 
 
 		if (!inFile)
 		{
-			throw GET_ERROR(110, 2);
+			throw GET_ERROR(110);
 		}
 		else
 		{
@@ -38,11 +39,12 @@ namespace In
 						break;
 					}
 					case in.F: {
-						NEW_ERROR_IN(111, in.lines, position, 2);
+						ADD_ERROR(111, in.lines, position, "", Error::INN);
 						count_error++;
 						break;
 					}
-					case in.T: case in.P: case in.Q: case in.S: {
+					case in.T: case in.P: case in.Q: case in.S: case in.K: {
+						
 						in.text[in.size] = tempChar;
 						break;
 					}
@@ -122,7 +124,10 @@ namespace In
 				}
 				case in.Q:
 				{
-					while (in.code[in.text[++i]] != in.Q);	// пропускаем все пробелы в "...."
+					while (in.code[in.text[++i]] != in.Q)	// пропускаем все пробелы в "...."
+					{
+						if (in.code[in.text[i]] == in.N) throw GET_ERROR(115, 1);
+					}
 					break;
 				}
 			}
@@ -162,6 +167,29 @@ namespace In
 					}					
 					break;
 				}
+				case in.K:
+				{
+					if (in.code[in.text[i + 1]] == in.K)
+					{
+						while (in.code[in.text[++i]] != in.N) 
+						{};
+						i--;
+					}
+					else
+					{
+						while (in.code[in.text[++i]] != in.K)
+						{
+							if (in.code[in.text[i]] == in.N)
+							{
+								dev.lines++;
+								dev.count_word++;
+								AddDevideWord(dev, 0, DEVIDE_LINE);
+							}
+							if (in.lines < dev.lines) throw GET_ERROR(114, 1);
+						};
+					}
+					break;
+				}
 				case in.Q:
 				{
 					AddDevideWord(dev, Word_position++, '\'');						// заменяются все ковычки на '...'
@@ -197,7 +225,7 @@ namespace In
 				}
 				default:
 				{
-					NEW_ERROR_IN(113, dev.lines, position, 2);
+					ADD_ERROR(113, dev.lines, position, "", Error::INN);
 					dev.count_error++;
 				}
 			}

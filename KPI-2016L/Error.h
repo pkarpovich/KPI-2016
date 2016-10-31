@@ -1,8 +1,7 @@
 ﻿#pragma once
 
-#define GET_ERROR(id, type) Error::getError(id, type);
-#define NEW_ERROR_IN(id,line,pos,type) Error::newError(id,line,pos,type);
-#define NEW_WARNING(id,line,word,type) Error::newWarning(id,line,word,type);
+#define GET_ERROR(id) Error::getError(id);
+#define ADD_ERROR(id,line,pos,word,type) Error::addError(id,line,pos,word,type);
 #define ERROR_THROW_IN Error::getErrorIn();
 #define ERROR_ENTRY(id, m) {id, m}
 #define ERROR_MAXSIZE_MESSAGE 200
@@ -30,7 +29,6 @@ namespace Error
 	struct ERRORS									// если есть доп. поля
 	{
 		int count = 0;								// колличество ошибок
-		int warning = 0;							// колличество предупреждений
 		ErrorType type;								// тип ошибки
 		int id;										// ид ошибки
 		char message[ERROR_MAXSIZE_MESSAGE];		// сообщение ошибки
@@ -38,17 +36,10 @@ namespace Error
 		{
 			int line;								// строка в которой ошибка
 			int pos;								// позиция ошибки
-		}errors_in[100];
-		struct LAerror								// ошибка в лексическом анализаторе
-		{
-			int id;
-			char message[ERROR_MAXSIZE_MESSAGE];
-			int line;
 			char word[255];
-		}errors_la[100];
+		}errors[100];
 	};
-	ERRORS getError(int id, int type);								// вывод ошибки, если нет доп. полей
-	void newError(int id, int line, int col, int type);				// занести новую ошибку в структуру
-	void newWarning(int id, int line, char word[255], int type);		// добавляем предупреждение
+	ERROR_MESSAGE getError(int id);
+	void addError(int id, int line, int col, char word[255], ErrorType type);				// занести новую ошибку в структуру
 	ERRORS getErrorIn();											// вывод ошибки, если есть доп поля
 }

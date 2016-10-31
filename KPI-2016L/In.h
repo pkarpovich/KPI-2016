@@ -8,11 +8,11 @@
 #define IN_CODE_TABLE {\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::P, IN::N, IN::T, IN::T, IN::I, IN::T, IN::T,\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T,\
-	IN::P, IN::T, IN::Q, IN::T, IN::T, IN::T, IN::T, IN::Q, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::T, IN::S,\
+	IN::P, IN::T, IN::Q, IN::T, IN::T, IN::T, IN::T, IN::Q, IN::S, IN::S, IN::S, IN::S, IN::S, IN::S, IN::T, IN::T,\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::S, IN::S, IN::S, IN::S, IN::T,\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T,\
-	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::T, IN::S, IN::T, IN::T,\
-	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T,\
+	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::K, IN::S, IN::T, IN::T,\
+	IN::Q, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T,\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::T, IN::S, IN::T, IN::T,\
 																													\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T,\
@@ -28,8 +28,8 @@ namespace In
 {
 	struct IN
 	{
-		enum {T = 1, F = 2, I = 3, N = 4, P = 5, Q = 6, S = 7};	// T - разрешенный, F - запрещенный, I -игнорируемый, N - конец строки
-																// P - пробел, Q - ковычки, S - сепаратор
+		enum {T = 1, F = 2, I = 3, N = 4, P = 5, Q = 6, S = 7, K = 8};	// T - разрешенный, F - запрещенный, I -игнорируемый, N - конец строки
+																// P - пробел, Q - ковычки, S - сепаратор, K - комментарий
 		int size,
 			lines,
 			ignor;

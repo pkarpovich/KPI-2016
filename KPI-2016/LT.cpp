@@ -60,15 +60,15 @@ namespace LT
 					{
 						if(l.table[i].lexema == LEX_AT)
 							cout << "{" << l.table[i].idxTI << "}";
-						else cout << "[" << l.table[i].idxTI << "]";
+						else cout << "" << l.table[i].idxTI << "]";
 					}*/
 				}
 			}
 			cout << endl << endl;
 		}
+		(*log.stream) << "Таблица лексем: " << endl;
 		for (int i = 0; i < l.size; i++)	//вывод таблицы лексем
 		{
-			(*log.stream) << "Таблица лексем: " << endl;
 			if (l.table[i].lexema != LEX_FORBIDDEN)
 			{
 				if (l.table[i].sn != l.table[i - 1].sn) // Чтобы при выводе выводило на новых строках
@@ -80,10 +80,11 @@ namespace LT
 				if (l.table[i].idxTI != TI_NULLIDX)
 				{
 					if (l.table[i].lexema == LEX_AT)
-						(*log.stream) << "{" << l.table[i].idxTI << "}";
-					else (*log.stream) << "[" << l.table[i].idxTI << "]";
+						(*log.stream) << "[" << l.table[i].idxTI << "]";
+					else (*log.stream) << "{" << l.table[i].idxTI << "}";
 				}
 			}
 		}
+		(*log.stream) << endl << endl;
 	}
 }

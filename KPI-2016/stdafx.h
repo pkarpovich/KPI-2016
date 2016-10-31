@@ -28,3 +28,4 @@ using namespace std;
 #include "GRB.h"
 #include "MFST.h"
 #include "PolishNotation.h"
+#include "SyntacticAnalyzer.h"

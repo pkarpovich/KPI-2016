@@ -9,8 +9,8 @@
 #define TI_STR_MAXSIZE		255
 namespace IT												// таблица идетификаторов
 {
-	enum IDDATATYPE { INT = 1, STR = 2 };					// типы данных идентификатов: integer, string
-	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, U = 5};				// типы идентификиторов: переменная, функция, параметр, литерал, указатель
+	enum IDDATATYPE { INT = 1, STR = 2, BOOL = 3 };					// типы данных идентификатов: integer, string
+	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, IF = 5, CIRCLE = 6};				// типы идентификиторов: переменная, функция, параметр, литерал, указатель
 
 	struct Entry											// строка таблицы идентификаторов
 	{
@@ -28,6 +28,7 @@ namespace IT												// таблица идетификаторов
 				int len;									// колличество симолов в string 
 				char str[TI_STR_MAXSIZE];					// симолы string
 			} vstr;											// значение string
+			char vbool[5];									// значение bool
 		}value;												// значение идентификатора
 	};
 

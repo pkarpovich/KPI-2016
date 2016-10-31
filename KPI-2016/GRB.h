@@ -4,25 +4,53 @@
 #define NS(n) GRB::Rule::Chain::N(n)
 #define TS(n) GRB::Rule::Chain::T(n)
 #define ISNS(n) GRB::Rule::Chain::isN(n)
-#define MFST_TRACE1 cout << setw(4) << left<< ++FST_TRACE_n << ": "\
+#define MFST_TRACE1 (*log.stream) << setw(4) << left<< ++FST_TRACE_n << ": "\
 					<< setw(20) << left << rule.getCRule(rbuf,nrulechain)\
 					<< setw(30) << left << getCLenta(lbuf,lenta_position)\
 					<< setw(20) << left << getCSt(sbuf)\
 					<< endl;
-#define MFST_TRACE2 cout<<setw(4)<<left<< FST_TRACE_n << ": "\
+
+#define CON_MFST_TRACE1 cout << setw(4) << left<< ++FST_TRACE_n << ": "\
+					<< setw(20) << left << rule.getCRule(rbuf,nrulechain)\
+					<< setw(30) << left << getCLenta(lbuf,lenta_position)\
+					<< setw(20) << left << getCSt(sbuf)\
+					<< endl;
+
+#define MFST_TRACE2 (*log.stream)<<setw(4)<<left<< FST_TRACE_n << ": "\
 					<< setw(20) << left << " "\
 					<< setw(30) << left << getCLenta(lbuf, lenta_position)\
 					<< setw(20) << left << getCSt(sbuf)\
 					<< endl;
-#define MFST_TRACE3 cout << setw(4) << left<< ++FST_TRACE_n << ": "\
+#define CON_MFST_TRACE2 cout<<setw(4)<<left<< FST_TRACE_n << ": "\
 					<< setw(20) << left << " "\
 					<< setw(30) << left << getCLenta(lbuf, lenta_position)\
 					<< setw(20) << left << getCSt(sbuf)\
 					<< endl;
-#define MFST_TRACE4(c) cout<<setw(4)<<left<<++FST_TRACE_n<<": "<<setw(20)<<left<<c<<endl;
-#define MFST_TRACE5(c) cout<<setw(4)<<left<< FST_TRACE_n<<": "<<setw(20)<<left<<c<<endl;
-#define MFST_TRACE6(c,k) cout<<setw(4)<<left<< FST_TRACE_n<<": "<<setw(20)<<left<<c<<k<<endl;
-#define MFST_TRACE7 cout<<setw(4)<<left<<state.lenta_position<<": "\
+
+#define MFST_TRACE3 (*log.stream) << setw(4) << left<< ++FST_TRACE_n << ": "\
+					<< setw(20) << left << " "\
+					<< setw(30) << left << getCLenta(lbuf, lenta_position)\
+					<< setw(20) << left << getCSt(sbuf)\
+					<< endl;
+#define CON_MFST_TRACE3 cout << setw(4) << left<< ++FST_TRACE_n << ": "\
+					<< setw(20) << left << " "\
+					<< setw(30) << left << getCLenta(lbuf, lenta_position)\
+					<< setw(20) << left << getCSt(sbuf)\
+					<< endl;
+
+#define MFST_TRACE4(c) (*log.stream)<<setw(4)<<left<<++FST_TRACE_n<<": "<<setw(20)<<left<<c<<endl;
+#define CON_MFST_TRACE4(c) cout<<setw(4)<<left<<++FST_TRACE_n<<": "<<setw(20)<<left<<c<<endl;
+
+#define MFST_TRACE5(c) (*log.stream)<<setw(4)<<left<< FST_TRACE_n<<": "<<setw(20)<<left<<c<<endl;
+#define CON_MFST_TRACE5(c) cout<<setw(4)<<left<< FST_TRACE_n<<": "<<setw(20)<<left<<c<<endl;
+
+#define MFST_TRACE6(c,k) (*log.stream)<<setw(4)<<left<< FST_TRACE_n<<": "<<setw(20)<<left<<c<<k<<endl;
+#define CON_MFST_TRACE6(c,k) cout<<setw(4)<<left<< FST_TRACE_n<<": "<<setw(20)<<left<<c<<k<<endl;
+
+#define MFST_TRACE7 (*log.stream)<<setw(4)<<left<<state.lenta_position<<": "\
+					<<setw(20)<<left<<rule.getCRule(rbuf,state.nrulechain)\
+					<<endl;
+#define CON_MFST_TRACE7 cout<<setw(4)<<left<<state.lenta_position<<": "\
 					<<setw(20)<<left<<rule.getCRule(rbuf,state.nrulechain)\
 					<<endl;
 

@@ -25,6 +25,7 @@ namespace IT
 	int IsId(IdTable & idTable, bool isDecFunction, char word[ID_MAXSIZE], char nameFunction[ID_MAXSIZE])
 	{
 		char *prefId = new char[255];
+		prefId[0] = '\0';
 		strcpy(prefId, nameFunction);
 		strcat(prefId, word);
 		if (!isDecFunction)
@@ -61,7 +62,7 @@ namespace IT
 			cout << "Таблица идентификаторов: " << endl;
 			cout << endl;
 			bool isLiteral = 0;
-			cout << " IT  |   LT   | УКАЗ. |     ИМЯ     |  ТИП ИДЕНТИФИКАТОРА  |     ЗНАЧЕНИЕ" << endl;
+			cout << " IT  |   LT   | УКАЗ. |      ИМЯ     |  ТИП ИДЕНТИФИКАТОРА  |     ЗНАЧЕНИЕ" << endl;
 			cout << "-------------------------------------------------------------------------------" << endl;
 			for (int i = 0; i < iT.size; i++)
 			{
@@ -69,13 +70,14 @@ namespace IT
 				cout << setw(5) << iT.table[i].idfirstLE << setw(4) << "|";
 				if (iT.table[i].pointer == true) cout << setw(4) << "*" << setw(4) << "|";
 				else cout << setw(4) << " " << setw(4) << "|";
-				cout << setw(10);
+				cout << setw(11);
 				cout << iT.table[i].prefId << setw(4) << "|";
 				cout << setw(8);
 				switch (iT.table[i].iddatatype)
 				{
 				case IT::INT: cout << "int"; break;
-				case IT::STR: cout << "string"; break;
+				case IT::STR: cout << "str"; break;
+				case IT::BOOL: cout << "bool"; break;
 				default: cout << " "; break;
 				}
 				cout << setw(12);
@@ -84,6 +86,8 @@ namespace IT
 				case IT::V: cout << "переменная"; break;
 				case IT::F: cout << "функция"; break;
 				case IT::P: cout << "параметр"; break;
+				case IT::CIRCLE: cout << "параметр в цикле"; break;
+				case IT::IF: cout << "параметр в условии"; break;
 				case IT::L: cout << "литерал"; isLiteral = true; break;
 				default: cout << " "; break;
 				}
@@ -92,6 +96,7 @@ namespace IT
 				if (isLiteral)
 				{
 					if (iT.table[i].iddatatype == IT::INT) cout << setw(3) << iT.table[i].value.vint;
+					else if (iT.table[i].iddatatype == IT::BOOL) cout << setw(3) << iT.table[i].value.vbool;
 					else cout << setw(3) << iT.table[i].value.vstr.str << "[" << iT.table[i].value.vstr.len << "]";
 				}
 				cout << endl;
@@ -101,7 +106,7 @@ namespace IT
 		(*log.stream) << "Таблица идентификаторов: " << endl;
 		(*log.stream) << endl;
 		bool isLiteral = 0;
-		(*log.stream) << " IT  |   LT   | УКАЗ. |     ИМЯ     |  ТИП ИДЕНТИФИКАТОРА  |     ЗНАЧЕНИЕ" << endl;
+		(*log.stream) << " IT  |   LT   | УКАЗ. |      ИМЯ     |  ТИП ИДЕНТИФИКАТОРА  |     ЗНАЧЕНИЕ" << endl;
 		(*log.stream) << "-------------------------------------------------------------------------------" << endl;
 		for (int i = 0; i < iT.size; i++)
 		{
@@ -109,13 +114,14 @@ namespace IT
 			(*log.stream) << setw(5) << iT.table[i].idfirstLE << setw(4) << "|";
 			if (iT.table[i].pointer == true) (*log.stream) << setw(4) << "*" << setw(4) << "|";
 			else (*log.stream) << setw(4) << " " << setw(4) << "|";
-			(*log.stream) << setw(10);
+			(*log.stream) << setw(11);
 			(*log.stream) << iT.table[i].prefId << setw(4) << "|";
 			(*log.stream) << setw(8);
 			switch (iT.table[i].iddatatype)
 			{
 			case IT::INT: (*log.stream) << "int"; break;
-			case IT::STR: (*log.stream) << "string"; break;
+			case IT::STR: (*log.stream) << "str"; break;
+			case IT::BOOL: (*log.stream) << "bool"; break;
 			default: (*log.stream) << " "; break;
 			}
 			(*log.stream) << setw(12);
@@ -132,6 +138,7 @@ namespace IT
 			if (isLiteral)
 			{
 				if (iT.table[i].iddatatype == IT::INT) (*log.stream) << setw(3) << iT.table[i].value.vint;
+				else if(iT.table[i].iddatatype == IT::BOOL) (*log.stream) << setw(3) << iT.table[i].value.vbool;
 				else (*log.stream) << setw(3) << iT.table[i].value.vstr.str << "[" << iT.table[i].value.vstr.len << "]";
 			}
 			(*log.stream) << endl;

@@ -5,7 +5,13 @@
 #define MFST_DIAGN_NUMBER 3
 
 typedef stack<short> MFSTSTSTACK; // стек автомата
-#define MFST_TRACE_START cout<<setw(4)<<setfill(' ')<<left<<"\n\nШаг"<<" : "\
+#define MFST_TRACE_START (*log.stream)<<setw(4)<<setfill(' ')<<left<<"\n\nШаг"<<" : "\
+								<<setw(20)<<setfill(' ')<<left<<"Правило"\
+								<<setw(30)<<setfill(' ')<<left<<"Входная лента"\
+								<<setw(20)<<setfill(' ')<<left<<"Стек"\
+								<<endl;
+
+#define CON_MFST_TRACE_START cout<<setw(4)<<setfill(' ')<<left<<"\n\nШаг"<<" : "\
 								<<setw(20)<<setfill(' ')<<left<<"Правило"\
 								<<setw(30)<<setfill(' ')<<left<<"Входная лента"\
 								<<setw(20)<<setfill(' ')<<left<<"Стек"\
@@ -13,6 +19,12 @@ typedef stack<short> MFSTSTSTACK; // стек автомата
 
 namespace MFST
 {
+	struct Rule
+	{
+		int count = 0;
+		char rule[DEV_MAX_WORD][DEV_WORD_SIZE];
+	};
+
 	struct MfstState // состояние автомата
 	{
 		short lenta_position; // позиция на ленте
@@ -75,18 +87,18 @@ namespace MFST
 		);
 		char* getCSt(char* buf); // получить содержимое стека
 		char* getCLenta(char* buf, short pos, short n = 25); // лента: n символов с pos
-		char* getDiagnosis(short n, char* buf); // получить n-ую строку диагностики или 0x00
-		bool savestate(); // сохранить состояние автомата
-		bool restate(); // восстановить состояние автомата
+		char* getDiagnosis(short n, char* buf, Log::LOG log, Parm::PARM param); // получить n-ую строку диагностики или 0x00
+		bool savestate(Log::LOG log, Parm::PARM param); // сохранить состояние автомата
+		bool restate(Log::LOG log, Parm::PARM param); // восстановить состояние автомата
 		bool push_chain( // поместить цепочку правила в стек
 			GRB::Rule::Chain chain // цепочка правила
 		);
-		RC_STEP step(); // выполнить шаг автомата
-		bool start(); // запустить автомат
+		RC_STEP step(Log::LOG log, Parm::PARM param); // выполнить шаг автомата
+		bool start(Log::LOG log, Parm::PARM param); // запустить автомат
 		bool savediagnosis(
 			RC_STEP pprc_step // код завершения шага
 		);
-		void printrules(); // ввести последовательность правил
+		void printrules(Log::LOG log, Parm::PARM param, Rule &ruleStract); // ввести последовательность правил
 
 		struct Deducation // вывод
 		{

@@ -10,7 +10,7 @@ Parm::PARM Parm::getparm( int argc, _TCHAR *argv[] )
 
 	if (argc == 1)	// если нет параметров
 	{
-		throw GET_ERROR(100,1);
+		throw GET_ERROR(100);
 	}
 	else			// если есть параметры
 	{
@@ -19,7 +19,7 @@ Parm::PARM Parm::getparm( int argc, _TCHAR *argv[] )
 			wcscpy(buf, argv[i]);
 			if (wcslen(buf) > PARM_MAX_SIZE)
 			{
-				throw GET_ERROR(104,1);									// если превышен размер входного параметра
+				throw GET_ERROR(104);									// если превышен размер входного параметра
 			}
 			else
 			{
@@ -46,6 +46,14 @@ Parm::PARM Parm::getparm( int argc, _TCHAR *argv[] )
 				else if (wcsstr(buf, PARM_IT) != NULL)
 				{
 					param.IT = true;											// ключ для таблицы индентификаторов
+				}
+				else if (wcsstr(buf, PARM_SA) != NULL)
+				{
+					param.SA = true;
+				}
+				else if (wcsstr(buf, PARM_RULES) != NULL)
+				{
+					param.R = true;
 				}
 			}
 		}

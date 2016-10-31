@@ -9,6 +9,8 @@
 #define PARM_LOG_DEFAULT_EXT	L".log"				// расширение лог файла
 #define PARM_LT					L"-LT"				// ключ для вывода таблицы лексем 
 #define PARM_IT					L"-IT"				// ключ для вывода таблицы индентификаторов
+#define PARM_SA					L"-SA"
+#define PARM_RULES				L"-R"
 
 namespace Parm
 {
@@ -19,6 +21,8 @@ namespace Parm
 		wchar_t log[PARM_MAX_SIZE];					// имя лог файла
 		bool IT = false;							// нужнен ли вывод таблицы индентификаторов
 		bool LT = false;							// нужен ли вывод таблицы лексем
+		bool SA = false;
+		bool R = false;
 	};
 
 	PARM getparm(int argc, _TCHAR* argv[]);
