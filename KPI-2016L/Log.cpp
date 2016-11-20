@@ -37,6 +37,11 @@ namespace Log
 		}
 	}
 
+	void WriteTimplates(LOG log, char * c)
+	{
+		(*log.stream) << c;
+	}
+
 	void WriteLog(LOG log)
 	{
 		char buf[255];

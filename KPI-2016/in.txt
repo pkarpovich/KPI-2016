@@ -1,6 +1,20 @@
+func int pow(int a, int b)
+[
+	int res:0;
+	int count:1;
+	while(count<b)
+	[
+		res:a*count;
+		count:count+1;
+	]
+	return res;
+]
+
 begin
 [
-	sout `Hello world !`;
-	sout `I am first programm`;
+	int a:2;
+	int b:5;
+	int res: pow(a,b);
+	sout res;
 	return 0;
 ]

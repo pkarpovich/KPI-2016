@@ -17,7 +17,7 @@ namespace MFST
 		st = pst;
 		nrulechain = pnrulechain;
 	}
-	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrule, short pnrulechain)
+	MfstState::MfstState(short pposition, MFSTSTSTACK pst, short pnrule, short pnrulechain)	// запоминаем наше правило
 	{
 		lenta_position = pposition;
 		st = pst;
@@ -227,6 +227,7 @@ namespace MFST
 			errid = grebach.getRule(diagnosis[n].nrule).iderror;
 			Error::ERROR_MESSAGE err = Error::getError(errid);
 			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "%d: строка %d, %s", err.id, lex.table[lpos].sn, err.message);
+			cout << "Ошибка " << err.id << ": " << err.message << ". Строка " << lex.table[lpos].sn << endl;
 			(*log.stream) << "Ошибка " << err.id << ": " << err.message << ". Строка " << lex.table[lpos].sn << endl;
 			rc = buf;
 		}
@@ -243,10 +244,7 @@ namespace MFST
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{
 			state = storestate._Get_container()[k];
-			cout <<"Номер правила: "<< state.lenta_position<< endl;
 			rule = grebach.getRule(state.nrule);
-			if(param.R) CON_MFST_TRACE7
-			MFST_TRACE7
 		}
 	}
 

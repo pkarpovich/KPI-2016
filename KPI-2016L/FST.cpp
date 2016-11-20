@@ -97,13 +97,14 @@ void FST::newFST(FST & f, char * newStr)
 	f.rstates[0] = 0;
 }
 
-bool FST::newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT)
+bool FST::newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT, LT::PN priority)
 {
 	newFST(fst, newLexem);
 	if (execute(fst))
 	{
 		e.lexema = lexem;
-		if (lexem == LEX_VARIABLE || lexem == LEX_LITERAL || lexem == LEX_ACTION)
+		e.priority = priority;
+		if (lexem == LEX_VARIABLE || lexem == LEX_LITERAL || lexem == LEX_ACTION || lexem == LEX_BOOL_ACTION)
 		{
 			e.idxTI = iT.size;
 		}

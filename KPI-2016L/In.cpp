@@ -198,6 +198,7 @@ namespace In
 						AddDevideWord(dev, Word_position++, in.text[i]);
 					}
 					AddDevideWord(dev, Word_position++, '\'');
+					if (in.code[in.text[i + 1]] == in.T) { dev.count_word++; Word_position = 0; }
 					break;
 				}
 				case in.P:
@@ -234,11 +235,11 @@ namespace In
 		{
 			throw ERROR_THROW_IN
 		}
-		/*cout << "Разделение слов" << endl;
+		cout << "Разделение слов" << endl;
 		for (int i = 0; i <= dev.count_word; i++)
 		{
 			cout << dev.word[i] << endl;
-		}*/
+		}
 		return dev;
 	}
 };

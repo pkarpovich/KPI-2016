@@ -93,7 +93,7 @@ namespace IT
 				}
 				cout << setw(3);
 				cout << "|";
-				if (isLiteral)
+				if (isLiteral || iT.table[i].value.vstr.len > 0)
 				{
 					if (iT.table[i].iddatatype == IT::INT) cout << setw(3) << iT.table[i].value.vint;
 					else if (iT.table[i].iddatatype == IT::BOOL) cout << setw(3) << iT.table[i].value.vbool;
@@ -135,7 +135,7 @@ namespace IT
 			}
 			(*log.stream) << setw(3);
 			(*log.stream) << "|";
-			if (isLiteral)
+			if (isLiteral || iT.table[i].value.vstr.len > 0)
 			{
 				if (iT.table[i].iddatatype == IT::INT) (*log.stream) << setw(3) << iT.table[i].value.vint;
 				else if(iT.table[i].iddatatype == IT::BOOL) (*log.stream) << setw(3) << iT.table[i].value.vbool;

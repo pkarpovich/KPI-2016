@@ -13,6 +13,8 @@
 #define LEX_BEGIN_FUNCTION	'm'				// Лексема для begin
 #define LEX_CIRCLE			'c'				// лексема для циклов
 #define LEX_CONDITION		'i'
+#define LEX_ELSE			'e'
+#define LEX_ENDL			'n'
 #define LEX_DECLARE			'd'				// лексема для declare
 #define LEX_RETURN			'r'				// лексема для return
 #define LEX_SOUT			'p'				// лексема для print
@@ -38,11 +40,13 @@
 
 namespace LT								// таблица лексем
 {
+	enum PN {PN_DEF, PN_MINUS=2, PN_PLUS=2, PN_STAR=3, PN_DIRSLASH=3, PN_LEFTTHESIS=1};
 	struct Entry							// строка таблицы лексем
 	{
 		char lexema;						// лексема
 		int sn;								// номер строки в исходном тексте
 		int idxTI;							// индекс в таблице идентификаторов иди LT_TI_NULLIDX
+		int priority; // приоритет
 	};
 
 	struct LexTable							// экземпляр таблиццы лексем
@@ -59,6 +63,7 @@ namespace LT								// таблица лексем
 			LexTable& lextable,				// экземпляр таблицы лексем
 			Entry entry						// строка таблицы лексем
 			);
+	void AddTo(LexTable& lextable, Entry entry, int pos);
 	Entry GetEntry(							// получить строку таблицы лексем
 					LexTable& lextable,		// экземпляр таблицы лексем
 					int n					// номер получаемой строки

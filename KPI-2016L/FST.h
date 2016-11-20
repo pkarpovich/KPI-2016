@@ -1,11 +1,10 @@
-﻿#include "stdafx.h"
-
-#define FN FST::AUTOMAT_NAME
+﻿#define FN FST::AUTOMAT_NAME
 
 namespace FST
 {
 	enum AUTOMAT_NAME {INT, STR, BOOL, FUNCTION, DECLARE, BEGIN, SOUT, RETURN, ACTION, BOOLACTION, EQUALLU, LTHESIS, RTHESIS, SEMILICON, COMMA, LBRACE, RBRACE,
-	FALSELITERAL, TRUELITERAL,IDENTETIF, FIDENTETIF, FALSENUMIDENTETIF, LITERAL, INTLITERAL, WCIRCLE, MORE, LESS, CONDITIONIF, SIN};
+	FALSELITERAL, TRUELITERAL,IDENTETIF, FIDENTETIF, FALSENUMIDENTETIF, LITERAL, INTLITERAL, WCIRCLE, MORE, LESS, CONDITIONIF, CONDITIONELSE, ENDL, SIN,
+	PLUS, MINUS, STAR, DIRSLASH};
 
 	struct RELATION
 	{
@@ -37,10 +36,11 @@ namespace FST
 		FST automat;
 		char lexema;
 		AUTOMAT_NAME automatName;
+		LT::PN priotiry; // priority
 	};
 
 	bool step(FST &fst, short *&rstates); // разбор одного символа
 	bool execute(FST &fsts /*конечный автомат*/);  //распонование цепочки
 	void newFST(FST& f, char* newStr);
-	bool newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT);
+	bool newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT, LT::PN priority);
 }

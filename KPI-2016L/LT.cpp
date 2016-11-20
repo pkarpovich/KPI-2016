@@ -29,6 +29,17 @@ namespace LT
 			lextable.table[lextable.size++] = entry;
 		}
 	}
+
+	void AddTo(LexTable& lextable, Entry entry, int pos)
+	{
+		for (int i = lextable.size; i > pos; i--)
+		{
+			lextable.table[i] = lextable.table[i - 1];
+		}
+		lextable.table[pos+1] = entry;
+		lextable.size++;
+	}
+
 	Entry GetEntry(LexTable & lextable, int n)
 	{
 		return lextable.table[n];

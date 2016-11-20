@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "stdafx.h"
 
 FST::FST fstTypeInteger("", 4,
 	FST::NODE(1, FST::RELATION('i', 1)),
@@ -59,6 +58,14 @@ FST::FST fstKeyDeclare("", 8,
 	FST::NODE()
 );
 
+FST::FST fstEndl("", 5,
+	FST::NODE(1, FST::RELATION('e', 1)),
+	FST::NODE(1, FST::RELATION('n', 2)),
+	FST::NODE(1, FST::RELATION('d', 3)),
+	FST::NODE(1, FST::RELATION('l', 4)),
+	FST::NODE()
+);
+
 FST::FST fstCircleWhile("", 6,
 	FST::NODE(1, FST::RELATION('w', 1)),
 	FST::NODE(1, FST::RELATION('h', 2)),
@@ -71,6 +78,14 @@ FST::FST fstCircleWhile("", 6,
 FST::FST fstProvisionIf("", 3,
 	FST::NODE(1, FST::RELATION('i', 1)),
 	FST::NODE(1, FST::RELATION('f', 2)),
+	FST::NODE()
+);
+
+FST::FST fstProvisionElse("", 5,
+	FST::NODE(1, FST::RELATION('e', 1)),
+	FST::NODE(1, FST::RELATION('l', 2)),
+	FST::NODE(1, FST::RELATION('s', 3)),
+	FST::NODE(1, FST::RELATION('e', 4)),
 	FST::NODE()
 );
 
@@ -467,33 +482,57 @@ FST::FST fstLiteral("", 4,
 	FST::NODE(1, FST::RELATION('\'', 3)),
 	FST::NODE()												
 );
+FST::FST fstPlus("", 2,
+	FST::NODE(1, FST::RELATION('+', 1)),
+	FST::NODE()
+);
+FST::FST fstMinus("", 2,
+	FST::NODE(1, FST::RELATION('-', 1)),
+	FST::NODE()
+);
+FST::FST fstStar("", 2,
+	FST::NODE(1, FST::RELATION('*', 1)),
+	FST::NODE()
+);
+
+FST::FST fstDirslash("", 2,
+	FST::NODE(1, FST::RELATION('/', 1)),
+	FST::NODE()
+);
 
 FST::Automatic FST_ARRAY[] = { 
-	{ fstTypeInteger,  LEX_INTEGER, FN::INT },
-	{ fstTypeString , LEX_STRING, FN::STR },
-	{ fstTypeBool, LEX_BOOL, FN::BOOL },
-	{ fstKeyFunction , LEX_FUNCTION, FN::FUNCTION },
-	{ fstKeyDeclare, LEX_DECLARE,FN::DECLARE },
-	{ fstKeyBegin , LEX_BEGIN_FUNCTION, FN::BEGIN },
-	{ fstCircleWhile , LEX_CIRCLE, FN::WCIRCLE},
-	{ fstProvisionIf, LEX_CONDITION, FN::CONDITIONIF},
-	{ fstKeySout , LEX_SOUT, FN::SOUT },
-	{ fstKeySin, LEX_SIN, FN::SIN },
-	{ fstKeyReturn, LEX_RETURN, FN::RETURN },
-	{ fstV, LEX_ACTION , FN::ACTION},
-	{ fstMore, LEX_MORE , FN::MORE },
-	{ fstEqually, LEX_EQUALLU, FN::EQUALLU },
-	{ fstLeftThesis, LEX_LEFTTHESIS, FN::LTHESIS },
-	{ fstRightThesis, LEX_RIGHTTHESIS,FN::RTHESIS },
-	{ fstSemiColon, LEX_SEMICOLON,FN::SEMILICON },
-	{ fstComma, LEX_COMMA,FN::COMMA },
-	{ fstLeftBrace, LEX_LEFTBRACE,FN::LBRACE },
-	{ fstRightBrace , LEX_RIGHTBRACE,FN::RBRACE },
-	{ fstFalseLiteral, LEX_BOOL_LITERAL, FN::FALSELITERAL },
-	{ fstTrueLiteral, LEX_BOOL_LITERAL, FN::TRUELITERAL },
-	{ fstLiteral, LEX_LITERAL,FN::LITERAL },
-	{ fstIntegerLiteral, LEX_LITERAL,FN::INTLITERAL },
-	{ fstIdentif, LEX_VARIABLE,FN::IDENTETIF },
-	{ fstFalseIdentif, LEX_VARIABLE,FN::FIDENTETIF },
-	{ fstFalseNumIdentif, LEX_VARIABLE, FN::FALSENUMIDENTETIF }
+	{ fstTypeInteger,  LEX_INTEGER, FN::INT, LT::PN_DEF },
+	{ fstTypeString , LEX_STRING, FN::STR, LT::PN_DEF },
+	{ fstTypeBool, LEX_BOOL, FN::BOOL, LT::PN_DEF },
+	{ fstKeyFunction , LEX_FUNCTION, FN::FUNCTION, LT::PN_DEF },
+	{ fstKeyDeclare, LEX_DECLARE,FN::DECLARE, LT::PN_DEF },
+	{ fstEndl, LEX_ENDL, FN::ENDL, LT::PN_DEF },
+	{ fstKeyBegin , LEX_BEGIN_FUNCTION, FN::BEGIN, LT::PN_DEF },
+	{ fstCircleWhile , LEX_CIRCLE, FN::WCIRCLE, LT::PN_DEF },
+	{ fstProvisionIf, LEX_CONDITION, FN::CONDITIONIF, LT::PN_DEF },
+	{ fstProvisionElse, LEX_ELSE, FN::CONDITIONELSE, LT::PN_DEF },
+	{ fstKeySout , LEX_SOUT, FN::SOUT, LT::PN_DEF },
+	{ fstKeySin, LEX_SIN, FN::SIN, LT::PN_DEF },
+	{ fstKeyReturn, LEX_RETURN, FN::RETURN, LT::PN_DEF },
+	{ fstPlus, LEX_ACTION, FN::PLUS, LT::PN_PLUS},
+	{ fstMinus, LEX_ACTION, FN::MINUS, LT::PN_MINUS },
+	{ fstStar, LEX_ACTION, FN::STAR, LT::PN_STAR },
+	{ fstDirslash, LEX_ACTION, FN::DIRSLASH, LT::PN_DIRSLASH },
+	{ fstV, LEX_ACTION , FN::ACTION, LT::PN_DEF },
+	{ fstMore, LEX_MORE , FN::MORE, LT::PN_DEF },
+	{ fstEqually, LEX_EQUALLU, FN::EQUALLU, LT::PN_DEF },
+	{ fstLeftThesis, LEX_LEFTTHESIS, FN::LTHESIS , LT::PN_LEFTTHESIS },
+	{ fstRightThesis, LEX_RIGHTTHESIS,FN::RTHESIS , LT::PN_LEFTTHESIS },
+	{ fstSemiColon, LEX_SEMICOLON,FN::SEMILICON, LT::PN_DEF },
+	{ fstComma, LEX_COMMA,FN::COMMA, LT::PN_DEF },
+	{ fstLeftBrace, LEX_LEFTBRACE,FN::LBRACE, LT::PN_DEF },
+	{ fstRightBrace , LEX_RIGHTBRACE,FN::RBRACE, LT::PN_DEF },
+	{ fstFalseLiteral, LEX_BOOL_LITERAL, FN::FALSELITERAL, LT::PN_DEF },
+	{ fstTrueLiteral, LEX_BOOL_LITERAL, FN::TRUELITERAL, LT::PN_DEF },
+	{ fstLiteral, LEX_LITERAL,FN::LITERAL, LT::PN_DEF },
+	{ fstIntegerLiteral, LEX_LITERAL,FN::INTLITERAL, LT::PN_DEF },
+	{ fstIdentif, LEX_VARIABLE,FN::IDENTETIF, LT::PN_DEF },
+	{ fstFalseIdentif, LEX_VARIABLE,FN::FIDENTETIF, LT::PN_DEF },
+	{ fstFalseNumIdentif, LEX_VARIABLE, FN::FALSENUMIDENTETIF, LT::PN_DEF }
+
 };

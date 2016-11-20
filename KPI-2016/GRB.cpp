@@ -5,7 +5,7 @@ namespace GRB
 #define NS(n) Rule::Chain::N(n)
 #define TS(n) Rule::Chain::T(n)
 
-	Greibach greibach(NS('S'), TS('$'), 7,
+	Greibach greibach(NS('S'), TS('$'), 8,
 		Rule(NS('S'), GRB_ERROR_SERIES, 4,   //  Структура программы
 			Rule::Chain(10, TS('f'), TS('t'), TS('v'), TS('('), NS('F'), TS(')'), TS('['), NS('N'), TS(']'), NS('S')),
 			Rule::Chain(11, TS('f'), TS('t'), TS('v'), TS('('), NS('F'), TS(')'), TS('['), NS('N'), TS(']'), TS(';'), NS('S')),
@@ -16,20 +16,24 @@ namespace GRB
 			Rule::Chain(2, TS('t'), TS('v')),
 			Rule::Chain(4, TS('t'), TS('v'), TS(','), NS('F'))
 		),
-		Rule(NS('C'), GRB_ERROR_SERIES + 2, 6, // возможные конструкции в циклах и условиях
+		Rule(NS('C'), GRB_ERROR_SERIES + 2, 8, // возможные конструкции в циклах и условиях
 			Rule::Chain(5, TS('v'), TS(':'), NS('E'), TS(';'), NS('C')),
-			Rule::Chain(4, TS('v'), TS(':'), NS('E'), TS(';')),
+			Rule::Chain(5, TS('v'), TS(':'), NS('E'), TS(';'), TS('e')),
+			Rule::Chain(5, TS('p'), NS('E'), TS('n'), TS(';'), NS('C')),
+			Rule::Chain(4, TS('p'), NS('E'), TS('n'), TS(';')),
 			Rule::Chain(4, TS('p'), NS('E'), TS(';'), NS('C')),
 			Rule::Chain(3, TS('p'), NS('E'), TS(';')),
-			Rule::Chain(4, TS('s'), NS('E'), TS(';'), NS('C')),
-			Rule::Chain(3, TS('s'), NS('E'), TS(';'))
+			Rule::Chain(3, TS('s'), NS('E'), TS(';'), NS('C')),
+			Rule::Chain(4, TS('s'), NS('E'), TS(';'))
 		),
-		Rule(NS('N'), GRB_ERROR_SERIES + 3, 8,  // возможные конструкции в ф-иях
+		Rule(NS('N'), GRB_ERROR_SERIES + 3, 10,  // возможные конструкции в ф-иях
 			Rule::Chain(6, TS('t'), TS('v'), TS(':'), NS('E'), TS(';'), NS('N')),	// объявление переменной
 			Rule::Chain(8, TS('c'), TS('('), NS('E'), TS(')'), TS('['), NS('C'), TS(']'), NS('N')),		// цикл
 			Rule::Chain(8, TS('i'), TS('('), NS('E'), TS(')'), TS('['), NS('C'), TS(']'), NS('N')),		// условие
+			Rule::Chain(12, TS('i'), TS('('), NS('E'), TS(')'), TS('['), NS('C'), TS(']'), TS('e'), TS('['), NS('C'), TS(']'), NS('N')),		// условие
 			Rule::Chain(5, TS('v'), TS(':'), NS('E'), TS(';'), NS('N')),
-			Rule::Chain(4, TS('p'), NS('E'), TS(';'), NS('N')),	// вывод на экран
+			Rule::Chain(4, TS('p'), NS('P'), TS(';'), NS('N')),	// вывод на экран
+			Rule::Chain(5, TS('p'), NS('P'), TS('n'), TS(';'), NS('N')),
 			Rule::Chain(4, TS('s'), NS('E'), TS(';'), NS('N')),	// ввод на экран
 			Rule::Chain(6, TS('v'), TS('('), NS('W'), TS(')'), TS(';'), NS('N')),
 			Rule::Chain(3, TS('r'), NS('E'), TS(';'))
@@ -50,6 +54,10 @@ namespace GRB
 			Rule::Chain(1, TS('l')),
 			Rule::Chain(1, TS('v'))
 		),
+		Rule(NS('P'), GRB_ERROR_SERIES + 4, 2, // принимаемые параметры ф-ии
+			Rule::Chain(1, TS('v')),
+			Rule::Chain(1, TS('l'))
+		),
 		Rule(NS('M'), GRB_ERROR_SERIES + 2, 4, // знаки
 			Rule::Chain(2, TS('a'), NS('E')),
 			Rule::Chain(2, TS('b'), NS('E')),
@@ -68,7 +76,7 @@ namespace GRB
 	Rule::Rule(GRBALPHABET pnn, int piderror, short psize, Chain c, ...) //конструктор правила
 	{
 		nn = pnn; //нетерминал
-		iderror = piderror; //идентификатор
+		iderror = piderror; // номер ошибки
 		chains = new Chain[size = psize]; //место для цепочки
 		Chain* p = &c;
 		for (int i(0); i < size; i++)
@@ -98,16 +106,20 @@ namespace GRB
 	Rule Greibach::getRule(short n) //получить правило по номеру
 	{
 		Rule rc; //создаём правило rc
-		if (n < size) rc = rules[n]; //присваиваем правилу rc правило n
+		if (n < size) 
+			rc = rules[n]; //присваиваем правилу rc правило n
 		return rc; //возвращаем созданное правило
 	};
 
 	char* Rule::getCRule(char* b, short nchain) // получить правило в виде N->цепочка
 	{
 		char bchain[200]; //строка
-		b[0] = Chain::alphabet_to_char(nn);	b[1] = '-'; b[2] = '>'; b[3] = 0x00; //терминал -> 
+		b[0] = Chain::alphabet_to_char(nn);
+		b[1] = '-';
+		b[2] = '>';
+		b[3] = 0x00; //терминал -> 
 		chains[nchain].getCChain(bchain); //получает правую сторонц правила
-		strcat_s(b, sizeof(bchain) + 5, bchain); //добавляем строку 
+		strcat(b, bchain); //добавляем строку 
 		return b;
 	};
 

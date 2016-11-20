@@ -12,6 +12,7 @@ namespace Log
 	LOG getlog(wchar_t logfile[]);
 	void WriteLine(LOG log, char* c, ...);
 	void WriteLine(LOG log, wchar_t* c, ...);
+	void WriteTimplates(LOG log, char* c);
 	void WriteLog(LOG log);
 	void WriteParm(LOG log, Parm::PARM parm);
 	void WriteIn(LOG log, In::IN in);

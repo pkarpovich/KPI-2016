@@ -15,18 +15,22 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <stack>
+#include <vector>
+#include <set>
+#include <iterator>
 
 using namespace std;
 #include "../KPI-2016L/Error.h"
 #include "../KPI-2016L/Parm.h"
 #include "../KPI-2016L/In.h"
 #include "../KPI-2016L/Log.h"
-#include "IT.h"
-#include "LT.h"
-#include "FST.h"
+#include "../KPI-2016L/IT.h"
+#include "../KPI-2016L/LT.h"
+#include "../KPI-2016L/FST.h"
 #include "LexicalAnalyzer.h"
 #include "GRB.h"
 #include "MFST.h"
 #include "PolishNotation.h"
 #include "SyntacticAnalyzer.h"
+#include "NT.h"
 #include "Generator.h"
