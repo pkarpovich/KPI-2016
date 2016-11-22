@@ -1,20 +1,14 @@
-func int pow(int a, int b)
+func int max(int i, int b)
 [
 	int res:0;
-	int count:1;
-	while(count<b)
-	[
-		res:a*count;
-		count:count+1;
-	]
+	res:i+b;
 	return res;
 ]
 
 begin
 [
-	int a:2;
-	int b:5;
-	int res: pow(a,b);
-	sout res;
+	int a: 0;
+	a: 1 + max(2,5);
+	sout a;
 	return 0;
 ]

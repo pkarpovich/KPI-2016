@@ -9,8 +9,8 @@
 #define TI_STR_MAXSIZE		255
 namespace IT												// таблица идетификаторов
 {
-	enum IDDATATYPE { NO = 0 ,INT = 1, STR = 2, BOOL = 3 };					// типы данных идентификатов: integer, stringяяяя
-	enum IDTYPE { V = 1, F = 2, P = 3, L = 4, IF = 5, CIRCLE = 6, IP};				// типы идентификиторов: переменная, функция, параметр, литерал, указатель
+	enum IDDATATYPE { DT_NO, DT_INT, DT_STR, DT_BOOL };					// типы данных идентификатов: integer, stringяяяя
+	enum IDTYPE { T_NO, T_VAR, T_FUNC, T_FUNC_P, T_FUNC_I, T_FUNC_IP, T_LITERAL, T_CONDITION, T_CONDITION_P, T_ELSE, T_CIRCLE, T_CIRCLE_P };				// типы идентификиторов: переменная, функция, параметр, литерал, указатель
 
 	struct Entry											// строка таблицы идентификаторов
 	{
@@ -18,11 +18,11 @@ namespace IT												// таблица идетификаторов
 		char		*id = new char[ID_MAXSIZE];				// идентификатор (автомат. усекаеться до ID_MAXSIZE)
 		char		*prefId = new char[ID_MAXSIZE];
 		bool		pointer = false;
-		IDDATATYPE	iddatatype;								// тип данных
-		IDTYPE		idtype;									// тип идентификатора
+		int			iddatatype;								// тип данных
+		int			idtype;									// тип идентификатора
 		union 
 		{
-			int vint;										// значение integer
+			char vint[5];										// значение integer
 			struct
 			{
 				int len;									// колличество симолов в string 
@@ -30,6 +30,7 @@ namespace IT												// таблица идетификаторов
 			} vstr;											// значение string
 			char vbool[5];									// значение bool
 		}value;												// значение идентификатора
+		Entry();
 	};
 
 	struct IdTable											// экземпляр таблицы идентификаторов

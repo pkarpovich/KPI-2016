@@ -40,13 +40,15 @@
 
 namespace LT								// таблица лексем
 {
-	enum PN {PN_DEF, PN_MINUS=2, PN_PLUS=2, PN_STAR=3, PN_DIRSLASH=3, PN_LEFTTHESIS=1};
+	enum PN { PN_DEF, PN_MINUS = 2, PN_PLUS = 2, PN_STAR = 3, PN_DIRSLASH = 3, PN_LEFTTHESIS = 1 };
 	struct Entry							// строка таблицы лексем
 	{
 		char lexema;						// лексема
 		int sn;								// номер строки в исходном тексте
 		int idxTI;							// индекс в таблице идентификаторов иди LT_TI_NULLIDX
-		int priority; // приоритет
+		int priority;						// приоритет
+		int braceType;
+		int automat;
 	};
 
 	struct LexTable							// экземпляр таблиццы лексем
@@ -55,6 +57,7 @@ namespace LT								// таблица лексем
 		int size;							// текущий размер таблицы лексем < maxsize
 		Entry* table;						// массив строк таблицы лексем
 	};
+
 
 	LexTable Create(						// создать таблицу лексем
 					int size				// емкость таблицы лексем < LT_MAXSIZE

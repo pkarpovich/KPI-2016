@@ -11,58 +11,50 @@ WriteString PROTO
 
 .data
 
-powres dword 0 
-powcount dword 1 
-begina dword 2 
-beginb dword 5 
-beginres dword 0 
+maxres dword 0 
+begina dword 0 
 
 .const
 
 cname db 'KPI-2016 Compiler ALPHA 3',0
 L01 dword 0 
-L02 dword 1 
+L02 dword 0 
 L03 dword 1 
 L04 dword 2 
 L05 dword 5 
 L06 dword 0 
 
 .code
-pow PROC uses ebx ebp esi edi, powa:dword, powb:dword
-@circle:
-mov eax, powcount
-cmp eax, powb
-ja @if
-
-push powa
-push powcount
+max PROC uses ebx ebp esi edi, maxi:dword, maxb:dword
+push maxi
+push maxb
 pop eax
 pop ebx
-imul eax, ebx
+add eax, ebx
 push eax
-pop powres
-push powcount
+pop maxres
+mov eax, maxres
+ret 8
+max ENDP
+
+main PROC
+
+invoke SetConsoleTitleA, offset cname
+
+invoke max, L04, L05
+push eax
 push L03
 pop eax
 pop ebx
 add eax, ebx
 push eax
-pop powcount
-jmp @circle
-@if:
-mov eax, powres
-ret 8
-pow ENDP
-
-main PROC
-
-invoke SetConsoleTitleA, offset cname
-invoke pow, begina, beginb
-push eax
-pop beginres
-mov EAX, beginres
+pop begina
+mov EAX, begina
 invoke WriteInt
+mov eax, L06
+ret 8
+main ENDP
+
 invoke WaitMsg
 invoke ExitProcess, 0
-main ENDP
 end main

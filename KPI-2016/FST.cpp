@@ -97,13 +97,15 @@ void FST::newFST(FST & f, char * newStr)
 	f.rstates[0] = 0;
 }
 
-bool FST::newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT, LT::PN priority)
+bool FST::newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT, LT::PN priority, AUTOMAT_NAME automat)
 {
 	newFST(fst, newLexem);
 	if (execute(fst))
 	{
 		e.lexema = lexem;
 		e.priority = priority;
+		e.automat = automat;
+		e.braceType = 0;
 		if (lexem == LEX_VARIABLE || lexem == LEX_LITERAL || lexem == LEX_ACTION || lexem == LEX_BOOL_ACTION)
 		{
 			e.idxTI = iT.size;

@@ -42,7 +42,7 @@ namespace PN
 			{
 			case LEX_VARIABLE: case LEX_LITERAL: case LEX_SOUT: case LEX_RETURN:
 			{
-				if (Lex.iT.table[Lex.l.table[i].idxTI].idtype != IT::F)	// сразу мы проверяем что бы у нас небыло имени функции
+				if (Lex.iT.table[Lex.l.table[i].idxTI].idtype != IT::T_FUNC)	// сразу мы проверяем что бы у нас небыло имени функции
 				{
 					LT::Swap(Lex.l, ++posLT, Lex.l.table[i]);	// если это не имя функции то мы отправляем буквы в выходную строку
 					if (isFunc)	paramCount++;	// если это параметр, то мы увеличиваем счетчик параметров

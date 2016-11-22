@@ -32,7 +32,7 @@
 #define ASM_IF "mov eax, %s\ncmp eax, %s\n"
 #define ASM_LESS "ja @if\n"
 #define ASM_MORE "jb @if\n"
-#define ASM_ENDIF "%s@if:\n"
+#define ASM_ENDIF "jmp @endElse\n@if:\n"
 #define ASM_ENDELSE "@endElse:\n"
 
 #define ASM_CIRCLE "@circle:\nmov eax, %s\ncmp eax, %s\n"
@@ -41,14 +41,14 @@
 #define ASM_FUNC "%s PROC uses ebx ebp esi edi"
 #define ASM_FUNC_PARAM ", %s:dword"
 #define ASM_FUNC_START "\n"
-#define ASM_FUNC_RETURN "mov eax, %s\n"
-#define ASM_FUNC_END "ret 8\n%s ENDP\n\n"
+#define ASM_FUNC_RETURN "mov eax, %s\nret 8\n"
+#define ASM_FUNC_END "%s ENDP\n\n"
 
 #define ASM_INVOKE_FUNC "invoke %s"
 #define ASM_INVOKE_PARAM ", %s"
 #define ASM_PUSH_INVOKE "\npush eax\n"
 
-#define ASM_END "invoke WaitMsg\ninvoke ExitProcess, 0\nmain ENDP\nend main"
+#define ASM_END "invoke WaitMsg\ninvoke ExitProcess, 0\nend main"
 
 
 

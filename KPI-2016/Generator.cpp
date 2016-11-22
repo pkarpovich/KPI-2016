@@ -30,15 +30,15 @@ namespace Gen
 		{
 			if (nt.TN == NT::INIT)
 			{
-				if(nt.TD == IT::STR)	GEN2(buf, ASM_STR, nt.p2, nt.p3);
-				else if(nt.TD == IT::INT) GEN2(buf, ASM_INT, nt.p2, nt.p3);
+				if(nt.TD == IT::DT_STR)	GEN2(buf, ASM_STR, nt.p2, nt.p3);
+				else if(nt.TD == IT::DT_INT) GEN2(buf, ASM_INT, nt.p2, nt.p3);
 				strcat(iden, buf);
 				stack.push(i);
 			}
 			else if (nt.TN == NT::LEX_INIT)
 			{
-				if (nt.TD == IT::STR)	GEN2(buf, ASM_STR, nt.p2, nt.p3);
-				else if (nt.TD == IT::INT) GEN2(buf, ASM_INT, nt.p2, nt.p3);
+				if (nt.TD == IT::DT_STR)	GEN2(buf, ASM_STR, nt.p2, nt.p3);
+				else if (nt.TD == IT::DT_INT) GEN2(buf, ASM_INT, nt.p2, nt.p3);
 				strcat(lexIden, buf);
 				stack.push(i);
 			}
@@ -69,7 +69,7 @@ namespace Gen
 			case NT::IF:	GEN2(buf, ASM_IF, nt.p3, nt.p2); Log::WriteTimplates(out, buf);	break;
 			case NT::MORE:	GEN0(buf, ASM_MORE); Log::WriteTimplates(out, buf);	break;
 			case NT::LESS:	GEN0(buf, ASM_LESS); Log::WriteTimplates(out, buf);	break;
-			case NT::ENDIF:	GEN1(buf, ASM_ENDIF, nt.p2); Log::WriteTimplates(out, buf); break;
+			case NT::ENDIF:	GEN0(buf, ASM_ENDIF); Log::WriteTimplates(out, buf); break;
 			case NT::ENDELSE: GEN0(buf, ASM_ENDELSE); Log::WriteTimplates(out, buf); break;
 			case NT::CIRCLE: GEN2(buf, ASM_CIRCLE, nt.p3, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::ENDCIRCLE:	GEN0(buf, ASM_CIRCLEEND); Log::WriteTimplates(out, buf); break;
@@ -82,7 +82,7 @@ namespace Gen
 			case NT::FANCPARAM:	GEN1(buf, ASM_INVOKE_PARAM, nt.p2);	Log::WriteTimplates(out, buf);break;
 			case NT::PUSHINVOKE:GEN0(buf, ASM_PUSH_INVOKE);	Log::WriteTimplates(out, buf); break;
 			case NT::PRINT:
-				if (nt.TD == IT::STR) GEN1(main, ASM_SPRINT, nt.p2);	else if (nt.TD == IT::INT)	GEN1(main, ASM_IPRINT, nt.p2);
+				if (nt.TD == IT::DT_STR) GEN1(main, ASM_SPRINT, nt.p2);	else if (nt.TD == IT::DT_INT)	GEN1(main, ASM_IPRINT, nt.p2);
 				if (strcmp(nt.p3, "endl") == 0) { GEN0(buf, ASM_ENDL); strcat(main, buf); }	Log::WriteTimplates(out, main);	break;
 			}
 		}

@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+
 FST::FST fstTypeInteger("", 4,
 	FST::NODE(1, FST::RELATION('i', 1)),
 	FST::NODE(1, FST::RELATION('n', 2)),
@@ -123,12 +124,22 @@ FST::FST fstKeyReturn("", 7,
 	FST::NODE()
 );
 
+FST::FST fstMore("", 2,
+	FST::NODE(1, FST::RELATION('>', 1)),
+	FST::NODE()
+);
+
+FST::FST fstLess("", 2,
+	FST::NODE(1, FST::RELATION('<', 1)),
+	FST::NODE()
+);
+
 FST::FST fstV("", 2,
 	FST::NODE(5, FST::RELATION('-', 1), FST::RELATION('+', 1), FST::RELATION('/', 1), FST::RELATION('*', 1)),
 	FST::NODE()
 );
 
-FST::FST fstMore("", 2,
+FST::FST fstBoolActio("", 2,
 	FST::NODE(3, FST::RELATION('>', 1), FST::RELATION('<', 1), FST::RELATION('=', 1)),
 	FST::NODE()
 );
@@ -500,7 +511,7 @@ FST::FST fstDirslash("", 2,
 	FST::NODE()
 );
 
-FST::Automatic FST_ARRAY[] = { 
+FST::Automatic FST_ARRAY[] = {
 	{ fstTypeInteger,  LEX_INTEGER, FN::INT, LT::PN_DEF },
 	{ fstTypeString , LEX_STRING, FN::STR, LT::PN_DEF },
 	{ fstTypeBool, LEX_BOOL, FN::BOOL, LT::PN_DEF },
@@ -518,8 +529,9 @@ FST::Automatic FST_ARRAY[] = {
 	{ fstMinus, LEX_ACTION, FN::MINUS, LT::PN_MINUS },
 	{ fstStar, LEX_ACTION, FN::STAR, LT::PN_STAR },
 	{ fstDirslash, LEX_ACTION, FN::DIRSLASH, LT::PN_DIRSLASH },
-	{ fstV, LEX_ACTION , FN::ACTION, LT::PN_DEF },
 	{ fstMore, LEX_MORE , FN::MORE, LT::PN_DEF },
+	{ fstLess, LEX_MORE , FN::LESS, LT::PN_DEF },
+	{ fstV, LEX_ACTION , FN::ACTION, LT::PN_DEF },
 	{ fstEqually, LEX_EQUALLU, FN::EQUALLU, LT::PN_DEF },
 	{ fstLeftThesis, LEX_LEFTTHESIS, FN::LTHESIS , LT::PN_LEFTTHESIS },
 	{ fstRightThesis, LEX_RIGHTTHESIS,FN::RTHESIS , LT::PN_LEFTTHESIS },
@@ -534,5 +546,4 @@ FST::Automatic FST_ARRAY[] = {
 	{ fstIdentif, LEX_VARIABLE,FN::IDENTETIF, LT::PN_DEF },
 	{ fstFalseIdentif, LEX_VARIABLE,FN::FIDENTETIF, LT::PN_DEF },
 	{ fstFalseNumIdentif, LEX_VARIABLE, FN::FALSENUMIDENTETIF, LT::PN_DEF }
-
 };

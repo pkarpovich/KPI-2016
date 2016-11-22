@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-MFST::Mfst SA::syntacticAnalyzer(LA::LexAnaliz &Lex, std::stack<MFST::MfstState>& state, Log::LOG log, Parm::PARM param)
+bool SA::syntacticAnalyzer(LA::LexAnaliz &Lex, std::stack<MFST::MfstState>& state, Log::LOG log, Parm::PARM param)
 {
 	MFST_TRACE_START;
 	if(param.SA)	CON_MFST_TRACE_START
@@ -8,7 +8,7 @@ MFST::Mfst SA::syntacticAnalyzer(LA::LexAnaliz &Lex, std::stack<MFST::MfstState>
 	if (mfst.start(log, param))
 	{
 		mfst.printrules(log, param, state);
-		return mfst;
+		return true;
 	}
-	return mfst;
+	return false;
 }

@@ -18,13 +18,13 @@ int _tmain(int argc, _TCHAR* argv[])
 		Log::WriteIn(log, in_file.in);
 		LA::LexAnaliz Lex = LA::LexicalAnaliz(in_file.dev, log, parm);
 		std::stack<MFST::MfstState> storestate;
-		MFST::Mfst mfst;
-		mfst = SA::syntacticAnalyzer(Lex, storestate, log, parm);
-		//PN::polishstart(Lex, log);
-		LT::ShowLT(Lex.l, parm, log);
-		NT::Nible nible = NT::genNible(Lex, log);
-		Gen::Generator(parm, nible);
-		WinExec("C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat", 1);
+		if (SA::syntacticAnalyzer(Lex, storestate, log, parm))
+		{
+			LT::ShowLT(Lex.l, parm, log);
+			NT::Nible nible = NT::genNible(Lex, log);
+			Gen::Generator(parm, nible);
+			WinExec("C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat", 1);
+		}
 		Log::Close(log);
 		return 0;
 	}

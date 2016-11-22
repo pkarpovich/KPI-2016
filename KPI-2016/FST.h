@@ -2,7 +2,7 @@
 
 namespace FST
 {
-	enum AUTOMAT_NAME {INT, STR, BOOL, FUNCTION, DECLARE, BEGIN, SOUT, RETURN, ACTION, BOOLACTION, EQUALLU, LTHESIS, RTHESIS, SEMILICON, COMMA, LBRACE, RBRACE,
+	enum AUTOMAT_NAME {NO ,INT, STR, BOOL, FUNCTION, DECLARE, BEGIN, SOUT, RETURN, ACTION, BOOLACTION, EQUALLU, LTHESIS, RTHESIS, SEMILICON, COMMA, LBRACE, RBRACE,
 	FALSELITERAL, TRUELITERAL,IDENTETIF, FIDENTETIF, FALSENUMIDENTETIF, LITERAL, INTLITERAL, WCIRCLE, MORE, LESS, CONDITIONIF, CONDITIONELSE, ENDL, SIN,
 	PLUS, MINUS, STAR, DIRSLASH};
 
@@ -42,5 +42,5 @@ namespace FST
 	bool step(FST &fst, short *&rstates); // разбор одного символа
 	bool execute(FST &fsts /*конечный автомат*/);  //распонование цепочки
 	void newFST(FST& f, char* newStr);
-	bool newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT, LT::PN priority);
+	bool newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry& e, LT::LexTable& l, IT::IdTable iT, LT::PN priority, AUTOMAT_NAME automat);
 }

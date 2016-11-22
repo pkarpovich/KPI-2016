@@ -18,6 +18,7 @@
 #include <vector>
 #include <set>
 #include <iterator>
+#include <algorithm>
 
 using namespace std;
 #include "../KPI-2016L/Error.h"
@@ -26,7 +27,7 @@ using namespace std;
 #include "../KPI-2016L/Log.h"
 #include "../KPI-2016L/IT.h"
 #include "../KPI-2016L/LT.h"
-#include "../KPI-2016L/FST.h"
+#include "FST.h"
 #include "LexicalAnalyzer.h"
 #include "GRB.h"
 #include "MFST.h"

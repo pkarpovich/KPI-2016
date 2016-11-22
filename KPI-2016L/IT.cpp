@@ -32,7 +32,7 @@ namespace IT
 		{
 			for (int i = 0; i < idTable.size; i++)
 			{
-				if (idTable.table[i].idtype == IT::F)
+				if (idTable.table[i].idtype == IT::T_FUNC)
 				{
 					if (strcmp(word, idTable.table[i].prefId) == 0)
 					{
@@ -75,28 +75,28 @@ namespace IT
 				cout << setw(8);
 				switch (iT.table[i].iddatatype)
 				{
-				case IT::INT: cout << "int"; break;
-				case IT::STR: cout << "str"; break;
-				case IT::BOOL: cout << "bool"; break;
+				case IT::DT_INT: cout << "int"; break;
+				case IT::DT_STR: cout << "str"; break;
+				case IT::DT_BOOL: cout << "bool"; break;
 				default: cout << " "; break;
 				}
 				cout << setw(12);
 				switch (iT.table[i].idtype)
 				{
-				case IT::V: cout << "переменная"; break;
-				case IT::F: cout << "функция"; break;
-				case IT::P: cout << "параметр"; break;
-				case IT::CIRCLE: cout << "параметр в цикле"; break;
-				case IT::IF: cout << "параметр в условии"; break;
-				case IT::L: cout << "литерал"; isLiteral = true; break;
+				case IT::T_VAR: cout << "переменная"; break;
+				case IT::T_FUNC: cout << "функция"; break;
+				case IT::T_FUNC_P: cout << "параметр"; break;
+				case IT::T_CIRCLE_P: cout << "параметр в цикле"; break;
+				case IT::T_CONDITION_P: cout << "параметр в условии"; break;
+				case IT::T_LITERAL: cout << "литерал"; isLiteral = true; break;
 				default: cout << " "; break;
 				}
 				cout << setw(3);
 				cout << "|";
 				if (isLiteral || iT.table[i].value.vstr.len > 0)
 				{
-					if (iT.table[i].iddatatype == IT::INT) cout << setw(3) << iT.table[i].value.vint;
-					else if (iT.table[i].iddatatype == IT::BOOL) cout << setw(3) << iT.table[i].value.vbool;
+					if (iT.table[i].iddatatype == IT::DT_INT) cout << setw(3) << iT.table[i].value.vint;
+					else if (iT.table[i].iddatatype == IT::DT_BOOL) cout << setw(3) << iT.table[i].value.vbool;
 					else cout << setw(3) << iT.table[i].value.vstr.str << "[" << iT.table[i].value.vstr.len << "]";
 				}
 				cout << endl;
@@ -119,30 +119,42 @@ namespace IT
 			(*log.stream) << setw(8);
 			switch (iT.table[i].iddatatype)
 			{
-			case IT::INT: (*log.stream) << "int"; break;
-			case IT::STR: (*log.stream) << "str"; break;
-			case IT::BOOL: (*log.stream) << "bool"; break;
+			case IT::DT_INT: (*log.stream) << "int"; break;
+			case IT::DT_STR: (*log.stream) << "str"; break;
+			case IT::DT_BOOL: (*log.stream) << "bool"; break;
 			default: (*log.stream) << " "; break;
 			}
 			(*log.stream) << setw(12);
 			switch (iT.table[i].idtype)
 			{
-			case IT::V: (*log.stream) << "переменная"; break;
-			case IT::F: (*log.stream) << "функция"; break;
-			case IT::P: (*log.stream) << "параметр"; break;
-			case IT::L: (*log.stream) << "литерал"; isLiteral = true; break;
+			case IT::T_VAR: (*log.stream) << "переменная"; break;
+			case IT::T_FUNC: (*log.stream) << "функция"; break;
+			case IT::T_FUNC_P: (*log.stream) << "параметр"; break;
+			case IT::T_LITERAL: (*log.stream) << "литерал"; isLiteral = true; break;
 			default: (*log.stream) << " "; break;
 			}
 			(*log.stream) << setw(3);
 			(*log.stream) << "|";
 			if (isLiteral || iT.table[i].value.vstr.len > 0)
 			{
-				if (iT.table[i].iddatatype == IT::INT) (*log.stream) << setw(3) << iT.table[i].value.vint;
-				else if(iT.table[i].iddatatype == IT::BOOL) (*log.stream) << setw(3) << iT.table[i].value.vbool;
+				if (iT.table[i].iddatatype == IT::DT_INT) (*log.stream) << setw(3) << iT.table[i].value.vint;
+				else if(iT.table[i].iddatatype == IT::DT_BOOL) (*log.stream) << setw(3) << iT.table[i].value.vbool;
 				else (*log.stream) << setw(3) << iT.table[i].value.vstr.str << "[" << iT.table[i].value.vstr.len << "]";
 			}
 			(*log.stream) << endl;
 			isLiteral = 0;
 		}
+	}
+	Entry::Entry()
+	{
+		strcpy(this->id, "null");
+		strcpy(this->prefId, "null");
+		this->idfirstLE = 0xffffffff;
+		this->idtype = IT::T_NO;
+		this->pointer = false;
+		strcpy(this->value.vbool, "false");
+		strcpy(this->value.vint, "0");
+		strcpy(this->value.vstr.str, "\0");
+		this->value.vstr.len = 0;
 	}
 }
