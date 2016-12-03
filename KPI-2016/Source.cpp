@@ -20,7 +20,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::stack<MFST::MfstState> storestate;
 		if (SA::syntacticAnalyzer(Lex, storestate, log, parm))
 		{
-			LT::ShowLT(Lex.l, parm, log);
+			//LT::ShowLT(Lex.l, parm, log);
 			NT::Nible nible = NT::genNible(Lex, log);
 			Gen::Generator(parm, nible);
 			WinExec("C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat", 1);
@@ -31,10 +31,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	catch (Error::ERROR_MESSAGE em)
 	{
 		Log::WriteError(log, em);
+		system("pause");
 	}
 	catch (Error::ERRORS e)
 	{
 		Log::WriteErrors(log, e);
-		
+		system("pause");
 	}
 };

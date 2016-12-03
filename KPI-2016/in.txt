@@ -1,14 +1,6 @@
-func int max(int i, int b)
-[
-	int res:0;
-	res:i+b;
-	return res;
-]
-
 begin
 [
-	int a: 0;
-	a: 1 + max(2,5);
-	sout a;
-	return 0;
+int a:0;
+sout a;
+return 0;
 ]

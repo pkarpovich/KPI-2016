@@ -235,11 +235,11 @@ namespace In
 		{
 			throw ERROR_THROW_IN
 		}
-		cout << "Разделение слов" << endl;
+		/*cout << "Разделение слов" << endl;
 		for (int i = 0; i <= dev.count_word; i++)
 		{
 			cout << dev.word[i] << endl;
-		}
+		}*/
 		return dev;
 	}
 };

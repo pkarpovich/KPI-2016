@@ -19,12 +19,7 @@ namespace PN
 	{
 		bool check = false;
 		while (!check)
-		{
-			if (Lex.l.table[--i].lexema == LEX_EQUALLU)
-			{
-				check = true;
-			}
-		}
+			if (Lex.l.table[--i].lexema == LEX_EQUALLU)				check = true;
 		Parm::PARM param;
 		param.LT = true;
 		stack<LT::Entry> stack;
@@ -33,7 +28,6 @@ namespace PN
 		bool isFunc = 0,	// если в строке есть функция
 			isPN = 0;		// выполнение преобразований 
 		int paramCount = 0;	// колличество параметров функции
-		int oldPos;
 		int posLT = i;
 		int sn = Lex.l.table[i].sn;
 		while (Lex.l.table[i].sn == sn)

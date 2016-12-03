@@ -110,7 +110,6 @@ namespace NT
 	{
 		Nible nible = Create(9000);
 
-		enum lexem { PRINT, SIN, INIT, RETURN, IF, FUNC, CIRCLE };
 		stack<char> stack;
 		bool check = 0, isAction = 0, isReturn = 0;
 		char *funcName = new char[50];	char *equallu = new char[50];
@@ -122,15 +121,15 @@ namespace NT
 				{
 				case IT::T_LITERAL:
 					if(it[i].iddatatype == IT::DT_INT)
-						Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.vint));
+						Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
 					else if(it[i].iddatatype == IT::DT_STR)
-						Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.vstr.str));
+						Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
 					break;
 				case IT::T_VAR:
 					if (it[i].iddatatype == IT::DT_INT)
-						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.vint));
+						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
 					else if (it[i].iddatatype == IT::DT_STR)
-						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.vstr.str));
+						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
 					break;
 				}
 			}
@@ -175,7 +174,7 @@ namespace NT
 			}
 			case LEX_RIGHTTHESIS:
 			{
-				if(LA::WhereI(lex, i) == IT::T_FUNC_IP) Add(nible, setNible(NT::PUSHINVOKE, IT::DT_NO));
+				if(lt[i].braceType == IT::T_FUNC) Add(nible, setNible(NT::PUSHINVOKE, IT::DT_NO));
 				break;
 			}
 			case LEX_LEFTBRACE:	if (LA::WhereI(lex,i) == IT::T_FUNC) Add(nible, setNible(NT::STARTFUNC, IT::DT_NO)); break;
@@ -200,7 +199,7 @@ namespace NT
 			case LEX_RETURN: isReturn = true; break;				
 			case LEX_ENDL: strcpy(nt[lastNible(nible,NT::PRINT)].p3, "endl"); break;
 			case LEX_ACTION: isAction = true; break;
-			case LEX_EQUALLU:	strcpy(equallu, lex.iT.table[lex.l.table[i - 1].idxTI].prefId);	break;
+			case LEX_EQUALLU:	stack.push(lt[i].lexema); strcpy(equallu, lex.iT.table[lex.l.table[i - 1].idxTI].prefId);	break;
 			case LEX_VARIABLE: case LEX_LITERAL:
 			{
 				if (LA::WhereI(lex, i) == IT::T_FUNC_P) { Add(nible, setNible(NT::PARAM_INIT, IT::DT_INT, idit(i).prefId, "0")); break; }
@@ -216,6 +215,7 @@ namespace NT
 					case LEX_SOUT: Add(nible, setNible(NT::PRINT, idit(i).iddatatype, idit(i).prefId)); break;
 					case LEX_CONDITION: Add(nible, setNible(NT::IF, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId)); break;
 					case LEX_CIRCLE: Add(nible, setNible(NT::CIRCLE, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId)); break;
+					case LEX_EQUALLU:Add(nible, setNible(NT::INT_D, IT::DT_NO, idit(i).value.val)); Add(nible, setNible(NT::INT_E, IT::DT_NO, equallu)); break;
 					}
 					stack.pop();
 				}

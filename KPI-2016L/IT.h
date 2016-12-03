@@ -20,15 +20,10 @@ namespace IT												// таблица идетификаторов
 		bool		pointer = false;
 		int			iddatatype;								// тип данных
 		int			idtype;									// тип идентификатора
-		union 
+		struct 
 		{
-			char vint[5];										// значение integer
-			struct
-			{
-				int len;									// колличество симолов в string 
-				char str[TI_STR_MAXSIZE];					// симолы string
-			} vstr;											// значение string
-			char vbool[5];									// значение bool
+			char *val = new char[255];						// значение integer
+			int len;
 		}value;												// значение идентификатора
 		Entry();
 	};

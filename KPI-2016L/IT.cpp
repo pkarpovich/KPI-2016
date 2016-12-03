@@ -93,11 +93,9 @@ namespace IT
 				}
 				cout << setw(3);
 				cout << "|";
-				if (isLiteral || iT.table[i].value.vstr.len > 0)
+				if (isLiteral || iT.table[i].value.len > 0)
 				{
-					if (iT.table[i].iddatatype == IT::DT_INT) cout << setw(3) << iT.table[i].value.vint;
-					else if (iT.table[i].iddatatype == IT::DT_BOOL) cout << setw(3) << iT.table[i].value.vbool;
-					else cout << setw(3) << iT.table[i].value.vstr.str << "[" << iT.table[i].value.vstr.len << "]";
+					if (iT.table[i].iddatatype == IT::DT_INT) cout << setw(3) << iT.table[i].value.val << "[" << iT.table[i].value.len << "]";
 				}
 				cout << endl;
 				isLiteral = 0;
@@ -135,11 +133,9 @@ namespace IT
 			}
 			(*log.stream) << setw(3);
 			(*log.stream) << "|";
-			if (isLiteral || iT.table[i].value.vstr.len > 0)
+			if (isLiteral || iT.table[i].value.len > 0)
 			{
-				if (iT.table[i].iddatatype == IT::DT_INT) (*log.stream) << setw(3) << iT.table[i].value.vint;
-				else if(iT.table[i].iddatatype == IT::DT_BOOL) (*log.stream) << setw(3) << iT.table[i].value.vbool;
-				else (*log.stream) << setw(3) << iT.table[i].value.vstr.str << "[" << iT.table[i].value.vstr.len << "]";
+				if (iT.table[i].iddatatype == IT::DT_INT) (*log.stream) << setw(3) << iT.table[i].value.val<< iT.table[i].value.len << "]";
 			}
 			(*log.stream) << endl;
 			isLiteral = 0;
@@ -152,9 +148,7 @@ namespace IT
 		this->idfirstLE = 0xffffffff;
 		this->idtype = IT::T_NO;
 		this->pointer = false;
-		strcpy(this->value.vbool, "false");
-		strcpy(this->value.vint, "0");
-		strcpy(this->value.vstr.str, "\0");
-		this->value.vstr.len = 0;
+		strcpy(this->value.val, "0");
+		this->value.len = 0;
 	}
 }
