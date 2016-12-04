@@ -13,6 +13,9 @@
 #include <qtextstream.h>
 #include <qsyntaxhighlighter.h>
 #include <qregexp.h>
+#include <qprocess.h>
+#include <qtextcodec.h>
+#include <QKeyEvent>
 
 class Syntax :public QSyntaxHighlighter
 {
@@ -48,6 +51,7 @@ public:
 	private slots:
 	void open();
 	void save();
+	void compil();
 private:
 	QTextEdit *_textEdit;
 	QPushButton *_close;
@@ -55,8 +59,11 @@ private:
 	QPushButton *_save;
 	QPushButton *_undo;
 	QPushButton *_redo;
+	QPushButton *_compil;
 
 	Syntax *syntax;
+protected:
+	virtual void keyPressEvent(QKeyEvent *event);
 };
 
 #endif // IDE_H

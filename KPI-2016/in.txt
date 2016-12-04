@@ -1,6 +1,2 @@
-begin
-[
-int a:0;
-sout a;
-return 0;
-]
+fsfdsfs
+fsdfds

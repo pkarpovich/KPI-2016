@@ -3,33 +3,66 @@
 TextEdit::TextEdit(QWidget *parent)
 	:QWidget(parent)
 {
+	resize(800, 500);
+	setWindowTitle("KPI-2016");
+
 	this->_textEdit = new QTextEdit;
-	//this->_textEdit->setLineWidth(1500);
 	this->_close = new QPushButton("Close");
 	this->_save = new QPushButton("Save");
 	this->_open = new QPushButton("Open");
 	this->_undo = new QPushButton("Undo");
 	this->_redo = new QPushButton("Redo");
-
+	this->_compil = new QPushButton("Compil");
 	syntax = new Syntax(this->_textEdit->document());
 
 	QHBoxLayout *menu = new QHBoxLayout;
 	menu->addWidget(this->_open);	menu->addWidget(this->_save);
 	menu->addWidget(this->_undo);	menu->addWidget(this->_redo);
+	menu->addWidget(this->_compil);
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->addLayout(menu);
 	layout->addWidget(this->_textEdit);
 	layout->addWidget(this->_close);
-
 	setLayout(layout);
-	setWindowTitle("KPI-2016");
 
 	connect(this->_close, SIGNAL(clicked()), qApp, SLOT(quit()));
 	connect(this->_save, SIGNAL(clicked()), this, SLOT(save()));
 	connect(this->_open, SIGNAL(clicked()), this, SLOT(open()));
 	connect(this->_undo, SIGNAL(clicked()), this->_textEdit, SLOT(undo()));
 	connect(this->_redo, SIGNAL(clicked()), this->_textEdit, SLOT(redo()));
+	connect(this->_compil, SIGNAL(clicked()), this, SLOT(compil()));
 };
+
+void TextEdit::keyPressEvent(QKeyEvent * event)
+{
+	switch (event->key())
+	{
+	case Qt::Key_F5:
+		if (event->modifiers() & Qt::CTRL)	compil();
+		break;
+	case Qt::Key_Q:
+		if (event->modifiers() & Qt::CTRL) close();
+	}
+}
+
+void TextEdit::compil()
+{
+	QString inPath = QTextCodec::codecForLocale()->toUnicode(
+		"C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\in.txt");
+	QFile inFile(inPath);
+	if (!inFile.open(QIODevice::WriteOnly))
+	{
+		QMessageBox::critical(this, tr("Error"), tr("Could not save file"));
+		return;
+	}
+	QTextStream stream(&inFile);
+	stream << this->_textEdit->toPlainText();
+	stream.flush(); inFile.close();
+	QProcess *process = new QProcess(this);
+	QString path = QTextCodec::codecForLocale()->toUnicode(
+		"C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\Debug\\KPI-2016.exe");
+	process->startDetached(path,QStringList() << "-in:../KPI-2016/in.txt" << "-out:code.asm");
+}
 
 void TextEdit::open()
 {
