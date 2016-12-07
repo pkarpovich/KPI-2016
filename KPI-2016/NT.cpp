@@ -177,12 +177,18 @@ namespace NT
 				if(lt[i].braceType == IT::T_FUNC) Add(nible, setNible(NT::PUSHINVOKE, IT::DT_NO));
 				break;
 			}
-			case LEX_LEFTBRACE:	if (LA::WhereI(lex,i) == IT::T_FUNC) Add(nible, setNible(NT::STARTFUNC, IT::DT_NO)); break;
+			case LEX_LEFTBRACE:	
+				if (lt[i].braceType == IT::T_FUNC)
+					Add(nible, setNible(NT::STARTFUNC, IT::DT_NO));
+				break;
 			case LEX_RIGHTBRACE:
 			{
 				switch (lt[i].braceType)
 				{
-				case IT::T_FUNC: Add(nible, setNible(NT::ENDFUNC, IT::DT_NO, funcName)); break;
+				case IT::T_FUNC:
+					if(strcmp(funcName,"begin") == 0) Add(nible, setNible(NT::ENDMAINFUNC, IT::DT_NO, funcName));
+					else	Add(nible, setNible(NT::ENDFUNC, IT::DT_NO, funcName)); 
+					break;
 				case IT::T_CIRCLE: Add(nible, setNible(NT::ENDCIRCLE, IT::DT_NO));	break;
 				case IT::T_ELSE: Add(nible, setNible(NT::ENDELSE, IT::DT_NO)); break;
 				case IT::T_CONDITION: Add(nible, setNible(NT::ENDIF, IT::DT_NO));
@@ -191,7 +197,7 @@ namespace NT
 				break;
 			}
 			case LEX_ELSE:	Add(nible, setNible(NT::ELSE, IT::DT_NO)); break;
-			case LEX_BEGIN_FUNCTION: Add(nible, setNible(NT::BEGIN, IT::DT_NO)); strcpy(funcName, "main"); break;
+			case LEX_BEGIN_FUNCTION: Add(nible, setNible(NT::BEGIN, IT::DT_NO)); strcpy(funcName, "begin"); break;
 			case LEX_BOOL_ACTION:
 				if(lt[i].automat == FST::MORE)	Add(nible, setNible(NT::MORE, IT::DT_NO));
 				else if(lt[i].automat == FST::LESS) Add(nible, setNible(NT::LESS, IT::DT_NO));
@@ -203,7 +209,7 @@ namespace NT
 			case LEX_VARIABLE: case LEX_LITERAL:
 			{
 				if (LA::WhereI(lex, i) == IT::T_FUNC_P) { Add(nible, setNible(NT::PARAM_INIT, IT::DT_INT, idit(i).prefId, "0")); break; }
-				if (isReturn && LA::WhereI(lex, i) == IT::T_FUNC) { Add(nible, setNible(NT::RETURN, IT::DT_INT, idit(i).prefId)); isReturn = false; break; }
+				if (isReturn) { Add(nible, setNible(NT::RETURN, IT::DT_INT, idit(i).prefId)); isReturn = false; break; }
 				if (idit(i).idtype == IT::T_FUNC && idit(i).pointer) { isAction = true; Add(nible, setNible(NT::FUNCINVOKE, IT::DT_INT, idit(i).prefId)); break; }
 				if (idit(i).idtype == IT::T_CONDITION_P) { Add(nible, setNible(NT::FANCPARAM, IT::DT_INT, idit(i).prefId)); break; }
 				if(LA::WhereI(lex, i) == IT::T_FUNC_IP) { Add(nible, setNible(NT::FANCPARAM, IT::DT_INT, idit(i).prefId)); break; }

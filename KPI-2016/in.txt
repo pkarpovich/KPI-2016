@@ -1,2 +1,10 @@
-fsfdsfs
-fsdfds
+begin
+[
+    int res:0;
+    res:20+90;
+    if(res > 70)
+    [
+    	sout res endl;
+    ]
+    return 0;
+]

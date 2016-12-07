@@ -39,12 +39,12 @@ namespace GRB
 			Rule::Chain(3, TS('r'), NS('E'), TS(';'))
 		),
 		Rule(NS('E'), GRB_ERROR_SERIES + 4, 8, // ошибка в выражении
+			Rule::Chain(2, TS('v'), NS('M')),
+			Rule::Chain(2, TS('l'), NS('M')),
 			Rule::Chain(1, TS('v')),
 			Rule::Chain(1, TS('l')),
 			Rule::Chain(3, TS('('), NS('E'), TS(')')),
 			Rule::Chain(4, TS('v'), TS('('), NS('W'), TS(')')),
-			Rule::Chain(2, TS('v'), NS('M')),
-			Rule::Chain(2, TS('l'), NS('M')),
 			Rule::Chain(4, TS('('), NS('E'), TS(')'), NS('M')),
 			Rule::Chain(5, TS('v'), TS('('), NS('W'), TS(')'), NS('M'))
 		),
@@ -58,11 +58,9 @@ namespace GRB
 			Rule::Chain(1, TS('v')),
 			Rule::Chain(1, TS('l'))
 		),
-		Rule(NS('M'), GRB_ERROR_SERIES + 2, 4, // знаки
+		Rule(NS('M'), GRB_ERROR_SERIES + 2, 2, // знаки
 			Rule::Chain(2, TS('a'), NS('E')),
-			Rule::Chain(2, TS('b'), NS('E')),
-			Rule::Chain(3, TS('a'), NS('E'), NS('M')),
-			Rule::Chain(3, TS('b'), NS('E'), NS('M'))
+			Rule::Chain(2, TS('b'), NS('E'))
 		)
 	);
 

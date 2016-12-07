@@ -78,6 +78,7 @@ namespace Gen
 			case NT::STARTFUNC:	GEN0(buf, ASM_FUNC_START); Log::WriteTimplates(out, buf); break;
 			case NT::RETURN:	GEN1(buf, ASM_FUNC_RETURN, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::ENDFUNC:	GEN1(buf, ASM_FUNC_END, nt.p2); Log::WriteTimplates(out, buf); break;
+			case NT::ENDMAINFUNC: GEN0(buf, ASM_MAIN_FUNC_END); Log::WriteTimplates(out, buf); break;
 			case NT::FUNCINVOKE:GEN1(buf, ASM_INVOKE_FUNC, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::FANCPARAM:	GEN1(buf, ASM_INVOKE_PARAM, nt.p2);	Log::WriteTimplates(out, buf);break;
 			case NT::PUSHINVOKE:GEN0(buf, ASM_PUSH_INVOKE);	Log::WriteTimplates(out, buf); break;
@@ -86,9 +87,6 @@ namespace Gen
 				if (strcmp(nt.p3, "endl") == 0) { GEN0(buf, ASM_ENDL); strcat(main, buf); }	Log::WriteTimplates(out, main);	break;
 			}
 		}
-
-		(*out.stream) << ASM_END;
-
 		Print(nible);
 	}
 }

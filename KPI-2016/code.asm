@@ -11,13 +11,16 @@ WriteString PROTO
 
 .data
 
-begina dword 0 
+beginres dword 0 
 
 .const
 
 cname db 'KPI-2016 Compiler ALPHA 3',0
 L01 dword 0 
-L02 dword 0 
+L02 dword 20 
+L03 dword 90 
+L04 dword 70 
+L05 dword 0 
 
 .code
 main PROC
@@ -25,13 +28,26 @@ main PROC
 invoke SetConsoleTitleA, offset cname
 
 push 0
-pop begina
-mov EAX, begina
+pop beginres
+push 20
+pop beginres
+push L02
+push L03
+pop eax
+pop ebx
+add eax, ebx
+push eax
+pop beginres
+mov eax, L04
+cmp eax, beginres
+ja @if
+mov EAX, beginres
 invoke WriteInt
-mov eax, L02
-ret 8
+invoke Crlf
+jmp @endElse
+@if:
+@endElse:
+mov EAX, L05
+ret
 main ENDP
-
-invoke WaitMsg
-invoke ExitProcess, 0
-end main
+END main

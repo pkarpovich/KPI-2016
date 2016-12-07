@@ -1,11 +1,11 @@
-#include "ide.h"
-#include <QtWidgets/QApplication>
+#include "stdafx.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	TextEdit textEdit;
-	//textEdit.resize(600, 400);
-	textEdit.show();
+	a.setApplicationName("KPI-2016");
+	a.setOrganizationName("TALLER");
+	IDE ide;
+	ide.show();
 	return a.exec();
 }

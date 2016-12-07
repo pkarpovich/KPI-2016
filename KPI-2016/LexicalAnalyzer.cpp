@@ -34,6 +34,7 @@ int LA::WhereI(LexAnaliz lex, int i)
 	{
 		switch (lex.l.table[k].lexema)
 		{
+		case LEX_BEGIN_FUNCTION: return IT::T_FUNC;
 		case LEX_LEFTBRACE:
 			switch (lex.l.table[k].braceType)
 			{
@@ -43,14 +44,13 @@ int LA::WhereI(LexAnaliz lex, int i)
 			case FST::FUNCTION:	return IT::T_FUNC;
 			}
 			break;
-		case LEX_RIGHTBRACE:	while (lex.l.table[--k].lexema != LEX_LEFTBRACE) {}; break;
-		case LEX_FUNCTION:	if (isParam) return IT::T_FUNC_P; break;
-		case LEX_CONDITION:	if (isParam) return IT::T_CONDITION_P; break;
-		case LEX_CIRCLE: if (isParam) return IT::T_CIRCLE_P; break;
-		case LEX_LEFTTHESIS:
-			if (lex.l.table[k - 1].lexema == LEX_VARIABLE && lex.iT.table[lex.l.table[k - 1].idxTI].pointer) return IT::T_FUNC_IP;
-			isParam = true; break;
-		case LEX_RIGHTTHESIS: while (lex.l.table[--k].lexema != LEX_LEFTTHESIS) {}; i++; break;
+		case LEX_RIGHTBRACE:	
+			while (lex.l.table[k--].lexema != LEX_CONDITION)
+			{};
+			break;
+		case LEX_FUNCTION:	return IT::T_FUNC; break;
+		case LEX_CONDITION:		return IT::T_CONDITION; break;
+		case LEX_CIRCLE: return IT::T_CIRCLE; break;
 		}
 	}
 	return 0;
@@ -92,23 +92,13 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 					case FN::BEGIN: {strcpy(nameFunction, "begin\0"); braceStack.push(FN::FUNCTION); beginCount++; break; }	// если у нас main
 					case FN::LBRACE: case FN::LTHESIS:
 					{
-						while (Lex.l.table[Lex.l.size - 1].braceType == 0)
-						{
-							switch (braceStack.top())
-							{
-							case FN::CONDITIONIF: stack.push(IT::T_CONDITION); Lex.l.table[Lex.l.size - 1].braceType = FN::CONDITIONIF; break;
-							case FN::CONDITIONELSE: stack.push(IT::T_ELSE); Lex.l.table[Lex.l.size - 1].braceType = FN::CONDITIONELSE; break;
-							case FN::WCIRCLE: stack.push(IT::T_CIRCLE); Lex.l.table[Lex.l.size - 1].braceType = FN::WCIRCLE; break;
-							case FN::FUNCTION: stack.push(IT::T_FUNC); Lex.l.table[Lex.l.size - 1].braceType = FN::FUNCTION; break;
-							}
-							if(FST_ARRAY[k].automatName != FN::LTHESIS)	braceStack.pop();
-							else {	if (Lex.l.table[Lex.l.size - 1].braceType == 0)	braceStack.pop(); }
-						}
-						break;
+						Lex.l.table[Lex.l.size - 1].braceType = WhereI(Lex, Lex.l.size - 2); break;
 					}					// если у нас {
 					case FN::WCIRCLE: case FN::CONDITIONIF: case  FN::CONDITIONELSE: braceStack.push(FST_ARRAY[k].automatName);break;
 					case FN::EQUALLU: isInitialization = true; break;
-					case FN::RBRACE: case FN::RTHESIS: Lex.l.table[Lex.l.size - 1].braceType = stack.top(); stack.pop();	break;	// если у нас }
+					case FN::RBRACE: case FN::RTHESIS:
+							Lex.l.table[Lex.l.size - 1].braceType = WhereI(Lex, Lex.l.size - 2);
+						break;	// если у нас }
 					case FN::FALSENUMIDENTETIF: {ADD_ERROR(301, Line, 0, dev.word[i], Error::LA); throw ERROR_THROW_IN}
 					case FN::FIDENTETIF: {ADD_ERROR(300, Line, 0, dev.word[i], Error::LA); throw ERROR_THROW_IN}
 					case FN::IDENTETIF:										// если у нас иден.

@@ -30,8 +30,8 @@
 #define ASM_DIV "pop ebx\npop eax\ncdq\ndiv ebx\npush eax\n"
 
 #define ASM_IF "mov eax, %s\ncmp eax, %s\n"
-#define ASM_LESS "ja @if\n"
-#define ASM_MORE "jb @if\n"
+#define ASM_LESS "jb @if\n"
+#define ASM_MORE "ja @if\n"
 #define ASM_ENDIF "jmp @endElse\n@if:\n"
 #define ASM_ENDELSE "@endElse:\n"
 
@@ -41,15 +41,20 @@
 #define ASM_FUNC "%s PROC uses ebx ebp esi edi"
 #define ASM_FUNC_PARAM ", %s:dword"
 #define ASM_FUNC_START "\n"
-#define ASM_FUNC_RETURN "mov eax, %s\nret 8\n"
+#define ASM_FUNC_RETURN "mov EAX, %s\nret\n"
 #define ASM_FUNC_END "%s ENDP\n\n"
+#define ASM_MAIN_FUNC_END "main ENDP\nEND main"
 
 #define ASM_INVOKE_FUNC "invoke %s"
 #define ASM_INVOKE_PARAM ", %s"
 #define ASM_PUSH_INVOKE "\npush eax\n"
 
-#define ASM_END "invoke WaitMsg\ninvoke ExitProcess, 0\nend main"
+#define ASM_END "invoke WaitMsg\ninvoke ExitProcess, 0\nretinvoke WaitMsg\ninvoke ExitProcess, 0\n"
 
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 #define ASM_SOUT_CHAR(literalValue) "mov EDX, offset "<<literalValue<< "\ninvoke WriteString\ninvoke Crlf\n"

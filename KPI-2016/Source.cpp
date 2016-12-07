@@ -20,12 +20,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::stack<MFST::MfstState> storestate;
 		if (SA::syntacticAnalyzer(Lex, storestate, log, parm))
 		{
-			//LT::ShowLT(Lex.l, parm, log);
 			NT::Nible nible = NT::genNible(Lex, log);
 			Gen::Generator(parm, nible);
 			WinExec("C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat", 1);
 		}
 		Log::Close(log);
+		system("pause");
 		return 0;
 	}
 	catch (Error::ERROR_MESSAGE em)
