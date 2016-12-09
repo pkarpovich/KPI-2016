@@ -12,6 +12,8 @@
 #define LEX_FUNCTION		'f'				// лексема для function
 #define LEX_BEGIN_FUNCTION	'm'				// Лексема для begin
 #define LEX_CIRCLE			'c'				// лексема для циклов
+#define LEX_INCLUDE			'%'
+#define LEX_KPI_LIB			'K'
 #define LEX_CONDITION		'i'
 #define LEX_ELSE			'e'
 #define LEX_ENDL			'n'

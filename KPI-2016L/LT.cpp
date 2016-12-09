@@ -48,9 +48,9 @@ namespace LT
 	{
 		delete lextable.table;
 	}
-	void Swap(LexTable &oldLexTable, int nomber, Entry newTable)
+	void Swap(LexTable &oldLexTable, int number, Entry newTable)
 	{
-		oldLexTable.table[nomber] = newTable;
+		oldLexTable.table[number] = newTable;
 	}
 	void ShowLT(LexTable & l, Parm::PARM param, Log::LOG log)
 	{

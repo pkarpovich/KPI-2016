@@ -22,7 +22,12 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			NT::Nible nible = NT::genNible(Lex, log);
 			Gen::Generator(parm, nible);
-			WinExec("C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat", 1);
+			char *param = new char[255];
+			char *buf = new char[50];
+			strcpy(param, "C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\make.bat ");
+			wcstombs(buf, parm.out, sizeof(parm.out));
+			strcat(param, buf);
+			WinExec(param, 1);
 		}
 		Log::Close(log);
 		system("pause");

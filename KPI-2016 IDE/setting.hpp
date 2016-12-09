@@ -8,6 +8,7 @@ public:
 	Setting(QWidget * parent = Q_NULLPTR);
 	~Setting();
 	QString _kpiPatch;
+	QString _exePatch;
 	bool isLT; bool isIT; bool isSA;
 	bool isLineNumber; bool isHighlightLine;
 private slots:
@@ -20,8 +21,9 @@ private:
 	QLabel *_kpiPatchLabel;
 	QPushButton *_kpiPatchButton;
 	QLineEdit *_kpiPathLine;
-	QSettings *_settings;
-	QPushButton *_save;
+
+	QLabel *_exePatchLabel;
+	QLineEdit *_exePathLine;
 
 	QCheckBox *_checkLT;
 	QCheckBox *_checkIT;
@@ -29,4 +31,7 @@ private:
 
 	QCheckBox *_checkLine;
 	QCheckBox *_checkHighLine;
+
+	QSettings *_settings;
+	QPushButton *_save;
 };

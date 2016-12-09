@@ -39,7 +39,8 @@
 #define ASM_CIRCLEEND "jmp @circle\n@if:\n"
 
 #define ASM_FUNC "%s PROC uses ebx ebp esi edi"
-#define ASM_FUNC_PARAM ", %s:dword"
+#define ASM_FUNC_PARAM " %s:dword"
+#define ASM_FUNC_SECOND_PARAM ", %s:dword"
 #define ASM_FUNC_START "\n"
 #define ASM_FUNC_RETURN "mov EAX, %s\nret\n"
 #define ASM_FUNC_END "%s ENDP\n\n"
@@ -68,7 +69,33 @@
 #define ASM_CONDITION_END "jmp @endElse\n@if:\n"
 #define ASM_ELSE_END "@endElse:\n"
 #define ASM_FIRST_VAL(iden) "mov eax, "<<iden<<"\n"
-
-
-
 #define ASM_RETURN "invoke WaitMsg\ninvoke ExitProcess, 0\n"
+
+
+#define ASM_KPI_LIB "xpow PROC USES ebx edx xpowx : SDWORD, xpowy : SDWORD\n\
+mov bufmath, 0\n\
+fild xpowy\n\
+fild xpowx\n\
+fyl2x\n\
+fld st(0)\n\
+frndint\n\
+fxch st(1)\n\
+fsub st(0), st(1)\n\
+f2xm1\n\
+fld1\n\
+faddp st(1), st\n\
+fscale\n\
+fistp bufmath\n\
+mov eax, bufmath\n\
+ret\n\
+xpow ENDP\n\
+\n\
+sqrt PROC USES ebx edx sqrtx : SDWORD\n\
+mov bufmath, 0\n\
+finit\n\
+fild sqrtx\n\
+fsqrt\n\
+fist bufmath\n\
+mov EAX, bufmath\n\
+ret\n\
+sqrt ENDP\n"

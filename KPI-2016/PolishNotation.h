@@ -2,10 +2,9 @@
 
 namespace PN
 {
-	int getPriority(char symbol);				// получить приоритет лексемы
-	void PolishNotation(LA::LexAnaliz &Lex, Log::LOG log);	// ОПЗ
+	bool needPN(LA::LexAnaliz Lex, Log::LOG Log, int sn);
 	void polishstart(LA::LexAnaliz Lex, Log::LOG log);
-	void PolishNotation(LA::LexAnaliz &Lex, Log::LOG log, int &i);
+	void PolishNotation(LA::LexAnaliz &Lex, Log::LOG log, int i);
 }
 
 /*

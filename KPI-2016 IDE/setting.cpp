@@ -10,6 +10,9 @@ Setting::Setting(QWidget * parent) : QWidget(parent) {
 	this->_kpiPatchButton = new QPushButton("Change");
 	this->_kpiPathLine = new QLineEdit(this->_kpiPatch);
 
+	this->_exePatchLabel = new QLabel("exe name");
+	this->_exePathLine = new QLineEdit(this->_exePatch);
+
 	this->_checkLT = new QCheckBox("Show LT", this); this->_checkLT->setChecked(this->isLT);
 	this->_checkIT = new QCheckBox("Show IT", this); this->_checkIT->setChecked(this->isIT);
 	this->_checkSA = new QCheckBox("Show SA", this); this->_checkSA->setChecked(this->isSA);
@@ -26,6 +29,10 @@ Setting::Setting(QWidget * parent) : QWidget(parent) {
 	kpiPatchLayout->addWidget(this->_kpiPathLine);
 	kpiPatchLayout->addWidget(this->_kpiPatchButton);
 
+	QHBoxLayout *exeNameLayout = new QHBoxLayout;
+	exeNameLayout->addWidget(this->_exePatchLabel);
+	exeNameLayout->addWidget(this->_exePathLine);
+
 	QVBoxLayout *ltLayout = new QVBoxLayout;
 	ltLayout->addWidget(this->_checkLT);
 	ltLayout->addWidget(this->_checkIT);
@@ -35,6 +42,7 @@ Setting::Setting(QWidget * parent) : QWidget(parent) {
 
 
 	mainLayout->addLayout(kpiPatchLayout);
+	mainLayout->addLayout(exeNameLayout);
 	mainLayout->addLayout(ltLayout);
 	mainLayout->addWidget(_save);
 	setLayout(mainLayout);
@@ -50,6 +58,7 @@ void Setting::saveSettings()
 {
 	//QMessageBox::critical(this, tr("Error"), tr("Could not save file"));
 	this->_settings->setValue("kpiPatch",_kpiPatch);
+	this->_settings->setValue("exeName", this->_exePathLine->text());
 	this->_settings->setValue("ltShow", this->_checkLT->isChecked());
 	this->_settings->setValue("itShow", this->_checkIT->isChecked());
 	this->_settings->setValue("saShow", this->_checkSA->isChecked());
@@ -60,6 +69,7 @@ void Setting::saveSettings()
 void Setting::loadSettings()
 {
 	this->_kpiPatch = _settings->value("kpiPatch", "bla").toString();
+	this->_exePatch = _settings->value("exeName", "bla").toString();
 	this->isLT = _settings->value("ltShow", 0).toBool();
 	this->isIT = _settings->value("itShow", 0).toBool();
 	this->isSA = _settings->value("saShow", 0).toBool();

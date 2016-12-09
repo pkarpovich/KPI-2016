@@ -110,7 +110,7 @@ void IDE::compil()
 	QProcess *process = new QProcess(this);
 	QString path = setting._kpiPatch;
 	QStringList *param = new QStringList;
-	*param << "-in:../KPI-2016/in.txt" << "-out:code.asm";
+	*param << "-in:../KPI-2016/in.txt" << "-out:"+setting._exePatch;
 	if (setting.isLT) *param << "-LT";
 	if (setting.isIT) *param << "-IT";
 	if (setting.isSA) *param << "-SA";

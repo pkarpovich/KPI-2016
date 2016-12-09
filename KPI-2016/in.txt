@@ -1,10 +1,30 @@
-begin
+include KPIlib	\\ include KPI
+
+func int mulm(int a, int b)
 [
-    int res:0;
-    res:20+90;
-    if(res > 70)
-    [
-    	sout res endl;
-    ]
-    return 0;
+	int mull: a*b;
+	return mull;
 ]
+
+func int sum(int a, int b)
+[
+    int res: a + b + mulm(2,2);
+    return res;
+]
+    
+    begin
+    [
+        int test: (12/12-(41*31-10)*((32-12)*20)/100) + sum(0,0) + xpow(25,5);
+        int lib: sqrt(4);
+        sout lib endl;
+        sout test endl;
+        int i:0;
+        while(i<10)
+        [
+        	sout i endl;
+        	i:i+1;
+        ]
+        int test: 20;
+        int i: 2;
+        return 0;
+    ]

@@ -2,20 +2,31 @@
 
 namespace PN
 {
-	void polishstart(LA::LexAnaliz Lex, Log::LOG log)
+	bool needPN(LA::LexAnaliz Lex, Log::LOG Log, int sn)
 	{
-		int k(0);
-		while (k != Lex.l.size)
+		for (int i = 0; i < Lex.l.size; i++)
 		{
-			if (Lex.l.table[k].lexema == LEX_ACTION)
+			if (Lex.l.table[i].sn == sn)
 			{
-				PolishNotation(Lex, log, k);
+				while (Lex.l.table[i++].sn == sn)
+				{
+					if (Lex.iT.table[Lex.l.table[i].idxTI].idtype == IT::T_FUNC_I)
+					{
+						PolishNotation(Lex, Log, i+2);
+						return true;
+					}
+					else if (Lex.l.table[i].lexema == LEX_ACTION)
+					{
+						PolishNotation(Lex, Log, i+2);
+						return true;
+					}						
+				}
+				return false;
 			}
-			k++;
 		}
 	}
 
-	void PolishNotation(LA::LexAnaliz &Lex, Log::LOG log, int &i)
+	void PolishNotation(LA::LexAnaliz &Lex, Log::LOG log, int i)
 	{
 		bool check = false;
 		while (!check)
@@ -36,7 +47,7 @@ namespace PN
 			{
 			case LEX_VARIABLE: case LEX_LITERAL: case LEX_SOUT: case LEX_RETURN:
 			{
-				if (Lex.iT.table[Lex.l.table[i].idxTI].idtype != IT::T_FUNC)	// сразу мы проверяем что бы у нас небыло имени функции
+				if (Lex.iT.table[Lex.l.table[i].idxTI].idtype != IT::T_FUNC && Lex.iT.table[Lex.l.table[i].idxTI].idtype != IT::T_FUNC_I)	// сразу мы проверяем что бы у нас небыло имени функции
 				{
 					LT::Swap(Lex.l, ++posLT, Lex.l.table[i]);	// если это не имя функции то мы отправляем буквы в выходную строку
 					if (isFunc)	paramCount++;	// если это параметр, то мы увеличиваем счетчик параметров
@@ -44,7 +55,9 @@ namespace PN
 				else	// если у нас имя функции, мы его игнорируем
 				{
 					LT::Swap(Lex.l, ++posLT, Lex.l.table[i]);
-					while (Lex.l.table[++i].lexema != ')');
+					while (Lex.l.table[++i].lexema != ')')
+						LT::Swap(Lex.l, ++posLT, Lex.l.table[i]);
+					LT::Swap(Lex.l, ++posLT, Lex.l.table[i]);
 					isFunc = true;
 				}
 				break;

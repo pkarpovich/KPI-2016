@@ -6,7 +6,10 @@ namespace Gen
 	void Generator(Parm::PARM param, NT::Nible nible)
 	{
 		Log::LOG out = Log::INITLOG;
-		out = Log::getlog(param.out);
+		wchar_t buff[50];
+		wcscpy(buff, param.out);
+		wcscat(buff, L".asm");
+		out = Log::getlog(buff);
 	
 		char *buf = new char[1024];
 		GEN0(buf, ASM_GLOBAL);
@@ -23,7 +26,7 @@ namespace Gen
 		}*/
 		(*out.stream) << lib;
 
-		char *iden = new char[1024]; strcpy(iden, "\n.data\n\n");
+		char *iden = new char[1024]; strcpy(iden, "\n.data\nbufmath sdword ?\n");
 		char *lexIden = new char[1024]; strcpy(lexIden, "\n.const\n\ncname db 'KPI-2016 Compiler ALPHA 3',0\n");
 		stack<int> stack;
 		for (int i = 0; i < nible.size; i++)
@@ -59,6 +62,7 @@ namespace Gen
 		{
 			switch (nt.TN)
 			{
+			case NT::KPILIB: Log::WriteTimplates(out, ASM_KPI_LIB); break;
 			case NT::BEGIN:	GEN0(buf, ASM_BEGIN);Log::WriteTimplates(out, buf);	break;
 			case NT::INT_D: GEN1(buf, ASM_INIT, nt.p2);	Log::WriteTimplates(out, buf);	break;
 			case NT::INT_E:	GEN1(buf, ASM_INITE, nt.p2); Log::WriteTimplates(out, buf);	break;
@@ -75,6 +79,7 @@ namespace Gen
 			case NT::ENDCIRCLE:	GEN0(buf, ASM_CIRCLEEND); Log::WriteTimplates(out, buf); break;
 			case NT::FUNC:	GEN1(buf, ASM_FUNC, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::PARAM_INIT: GEN1(buf, ASM_FUNC_PARAM, nt.p2); Log::WriteTimplates(out, buf); break;
+			case NT::PARAM_SECOND_INIT: GEN1(buf, ASM_FUNC_SECOND_PARAM, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::STARTFUNC:	GEN0(buf, ASM_FUNC_START); Log::WriteTimplates(out, buf); break;
 			case NT::RETURN:	GEN1(buf, ASM_FUNC_RETURN, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::ENDFUNC:	GEN1(buf, ASM_FUNC_END, nt.p2); Log::WriteTimplates(out, buf); break;
@@ -88,5 +93,6 @@ namespace Gen
 			}
 		}
 		Print(nible);
+		Log::Close(out);
 	}
 }

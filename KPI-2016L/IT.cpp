@@ -83,9 +83,12 @@ namespace IT
 				cout << setw(12);
 				switch (iT.table[i].idtype)
 				{
+				case IT::T_NO: cout << "неизвестно"; break;
 				case IT::T_VAR: cout << "переменная"; break;
 				case IT::T_FUNC: cout << "функция"; break;
-				case IT::T_FUNC_P: cout << "параметр"; break;
+				case IT::T_FUNC_I: cout << "вызываемая функция"; break;
+				case IT::T_FUNC_IP: cout << "параметр в вызываемой функции"; break;
+				case IT::T_FUNC_P: cout << "параметр функции"; break;
 				case IT::T_CIRCLE_P: cout << "параметр в цикле"; break;
 				case IT::T_CONDITION_P: cout << "параметр в условии"; break;
 				case IT::T_LITERAL: cout << "литерал"; isLiteral = true; break;

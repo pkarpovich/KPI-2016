@@ -124,6 +124,27 @@ FST::FST fstKeyReturn("", 7,
 	FST::NODE()
 );
 
+FST::FST fstInclude("", 8,
+	FST::NODE(1, FST::RELATION('i', 1)),
+	FST::NODE(1, FST::RELATION('n', 2)),
+	FST::NODE(1, FST::RELATION('c', 3)),
+	FST::NODE(1, FST::RELATION('l', 4)),
+	FST::NODE(1, FST::RELATION('u', 5)),
+	FST::NODE(1, FST::RELATION('d', 6)),
+	FST::NODE(1, FST::RELATION('e', 7)),
+	FST::NODE()
+);
+
+FST::FST fstKPI("", 7,
+	FST::NODE(1, FST::RELATION('K', 1)),
+	FST::NODE(1, FST::RELATION('P', 2)),
+	FST::NODE(1, FST::RELATION('I', 3)),
+	FST::NODE(1, FST::RELATION('l', 4)),
+	FST::NODE(1, FST::RELATION('i', 5)),
+	FST::NODE(1, FST::RELATION('b', 6)),
+	FST::NODE()
+);
+
 FST::FST fstMore("", 2,
 	FST::NODE(1, FST::RELATION('>', 1)),
 	FST::NODE()
@@ -515,6 +536,8 @@ FST::Automatic FST_ARRAY[] = {
 	{ fstTypeInteger,  LEX_INTEGER, FN::INT, LT::PN_DEF },
 	{ fstTypeString , LEX_STRING, FN::STR, LT::PN_DEF },
 	{ fstTypeBool, LEX_BOOL, FN::BOOL, LT::PN_DEF },
+	{ fstInclude , LEX_INCLUDE, FN::INCLUDE, LT::PN_DEF },
+	{ fstKPI , LEX_KPI_LIB, FN::KPILIB, LT::PN_DEF },
 	{ fstKeyFunction , LEX_FUNCTION, FN::FUNCTION, LT::PN_DEF },
 	{ fstKeyDeclare, LEX_DECLARE,FN::DECLARE, LT::PN_DEF },
 	{ fstEndl, LEX_ENDL, FN::ENDL, LT::PN_DEF },

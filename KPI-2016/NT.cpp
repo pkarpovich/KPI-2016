@@ -113,6 +113,7 @@ namespace NT
 		stack<char> stack;
 		bool check = 0, isAction = 0, isReturn = 0;
 		char *funcName = new char[50];	char *equallu = new char[50];
+		int paramCount = 0;
 		for (int i = 0; i < lex.iT.size; i++)
 		{
 			if (!it[i].pointer)
@@ -131,50 +132,71 @@ namespace NT
 					else if (it[i].iddatatype == IT::DT_STR)
 						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
 					break;
+				case IT::T_FUNC_IP:
+						if (it[i].iddatatype == IT::DT_INT)
+							Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
+				case IT::T_CIRCLE_P:
+						if (it[i].iddatatype == IT::DT_INT)
+							Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
 				}
 			}
 		}
 		for (int i = 0; i < lex.l.size; i++)
 		{
+			if (PN::needPN(lex, log, lex.l.table[i].sn))
+			{
+				check = false;
+				//PN::PolishNotation(lex, log, i);
+				int sn = lex.l.table[i].sn;
+				while (!check)
+				{
+					if (lex.l.table[++i].lexema == LEX_EQUALLU)
+					{
+						strcpy(equallu, lex.iT.table[lex.l.table[i - 1].idxTI].prefId);
+						check = true;	// доходим до начала строки
+					}
+				}
+				while (lex.l.table[i].sn == sn)
+				{
+					switch (lex.l.table[i].lexema)
+					{
+					case LEX_VARIABLE: case LEX_LITERAL:
+						if (idit(i).idtype == IT::T_FUNC_I) { isAction = true; Add(nible, setNible(NT::FUNCINVOKE, IT::DT_INT, idit(i).prefId)); break; }
+						if (idit(i).idtype == IT::T_FUNC_IP) { Add(nible, setNible(NT::FANCPARAM, IT::DT_INT, idit(i).prefId)); break; }
+							Add(nible, setNible(NT::INT_D, IT::DT_NO, idit(i).prefId)); break;
+						break;
+					case LEX_ACTION:
+					{
+						switch (lt[i].automat)
+						{
+						case FST::PLUS: Add(nible, setNible(NT::PLUS, IT::DT_NO)); break;
+						case FST::MINUS: Add(nible, setNible(NT::MINUS, IT::DT_NO)); break;
+						case FST::STAR: Add(nible, setNible(NT::MUL, IT::DT_NO)); break;
+						case FST::DIRSLASH:Add(nible, setNible(NT::DIV, IT::DT_NO)); break;
+						}
+						break;
+					}
+					case LEX_RIGHTTHESIS:
+						Add(nible, setNible(NT::PUSHINVOKE, IT::DT_NO)); break;
+					}
+					i++;
+				}
+				Add(nible, setNible(NT::INT_E, IT::DT_NO, equallu));
+			}
 			switch (lex.l.table[i].lexema)
 			{
 			case LEX_CIRCLE: case LEX_SIN: case LEX_CONDITION: case LEX_FUNCTION: case LEX_SOUT:	stack.push(lt[i].lexema); break;
+			case LEX_KPI_LIB: Add(nible, setNible(NT::KPILIB, IT::DT_NO)); break;
 			case LEX_SEMICOLON: 
 			{
 				check = false;
+				paramCount = 0;
 				while (!stack.empty()) stack.pop();
 				if (isAction)
 				{
 					isAction = false;
-					PN::PolishNotation(lex, log, i);
-					while (!check)	if (lex.l.table[--i].lexema == LEX_EQUALLU) check = true;	// доходим до начала строки
-					while (lex.l.table[i].lexema != ';' && lex.l.table[i].lexema != '#' )
-					{
-						switch (lex.l.table[i].lexema)
-						{
-						case LEX_VARIABLE: case LEX_LITERAL:
-							if(idit(i).idtype != IT::T_FUNC) Add(nible, setNible(NT::INT_D, IT::DT_NO, idit(i).prefId)); break;
-						case LEX_ACTION:
-						{
-							switch (lt[i].automat)
-							{
-							case FST::PLUS: Add(nible, setNible(NT::PLUS, IT::DT_NO)); break;
-							case FST::MINUS: Add(nible, setNible(NT::MINUS, IT::DT_NO)); break;
-							case FST::STAR: Add(nible, setNible(NT::MUL, IT::DT_NO)); break;
-							case FST::DIRSLASH:Add(nible, setNible(NT::DIV, IT::DT_NO)); break;
-							}
-						}
-						}
-						i++;
-					}
-					Add(nible, setNible(NT::INT_E, IT::DT_NO, equallu));
-					--i;
+					
 				}
-				break;
-			}
-			case LEX_RIGHTTHESIS:
-			{
-				if(lt[i].braceType == IT::T_FUNC) Add(nible, setNible(NT::PUSHINVOKE, IT::DT_NO));
 				break;
 			}
 			case LEX_LEFTBRACE:	
@@ -208,11 +230,15 @@ namespace NT
 			case LEX_EQUALLU:	stack.push(lt[i].lexema); strcpy(equallu, lex.iT.table[lex.l.table[i - 1].idxTI].prefId);	break;
 			case LEX_VARIABLE: case LEX_LITERAL:
 			{
-				if (LA::WhereI(lex, i) == IT::T_FUNC_P) { Add(nible, setNible(NT::PARAM_INIT, IT::DT_INT, idit(i).prefId, "0")); break; }
+				if (LA::WhereI(lex, i) == IT::T_FUNC_P)
+				{
+					paramCount++;
+					if(paramCount == 1)		Add(nible, setNible(NT::PARAM_INIT, IT::DT_INT, idit(i).prefId, "0"));
+					else Add(nible, setNible(NT::PARAM_SECOND_INIT, IT::DT_INT, idit(i).prefId, "0"));
+					break;
+				}
 				if (isReturn) { Add(nible, setNible(NT::RETURN, IT::DT_INT, idit(i).prefId)); isReturn = false; break; }
-				if (idit(i).idtype == IT::T_FUNC && idit(i).pointer) { isAction = true; Add(nible, setNible(NT::FUNCINVOKE, IT::DT_INT, idit(i).prefId)); break; }
 				if (idit(i).idtype == IT::T_CONDITION_P) { Add(nible, setNible(NT::FANCPARAM, IT::DT_INT, idit(i).prefId)); break; }
-				if(LA::WhereI(lex, i) == IT::T_FUNC_IP) { Add(nible, setNible(NT::FANCPARAM, IT::DT_INT, idit(i).prefId)); break; }
 				while (!stack.empty())
 				{
 					switch (stack.top())
