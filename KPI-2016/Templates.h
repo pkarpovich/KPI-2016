@@ -30,13 +30,13 @@
 #define ASM_DIV "pop ebx\npop eax\ncdq\ndiv ebx\npush eax\n"
 
 #define ASM_IF "mov eax, %s\ncmp eax, %s\n"
-#define ASM_LESS "jb @if\n"
-#define ASM_MORE "ja @if\n"
-#define ASM_ENDIF "jmp @endElse\n@if:\n"
-#define ASM_ENDELSE "@endElse:\n"
+#define ASM_LESS "jb @if%s\n"
+#define ASM_MORE "ja @if%s\n"
+#define ASM_ENDIF "jmp @endElse%s\n@if%s:\n"
+#define ASM_ENDELSE "@endElse%s:\n"
 
-#define ASM_CIRCLE "@circle:\nmov eax, %s\ncmp eax, %s\n"
-#define ASM_CIRCLEEND "jmp @circle\n@if:\n"
+#define ASM_CIRCLE "@circle%s:\nmov eax, %s\ncmp eax, %s\n"
+#define ASM_CIRCLEEND "jmp @circle%s\n@if%s:\n"
 
 #define ASM_FUNC "%s PROC uses ebx ebp esi edi"
 #define ASM_FUNC_PARAM " %s:dword"

@@ -22,7 +22,7 @@ begini dword 0
 
 .const
 
-cname db 'KPI-2016 Compiler ALPHA 3',0
+cname db 'KPI-2016 Compiler RC1',0
 L01 dword 2 
 L02 dword 2 
 L04 dword 12 
@@ -39,8 +39,8 @@ L16 dword 4
 L17 dword 0 
 L18 dword 10 
 L19 dword 1 
-L20 dword 20 
-L21 dword 2 
+L20 db 'second if',0 
+L21 db 'if',0 
 L22 dword 0 
 
 .code
@@ -172,10 +172,10 @@ invoke WriteInt
 invoke Crlf
 push 0
 pop begini
-@circle:
+@circle1:
 mov eax, L18
 cmp eax, begini
-jb @if
+jb @if1
 mov EAX, begini
 invoke WriteInt
 invoke Crlf
@@ -186,12 +186,20 @@ pop ebx
 add eax, ebx
 push eax
 pop begini
-jmp @circle
-@if:
-push 20
-pop begintest
-push 2
-pop begini
+jmp @circle1
+@if1:
+mov EDX, offset L20
+invoke WriteString
+invoke Crlf
+mov eax, begintest
+cmp eax, begini
+jb @if2
+mov EDX, offset L21
+invoke WriteString
+invoke Crlf
+jmp @endElse2
+@if2:
+@endElse2:
 mov EAX, L22
 ret
 main ENDP

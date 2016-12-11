@@ -27,7 +27,7 @@ namespace Gen
 		(*out.stream) << lib;
 
 		char *iden = new char[1024]; strcpy(iden, "\n.data\nbufmath sdword ?\n");
-		char *lexIden = new char[1024]; strcpy(lexIden, "\n.const\n\ncname db 'KPI-2016 Compiler ALPHA 3',0\n");
+		char *lexIden = new char[1024]; strcpy(lexIden, "\n.const\n\ncname db 'KPI-2016 Compiler RC1',0\n");
 		stack<int> stack;
 		for (int i = 0; i < nible.size; i++)
 		{
@@ -64,19 +64,19 @@ namespace Gen
 			{
 			case NT::KPILIB: Log::WriteTimplates(out, ASM_KPI_LIB); break;
 			case NT::BEGIN:	GEN0(buf, ASM_BEGIN);Log::WriteTimplates(out, buf);	break;
-			case NT::INT_D: GEN1(buf, ASM_INIT, nt.p2);	Log::WriteTimplates(out, buf);	break;
-			case NT::INT_E:	GEN1(buf, ASM_INITE, nt.p2); Log::WriteTimplates(out, buf);	break;
+			case NT::PUSH: GEN1(buf, ASM_INIT, nt.p2);	Log::WriteTimplates(out, buf);	break;
+			case NT::POP:	GEN1(buf, ASM_INITE, nt.p2); Log::WriteTimplates(out, buf);	break;
 			case NT::PLUS:	GEN0(buf, ASM_PLUS); Log::WriteTimplates(out, buf);	break;
 			case NT::MINUS:	GEN0(buf, ASM_MINUS); Log::WriteTimplates(out, buf); break;
 			case NT::MUL:	GEN0(buf, ASM_MUL);	Log::WriteTimplates(out, buf);	break;
 			case NT::DIV:	GEN0(buf, ASM_DIV);	Log::WriteTimplates(out, buf);	break;
 			case NT::IF:	GEN2(buf, ASM_IF, nt.p3, nt.p2); Log::WriteTimplates(out, buf);	break;
-			case NT::MORE:	GEN0(buf, ASM_MORE); Log::WriteTimplates(out, buf);	break;
-			case NT::LESS:	GEN0(buf, ASM_LESS); Log::WriteTimplates(out, buf);	break;
-			case NT::ENDIF:	GEN0(buf, ASM_ENDIF); Log::WriteTimplates(out, buf); break;
-			case NT::ENDELSE: GEN0(buf, ASM_ENDELSE); Log::WriteTimplates(out, buf); break;
-			case NT::CIRCLE: GEN2(buf, ASM_CIRCLE, nt.p3, nt.p2); Log::WriteTimplates(out, buf); break;
-			case NT::ENDCIRCLE:	GEN0(buf, ASM_CIRCLEEND); Log::WriteTimplates(out, buf); break;
+			case NT::MORE:	GEN1(buf, ASM_MORE, nt.p4); Log::WriteTimplates(out, buf);	break;
+			case NT::LESS:	GEN1(buf, ASM_LESS, nt.p4); Log::WriteTimplates(out, buf);	break;
+			case NT::ENDIF:	GEN2(buf, ASM_ENDIF, nt.p4, nt.p4); Log::WriteTimplates(out, buf); break;
+			case NT::ENDELSE: GEN1(buf, ASM_ENDELSE, nt.p4); Log::WriteTimplates(out, buf); break;
+			case NT::CIRCLE: GEN3(buf, ASM_CIRCLE,nt.p4, nt.p3, nt.p2); Log::WriteTimplates(out, buf); break;
+			case NT::ENDCIRCLE:	GEN2(buf, ASM_CIRCLEEND, nt.p4, nt.p4); Log::WriteTimplates(out, buf); break;
 			case NT::FUNC:	GEN1(buf, ASM_FUNC, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::PARAM_INIT: GEN1(buf, ASM_FUNC_PARAM, nt.p2); Log::WriteTimplates(out, buf); break;
 			case NT::PARAM_SECOND_INIT: GEN1(buf, ASM_FUNC_SECOND_PARAM, nt.p2); Log::WriteTimplates(out, buf); break;
