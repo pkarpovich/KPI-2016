@@ -141,7 +141,7 @@ namespace In
 		buf[1] = '\0';
 		strcpy(&dev.word[dev.count_word][count], buf);
 	}
-	Devide DivideWord(IN in)
+	Devide DivideWord(IN in, Parm::PARM param, Log::LOG log)
 	{
 		In::Devide dev;
 		int Word_position = 0, position = 0;
@@ -203,7 +203,7 @@ namespace In
 				}
 				case in.P:
 				{
-					if (in.code[in.text[i + 1]] != in.P && in.code[in.text[i + 1]] != in.S)
+					if (in.code[in.text[i + 1]] != in.P && in.code[in.text[i + 1]] != in.S && in.text[i + 1] != IN_CODE_ENDL)
 					{
 						dev.count_word++;
 						Word_position = 0;
@@ -235,11 +235,11 @@ namespace In
 		{
 			throw ERROR_THROW_IN
 		}
-		/*cout << "Разделение слов" << endl;
-		for (int i = 0; i <= dev.count_word; i++)
+		if (param.DT)
 		{
-			cout << dev.word[i] << endl;
-		}*/
+			DW(param.DT, "\nРазделение слов:\n");
+			for (int i = 0; i <= dev.count_word; i++)	DW(param.DT, dev.word[i], "\n");
+		}		
 		return dev;
 	}
 };

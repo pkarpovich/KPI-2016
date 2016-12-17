@@ -51,7 +51,15 @@ Parm::PARM Parm::getparm( int argc, _TCHAR *argv[] )
 				{
 					param.SA = true;
 				}
-				else if (wcsstr(buf, PARM_RULES) != NULL)
+				else if (wcsstr(buf, PARM_DT) != NULL)
+				{
+					param.DT = true;
+				}
+				else if (wcsstr(buf, PARM_NT) != NULL)
+				{
+					param.NT = true;
+				}
+				else if (wcsstr(buf, PARM_RULE) != NULL)
 				{
 					param.R = true;
 				}

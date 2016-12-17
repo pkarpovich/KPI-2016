@@ -19,7 +19,11 @@ namespace PN
 					{
 						PolishNotation(Lex, Log, i+2);
 						return true;
-					}						
+					}
+					else if (Lex.iT.table[Lex.l.table[i].idxTI].idtype == IT::DT_STR)
+					{
+						return false;
+					}
 				}
 				return false;
 			}
@@ -107,11 +111,11 @@ namespace PN
 			LT::Swap(Lex.l, ++posLT, temp);	// заменяем удаленные символы запрещенной лексемой
 		}
 		isPN = true;
-		if (isPN == true)
+		/*if (isPN == true)
 		{
 			cout << "Польская запись построенна." << endl;
 			(*log.stream) << "Польская запись построенна." << endl;
-		}
+		}*/
 	}
 }
 //void PN::PolishNotation(LA::LexAnaliz &Lex, Log::LOG log)

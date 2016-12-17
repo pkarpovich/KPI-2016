@@ -43,9 +43,11 @@ int LA::WhereBrace(LexAnaliz Lex, int i)
 	{
 		switch (Lex.l.table[k].lexema)
 		{
-		case LEX_BEGIN_FUNCTION: case LEX_FUNCTION: 
+		case LEX_FUNCTION: 
 			if (Lex.iT.table[Lex.l.table[k + 2].idxTI].pointer)	return IT::T_FUNC_I;
 			return IT::T_FUNC;
+		case LEX_BEGIN_FUNCTION:
+			return IT::T_MAINFUNC;
 		case LEX_RIGHTBRACE:	
 			while (Lex.l.table[k].lexema != LEX_CONDITION && Lex.l.table[k].lexema != LEX_CIRCLE)
 			{
@@ -55,6 +57,8 @@ int LA::WhereBrace(LexAnaliz Lex, int i)
 		case LEX_CONDITION:		return IT::T_CONDITION;
 		case LEX_ELSE: return IT::T_ELSE;
 		case LEX_CIRCLE: return IT::T_CIRCLE;
+		case LEX_RETURN: return IT::T_FUNC;
+		case LEX_VARIABLE: if (Lex.iT.table[Lex.l.table[i].idxTI].idtype == IT::T_FUNC_I) return IT::T_FUNC_I;
 		}
 	}
 	return 0;
@@ -131,7 +135,7 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 				{
 					switch (FST_ARRAY[k].automatName)
 					{
-					case FN::INT: case FN::STR: case FN::BOOL: case FN::FUNCTION: case FN::COMMA:
+					case FN::INT: case FN::STR: case FN::FUNCTION: case FN::COMMA:
 						LexStack.push(FST_ARRAY[k].automatName);break;
 					case FN::LBRACE: case FN::LTHESIS: case FN::RBRACE: case FN::RTHESIS:
 						LexStack.push(FST_ARRAY[k].automatName);
@@ -156,13 +160,17 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 							{
 							case FN::INT: it->iddatatype = IT::DT_INT; isDec = true; break; 	// если был инт
 							case FN::STR: it->iddatatype = IT::DT_STR; isDec = true; break; 	// если был стр
-							case FN::BOOL: it->iddatatype = IT::DT_BOOL; isDec = true; break;	// если был стр
 							case FN::FUNCTION: strcpy(nameFunction, dev.word[i]); break;	// если была функция
 							}
 							LexStack.pop();	// удаляем из стека
 						}
 							if (IT::IsId(Lex.iT, isDecFunction, dev.word[i], nameFunction) != TI_NULLIDX)	// проверяем на указатель
 							{
+								/*if(Lex.l.table[Lex.l.size - 2].lexema == LEX_INTEGER)
+								{
+									ADD_ERROR(304, Line, 0, dev.word[i], Error::LA);
+									throw ERROR_THROW_IN
+								}*/
 								int pointerID = IT::IsId(Lex.iT, isDecFunction, dev.word[i], nameFunction);
 								if (it->idtype == IT::T_CIRCLE_P)
 								{
@@ -189,7 +197,7 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 							}
 							else // если у нас новая переменная
 							{
-								/*if (!isDec)
+								/*if(Lex.l.table[Lex.l.size - 2].lexema != LEX_INTEGER && it->iddatatype != IT::T_FUNC)
 								{
 									ADD_ERROR(305, Line, 0, dev.word[i], Error::LA);
 									throw ERROR_THROW_IN
@@ -208,15 +216,28 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 							char literal[] = { 'L', '0' + (count_literal / 10), '0' + (count_literal++ % 10), '\0' };	// счетчик(имя) литерала
 							AddID(*it, false, "", literal, "");
 							it->idfirstLE = i;
-							if (Lex.l.table[Lex.l.size - 2].lexema == '(' || Lex.l.table[Lex.l.size - 2].lexema == ',' ||
+							if ((Lex.l.table[Lex.l.size - 2].lexema == '(' && Lex.l.table[Lex.l.size-2].braceType == IT::T_FUNC_I) || Lex.l.table[Lex.l.size - 2].lexema == ',' ||
 								Lex.l.table[Lex.l.size - 2].lexema == 'b')
+							{
 								it->idtype = WhereI(Lex, Lex.l.size - 2);
+							}
 							else	it->idtype = IT::T_LITERAL;
 							strcpy(it->value.val, dev.word[i]);
+							if (strcmp(dev.word[i], "0") == 0 && Lex.l.table[Lex.l.size-2].automat == FST::DIRSLASH)
+							{
+								throw GET_ERROR(308, 6)
+							}
 							switch (FST_ARRAY[k].automatName)
 							{
-							case FN::INTLITERAL: case FN::FALSELITERAL: case FN::TRUELITERAL:	it->iddatatype = IT::DT_INT; break;
-							case FN::LITERAL:	it->iddatatype = IT::DT_STR;	it->value.len = strlen(dev.word[i]); break;
+							case FN::INTLITERAL: it->iddatatype = IT::DT_INT; break;
+							case FN::LITERAL:	
+								it->iddatatype = IT::DT_STR;	
+								it->value.len = strlen(dev.word[i]);
+								/*if (Lex.l.table[Lex.l.size - 2].lexema == LEX_EQUALLU)
+								{
+									strcpy(Lex.iT.table[Lex.iT.size - 1].value.val, dev.word[i]);
+								}*/
+								break;
 							}
 							IT::Add(Lex.iT, *it);
 							delete[] it;

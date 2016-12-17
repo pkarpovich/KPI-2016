@@ -14,14 +14,28 @@ namespace IT
 		New->table = new Entry[size];
 		return *New;
 	}
+
+	Entry::Entry()
+	{
+		strcpy(this->id, "null");
+		strcpy(this->prefId, "null");
+		this->idfirstLE = 0xffffffff;
+		this->idtype = IT::T_NO;
+		this->pointer = false;
+		strcpy(this->value.val, "0");
+		this->value.len = 0;
+	}
+
 	void Add(IdTable & idtable, Entry entry)
 	{
 		idtable.table[idtable.size++] = entry;
 	}
+
 	Entry GetEntry(IdTable &idtable, int n)
 	{
 		return idtable.table[n];
 	}
+
 	int IsId(IdTable & idTable, bool isDecFunction, char word[ID_MAXSIZE], char nameFunction[ID_MAXSIZE])
 	{
 		char *prefId = new char[255];
@@ -50,6 +64,7 @@ namespace IT
 		}
 		return TI_NULLIDX;
 	}
+
 	void Delete(IdTable & ittable)
 	{
 		delete &ittable;
@@ -57,101 +72,45 @@ namespace IT
 
 	void ShowIT(IdTable & iT, LT::LexTable l, Parm::PARM param, Log::LOG log)
 	{
-		if (param.IT == true)
-		{
-			cout << "Таблица идентификаторов: " << endl;
-			cout << endl;
-			bool isLiteral = 0;
-			cout << " IT  |   LT   | УКАЗ. |      ИМЯ     |  ТИП ИДЕНТИФИКАТОРА  |     ЗНАЧЕНИЕ" << endl;
-			cout << "-------------------------------------------------------------------------------" << endl;
-			for (int i = 0; i < iT.size; i++)
-			{
-				cout << setfill(' ') << setfill('0') << setw(2) << i << setw(4) << setfill(' ') << "|";
-				cout << setw(5) << iT.table[i].idfirstLE << setw(4) << "|";
-				if (iT.table[i].pointer == true) cout << setw(4) << "*" << setw(4) << "|";
-				else cout << setw(4) << " " << setw(4) << "|";
-				cout << setw(11);
-				cout << iT.table[i].prefId << setw(4) << "|";
-				cout << setw(8);
-				switch (iT.table[i].iddatatype)
-				{
-				case IT::DT_INT: cout << "int"; break;
-				case IT::DT_STR: cout << "str"; break;
-				case IT::DT_BOOL: cout << "bool"; break;
-				default: cout << " "; break;
-				}
-				cout << setw(12);
-				switch (iT.table[i].idtype)
-				{
-				case IT::T_NO: cout << "неизвестно"; break;
-				case IT::T_VAR: cout << "переменная"; break;
-				case IT::T_FUNC: cout << "функция"; break;
-				case IT::T_FUNC_I: cout << "вызываемая функция"; break;
-				case IT::T_FUNC_IP: cout << "параметр в вызываемой функции"; break;
-				case IT::T_FUNC_P: cout << "параметр функции"; break;
-				case IT::T_CIRCLE_P: cout << "параметр в цикле"; break;
-				case IT::T_CONDITION_P: cout << "параметр в условии"; break;
-				case IT::T_LITERAL: cout << "литерал"; isLiteral = true; break;
-				default: cout << " "; break;
-				}
-				cout << setw(3);
-				cout << "|";
-				if (isLiteral || iT.table[i].value.len > 0)
-				{
-					if (iT.table[i].iddatatype == IT::DT_INT) cout << setw(3) << iT.table[i].value.val << "[" << iT.table[i].value.len << "]";
-				}
-				cout << endl;
-				isLiteral = 0;
-			}
-		}
-		(*log.stream) << "Таблица идентификаторов: " << endl;
-		(*log.stream) << endl;
-		bool isLiteral = 0;
-		(*log.stream) << " IT  |   LT   | УКАЗ. |      ИМЯ     |  ТИП ИДЕНТИФИКАТОРА  |     ЗНАЧЕНИЕ" << endl;
-		(*log.stream) << "-------------------------------------------------------------------------------" << endl;
+		char *buf = new char[255];
+		DW(param.IT, "Таблица идентификаторов: \n");
+		DW(param.IT, " IT  |   LT   | УКАЗ. |          ИМЯ         |           ТИП ИДЕНТИФИКАТОРА           |     ЗНАЧЕНИЕ\n");
+		sprintf_s(buf, 255, "%s\n", std::string(115, '-').c_str());	DW(param.IT, buf);
 		for (int i = 0; i < iT.size; i++)
 		{
-			(*log.stream) << setfill(' ') << setfill('0') << setw(2) << i << setw(4) << setfill(' ') << "|";
-			(*log.stream) << setw(5) << iT.table[i].idfirstLE << setw(4) << "|";
-			if (iT.table[i].pointer == true) (*log.stream) << setw(4) << "*" << setw(4) << "|";
-			else (*log.stream) << setw(4) << " " << setw(4) << "|";
-			(*log.stream) << setw(11);
-			(*log.stream) << iT.table[i].prefId << setw(4) << "|";
-			(*log.stream) << setw(8);
+			sprintf_s(buf, 255, "%-1s%03d%-1s", " ", i, " ");	DW(param.IT, buf);
+			sprintf_s(buf, 255, "|%-3s%03d%2s|", " ", iT.table[i].idfirstLE, "");	DW(param.IT, buf);
+			if (iT.table[i].pointer) sprintf_s(buf, 255, "%-3s%s%-3s|", " ", "*", " ");
+			else sprintf_s(buf, 255, "%-7s|", " ");
+			DW(param.IT, buf);
+			sprintf_s(buf, 255, "%22s|",iT.table[i].prefId);	DW(param.IT, buf);
 			switch (iT.table[i].iddatatype)
 			{
-			case IT::DT_INT: (*log.stream) << "int"; break;
-			case IT::DT_STR: (*log.stream) << "str"; break;
-			case IT::DT_BOOL: (*log.stream) << "bool"; break;
-			default: (*log.stream) << " "; break;
+				case IT::DT_INT: sprintf_s(buf, 255, "%6s", "int");break;
+				case IT::DT_STR: sprintf_s(buf, 255, "%6s", "str");break;
+				default: sprintf_s(buf, 255, "%6s", " ");break;
 			}
-			(*log.stream) << setw(12);
+			DW(param.IT, buf); memset(buf, '\n', 254);
 			switch (iT.table[i].idtype)
 			{
-			case IT::T_VAR: (*log.stream) << "переменная"; break;
-			case IT::T_FUNC: (*log.stream) << "функция"; break;
-			case IT::T_FUNC_P: (*log.stream) << "параметр"; break;
-			case IT::T_LITERAL: (*log.stream) << "литерал"; isLiteral = true; break;
-			default: (*log.stream) << " "; break;
+				case IT::T_NO:			sprintf_s(buf, 255, "%34s|", " неизвестно");break;
+				case IT::T_VAR:			sprintf_s(buf, 255, "%34s|", " переменная");break;
+				case IT::T_FUNC:		sprintf_s(buf, 255, "%34s|", " функция");break;
+				case IT::T_FUNC_I:		sprintf_s(buf, 255, "%34s|", " вызываемая функция");break;
+				case IT::T_FUNC_IP:		sprintf_s(buf, 255, "%34s|", " параметры вызываемой функции");break;
+				case IT::T_FUNC_P:		sprintf_s(buf, 255, "%34s|", " парамтры функции");break;
+				case IT::T_CIRCLE_P:	sprintf_s(buf, 255, "%34s|", " параметры в цикле");break;
+				case IT::T_CONDITION_P: sprintf_s(buf, 255, "%34s|", " параметры в условии");break;
+				case IT::T_LITERAL:		sprintf_s(buf, 255, "%34s|", " литерал");break;
+				default:				sprintf_s(buf, 255, "%34s|", " ");break;
 			}
-			(*log.stream) << setw(3);
-			(*log.stream) << "|";
-			if (isLiteral || iT.table[i].value.len > 0)
+			DW(param.IT, buf); memset(buf, '\0', 254);
+			if (iT.table[i].idtype == IT::T_VAR || iT.table[i].idtype == IT::T_LITERAL)
 			{
-				if (iT.table[i].iddatatype == IT::DT_INT) (*log.stream) << setw(3) << iT.table[i].value.val<< iT.table[i].value.len << "]";
+				if (iT.table[i].iddatatype == IT::DT_INT) sprintf_s(buf, 255, "%5s", iT.table[i].value.val);
+				else {	if (iT.table[i].value.len != 0)		sprintf_s(buf, 255, "%5s[%d]", iT.table[i].value.val, iT.table[i].value.len); }
 			}
-			(*log.stream) << endl;
-			isLiteral = 0;
+			DW(param.IT, buf, "\n"); memset(buf, '\0', 254);
 		}
-	}
-	Entry::Entry()
-	{
-		strcpy(this->id, "null");
-		strcpy(this->prefId, "null");
-		this->idfirstLE = 0xffffffff;
-		this->idtype = IT::T_NO;
-		this->pointer = false;
-		strcpy(this->value.val, "0");
-		this->value.len = 0;
 	}
 }

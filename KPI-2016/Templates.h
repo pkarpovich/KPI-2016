@@ -23,6 +23,7 @@
 
 #define ASM_INIT "push %s\n"
 #define ASM_INITE "pop %s\n"
+#define ASM_STR_INIT "invoke Str_copy, offset %s, offset %s\n"
 
 #define ASM_PLUS "pop eax\npop ebx\nadd eax, ebx\npush eax\n"
 #define ASM_MINUS "pop ebx\npop eax\nsub eax, ebx\npush eax\n"
@@ -30,8 +31,8 @@
 #define ASM_DIV "pop ebx\npop eax\ncdq\ndiv ebx\npush eax\n"
 
 #define ASM_IF "mov eax, %s\ncmp eax, %s\n"
-#define ASM_LESS "jb @if%s\n"
-#define ASM_MORE "ja @if%s\n"
+#define ASM_LESS "jle @if%s\n"
+#define ASM_MORE "jge @if%s\n"
 #define ASM_ENDIF "jmp @endElse%s\n@if%s:\n"
 #define ASM_ENDELSE "@endElse%s:\n"
 

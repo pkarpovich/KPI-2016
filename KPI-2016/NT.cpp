@@ -3,16 +3,16 @@
 #define lt Lex.l.table
 #define nt nible.table
 #define idit(i) Lex.iT.table[Lex.l.table[i].idxTI]
+#define ADD_NT(type, ...) Add(nible, setNible(type, __VA_ARGS__))
 namespace NT
 {
-	Nible Create(int size)
+	Nible::Nible(int size)
 	{
-		Nible *newNible = new Nible;
-		newNible->maxSize = size;
-		newNible->size = 0;
-		newNible->table = new Entry[size];
-		return *newNible;
+		this->maxSize = size;
+		this->size = 0;
+		this->table = new Entry[size];
 	}
+
 	void Add(Nible& table, Entry entry)
 	{
 		if (entry.TN == NT::INIT || entry.TN == NT::LEX_INIT)
@@ -49,52 +49,62 @@ namespace NT
 		}
 	}
 
-
-	void Print(Nible table)
+	Entry setNible(int TN, int TD, const char * p2, const char * p3, const char *p4)
 	{
-		cout << endl;
+		Entry *temp = new Entry;
+		temp->TN = TN;
+		temp->TD = TD;
+		strcpy(temp->p2, p2);
+		strcpy(temp->p3, p3);
+		strcpy(temp->p4, p4);
+		return *temp;
+	}
+
+	void Print(Nible table, Parm::PARM param,Log::LOG log)
+	{
 		for (int i = 0; i < table.size; i++)
 		{
-			switch (table.table[i].TN)	
+			switch (table.table[i].TN)
 			{
-			case typeNible::PLUS:cout << "PLUS( "; break;
-			case typeNible::MINUS:cout << "MINUS( "; break;
-			case typeNible::MUL:cout << "MUL( "; break;
-			case typeNible::DIV:cout << "DIV( "; break;
-			case typeNible::IF:cout << "IF( "; break;
-			case typeNible::ENDIF:cout << "ENDIF( "; break;
-			case typeNible::CIRCLE:cout << "CIRCLE( "; break;
-			case typeNible::ENDCIRCLE:cout << "ENDCIRCLE( "; break;
-			case typeNible::MORE:cout << "MORE( "; break;
-			case typeNible::LESS:cout << "LESS( "; break;
-			case typeNible::PRINT:cout << "PRINT( "; break;
-			case typeNible::INIT:cout << "INIT( "; break;
-			case typeNible::PUSH:cout << "PUSH("; break;
-			case typeNible::POP:cout << "POP("; break;
-			case typeNible::LEX_INIT: cout << "LEX_INIT( "; break;
-			case typeNible::RETURN:cout << "RETURN( "; break;
-			case typeNible::ENDELSE:cout << "ENDELSE( "; break;
-			case typeNible::ELSE:cout << "ELSE( "; break;
-			case typeNible::FUNC:cout << "FUNC( "; break;
-			case typeNible::PARAM_INIT:cout << "PARAM_INIT( "; break;
-			case typeNible::STARTFUNC:cout << "STARTFUNT( "; break;
-			case typeNible::ENDFUNC:cout << "ENDFUNC( "; break;
-			case typeNible::FUNCINVOKE:cout << "FUNCINVOKE( "; break;
-			case typeNible::FANCPARAM:cout << "FUNCPARAM( "; break;
-			case typeNible::BEGIN:cout << "BEGIN( "; break;
-			case typeNible::PUSHINVOKE:cout << "PUSHINVOKE( "; break;
-			default: cout << "UNKNOWN( "; break;
+			case typeNible::PLUS: DW(param.NT,"PLUS(") break;
+			case typeNible::MINUS:DW(param.NT, "MINUS(") break;
+			case typeNible::MUL:DW(param.NT, "MUL(") break;
+			case typeNible::DIV:DW(param.NT, "DIV(") break;
+			case typeNible::IF:DW(param.NT, "IF(") break;
+			case typeNible::END_IF:DW(param.NT, "ENDIF(") break;
+			case typeNible::CIRCLE:DW(param.NT, "CIRCLE(") break;
+			case typeNible::END_CIRCLE:DW(param.NT, "END_CIRCLE(") break;
+			case typeNible::MORE:DW(param.NT, "MORE(") break;
+			case typeNible::LESS:DW(param.NT, "LESS(") break;
+			case typeNible::PRINT:DW(param.NT, "PRINT(") break;
+			case typeNible::INIT:DW(param.NT, "INIT(") break;
+			case typeNible::LEX_INIT:DW(param.NT, "LEX_INIT(") break;
+			case typeNible::PUSH:DW(param.NT, "PUSH(") break;
+			case typeNible::POP:DW(param.NT, "POP(") break;
+			case typeNible::RETURN:DW(param.NT, "RETURN(") break;
+			case typeNible::END_ELSE:DW(param.NT, "END_ELSE(") break;
+			case typeNible::ELSE:DW(param.NT, "ELSE(") break;
+			case typeNible::FUNC:DW(param.NT, "FUNC(") break;
+			case typeNible::PARAM_INIT:DW(param.NT, "PARAM_INIT(") break;
+			case typeNible::START_FUNC:DW(param.NT, "START_FUNC(") break;
+			case typeNible::END_FUNC:DW(param.NT, "END_FUNC(") break;
+			case typeNible::END_MAIN_FUNC:DW(param.NT, "END_MAIN_FUNC("); break;
+			case typeNible::FUNC_INVOKE:DW(param.NT, "FUNC_INVOKE(") break;
+			case typeNible::FANC_PARAM:DW(param.NT, "FUNC_PARAM(") break;
+			case typeNible::BEGIN:DW(param.NT, "BEGIN(") break;
+			case typeNible::KPI_LIB:DW(param.NT, "KPI_LIB(") break;
+			case typeNible::PUSH_INVOKE:DW(param.NT, "PUSH_INVOKE(") break;
+			default: DW(param.NT, "UNKNOWN(") break;
 			}
-			switch(table.table[i].TD)
+			switch (table.table[i].TD)
 			{
-			case IT::DT_NO: cout << "no, "; break;
-			case IT::DT_INT: cout << "int, "; break;
-			case IT::DT_STR: cout << "str, "; break;
-			case IT::DT_BOOL: cout << "bool, "; break;
+			case IT::DT_NO: DW(param.NT, "no,") break;
+			case IT::DT_INT: DW(param.NT, "int,") break;
+			case IT::DT_STR: DW(param.NT, "str,") break;
 			}
-			cout << table.table[i].p2 << ", " << table.table[i].p3 << ", " << table.table[i].p4 << ")" << endl;
+			DW(param.NT, table.table[i].p2, ", ", table.table[i].p3, ", ", table.table[i].p4, ")\n");
 		}
-		cout << endl;
+		DW(param.NT,"\n")
 	}
 
 	bool operator==(Entry e1, Entry e2)
@@ -106,12 +116,13 @@ namespace NT
 		return false;
 	}
 
-	Nible genNible(LA::LexAnaliz Lex, Log::LOG log)
+	Nible genNible(LA::LexAnaliz Lex, Log::LOG log, Parm::PARM param)
 	{
-		Nible nible = Create(9000);
+		Nible nible(9000);
 
 		stack<char> stack;
-		bool isAction = 0, isReturn = 0;
+		std::stack<int> circleCount;
+		bool isReturn = 0;
 		char *funcName = new char[50];	char *equallu = new char[50]; char *buf = new char[50];
 		int paramCount = 0, conditionCount = 0;
 		for (int i = 0; i < Lex.iT.size; i++)
@@ -121,20 +132,20 @@ namespace NT
 				switch (it[i].idtype)
 				{
 				case IT::T_LITERAL:
-					if(it[i].iddatatype == IT::DT_INT)
-						Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
-					else if(it[i].iddatatype == IT::DT_STR)
-						Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
+					if (it[i].iddatatype == IT::DT_INT)
+						ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
+					else if (it[i].iddatatype == IT::DT_STR)
+						ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
 					break;
 				case IT::T_VAR:
 					if (it[i].iddatatype == IT::DT_INT)
-						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
+						ADD_NT(INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
 					else if (it[i].iddatatype == IT::DT_STR)
-						Add(nible, setNible(NT::INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
+						ADD_NT(INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
 					break;
 				case IT::T_FUNC_IP: case IT::T_CIRCLE_P: case IT::T_CONDITION_P:
-						if (it[i].iddatatype == IT::DT_INT)
-							Add(nible, setNible(NT::LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val));
+					if (it[i].iddatatype == IT::DT_INT)
+						ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
 						break;
 				}
 			}
@@ -144,40 +155,41 @@ namespace NT
 			if (PN::needPN(Lex, log, Lex.l.table[i].sn))
 			{
 				bool check = false;
-				int sn = Lex.l.table[i].sn;
+				int sn = lt[i].sn;
 				while (!check)
 				{
-					if (Lex.l.table[++i].lexema == LEX_EQUALLU)
+					if (lt[++i].lexema == LEX_EQUALLU)
 					{
-						strcpy(equallu, Lex.iT.table[Lex.l.table[i - 1].idxTI].prefId);
+						strcpy(equallu, it[lt[i - 1].idxTI].prefId);
 						check = true;	// доходим до начала строки
 					}
 				}
-				while (Lex.l.table[i].sn == sn)
+				while (lt[i].sn == sn)
 				{
-					switch (Lex.l.table[i].lexema)
+					switch (lt[i].lexema)
 					{
 					case LEX_VARIABLE: case LEX_LITERAL:
 						switch (idit(i).idtype)
 						{
-						case IT::T_FUNC_I: isAction = true; Add(nible, setNible(NT::FUNCINVOKE, IT::DT_INT, idit(i).prefId)); break;
-						case IT::T_FUNC_IP: Add(nible, setNible(NT::FANCPARAM, IT::DT_INT, idit(i).prefId)); break;
-						default: Add(nible, setNible(NT::PUSH, IT::DT_NO, idit(i).prefId)); break;
+						case IT::T_FUNC_I: ADD_NT(FUNC_INVOKE, IT::DT_INT, idit(i).prefId); break;
+						case IT::T_FUNC_IP: ADD_NT(FANC_PARAM, IT::DT_INT, idit(i).prefId); break;
+						default: ADD_NT(PUSH, IT::DT_NO, idit(i).prefId); break;
 						}
 						break;
 					case LEX_ACTION:
 					{
 						switch (lt[i].automat)
 						{
-						case FST::PLUS: Add(nible, setNible(NT::PLUS, IT::DT_NO)); break;
-						case FST::MINUS: Add(nible, setNible(NT::MINUS, IT::DT_NO)); break;
-						case FST::STAR: Add(nible, setNible(NT::MUL, IT::DT_NO)); break;
-						case FST::DIRSLASH:Add(nible, setNible(NT::DIV, IT::DT_NO)); break;
+						case FST::PLUS: ADD_NT(PLUS, IT::DT_NO); break;
+						case FST::MINUS: ADD_NT(MINUS, IT::DT_NO); break;
+						case FST::STAR: ADD_NT(MUL, IT::DT_NO); break;
+						case FST::DIRSLASH: ADD_NT(DIV, IT::DT_NO); break;
 						}
 						break;
 					}
-					case LEX_RIGHTTHESIS:	Add(nible, setNible(NT::PUSHINVOKE, IT::DT_NO)); break;
+					case LEX_RIGHTTHESIS:	ADD_NT(PUSH_INVOKE, IT::DT_NO); break;
 					}
+					if (Lex.l.table[i].lexema == ';') break;
 					i++;
 				}
 				Add(nible, setNible(NT::POP, IT::DT_NO, equallu));
@@ -185,59 +197,80 @@ namespace NT
 			switch (Lex.l.table[i].lexema)
 			{
 			case LEX_CIRCLE: case LEX_SIN: case LEX_CONDITION: case LEX_FUNCTION: case LEX_SOUT:	stack.push(lt[i].lexema); break;
-			case LEX_KPI_LIB: Add(nible, setNible(NT::KPILIB, IT::DT_NO)); break;
+			case LEX_KPI_LIB: ADD_NT(KPI_LIB, IT::DT_NO); break;
 			case LEX_SEMICOLON: paramCount = 0;	while (!stack.empty()) stack.pop();	break;
-			case LEX_LEFTBRACE:	
-				if (lt[i].braceType == IT::T_FUNC)
-					Add(nible, setNible(NT::STARTFUNC, IT::DT_NO));
-				break;
+			case LEX_LEFTBRACE:	if (lt[i].braceType == IT::T_FUNC)	ADD_NT(START_FUNC, IT::DT_NO);	break;	// начало функ.
 			case LEX_RIGHTBRACE:
 			{
 				switch (lt[i].braceType)
 				{
 				case IT::T_FUNC:
-					if(strcmp(funcName,"begin") == 0) Add(nible, setNible(NT::ENDMAINFUNC, IT::DT_NO, funcName));
-					else	Add(nible, setNible(NT::ENDFUNC, IT::DT_NO, funcName)); 
+					if (strcmp(funcName, "begin") == 0) ADD_NT(END_MAIN_FUNC, IT::DT_NO, funcName);
+					else	ADD_NT(END_FUNC, IT::DT_NO, funcName);
 					break;
-				case IT::T_CIRCLE:_itoa(conditionCount, buf, 10); Add(nible, setNible(NT::ENDCIRCLE, IT::DT_NO, "null", "null", buf));	break;
-				case IT::T_ELSE: _itoa(conditionCount, buf, 10); Add(nible, setNible(NT::ENDELSE,IT::DT_NO, "null", "null", buf)); break;
-				case IT::T_CONDITION: _itoa(conditionCount, buf, 10); Add(nible, setNible(NT::ENDIF, IT::DT_NO, "null", "null", buf));
-					if (lt[i + 1].lexema != 'e') { _itoa(conditionCount, buf, 10); Add(nible, setNible(NT::ENDELSE, IT::DT_NO, "null", "null", buf)); } break;
+				case IT::T_CIRCLE:
+					_itoa(circleCount.top(), buf, 10);
+					ADD_NT(END_CIRCLE, IT::DT_NO, "null", "null", buf);
+					circleCount.pop();
+					break;
+				case IT::T_ELSE: 
+					ADD_NT(END_ELSE, IT::DT_NO, "null", "null", buf);
+					circleCount.pop();
+					break;
+				case IT::T_CONDITION: 
+					_itoa(circleCount.top(), buf, 10);
+					ADD_NT(END_IF, IT::DT_NO, "null", "null", buf);
+					if (lt[i + 1].lexema != 'e') 
+					{
+						ADD_NT(END_ELSE, IT::DT_NO, "null", "null", buf);
+					circleCount.pop();
+					}
+					break;
 				}
 				break;
 			}
-			case LEX_ELSE:	Add(nible, setNible(NT::ELSE, IT::DT_NO)); break;
 			case LEX_ENDL: strcpy(nt[lastNible(nible, NT::PRINT)].p3, "endl"); break;
-			case LEX_BEGIN_FUNCTION: Add(nible, setNible(NT::BEGIN, IT::DT_NO)); strcpy(funcName, "begin"); break;
+			case LEX_BEGIN_FUNCTION: ADD_NT(BEGIN, IT::DT_NO); strcpy(funcName, "begin"); break;
 			case LEX_BOOL_ACTION:
-				if(lt[i].automat == FST::MORE)	Add(nible, setNible(NT::MORE, IT::DT_NO, "null", "null", buf));
-				else if(lt[i].automat == FST::LESS) Add(nible, setNible(NT::LESS, IT::DT_NO, "null", "null", buf));
+				_itoa(circleCount.top(), buf, 10);
+				if (lt[i].automat == FST::MORE)	ADD_NT(MORE, IT::DT_NO, "null", "null", buf);
+				else if (lt[i].automat == FST::LESS) ADD_NT(LESS, IT::DT_NO, "null", "null", buf);
 				break;
 			case LEX_RETURN: isReturn = true; break;				
-			case LEX_ACTION: isAction = true; break;
-			case LEX_EQUALLU:	stack.push(lt[i].lexema); strcpy(equallu, Lex.iT.table[Lex.l.table[i - 1].idxTI].prefId);	break;
+			case LEX_EQUALLU:	stack.push(lt[i].lexema); strcpy(equallu, it[lt[i - 1].idxTI].prefId);	break;
 			case LEX_VARIABLE: case LEX_LITERAL:
 			{
 				if (LA::WhereI(Lex, i) == IT::T_FUNC_P)
 				{
 					paramCount++;
-					if(paramCount == 1)		Add(nible, setNible(NT::PARAM_INIT, IT::DT_INT, idit(i).prefId, "0"));
-					else Add(nible, setNible(NT::PARAM_SECOND_INIT, IT::DT_INT, idit(i).prefId, "0"));
+					if (paramCount == 1)	ADD_NT(PARAM_INIT, IT::DT_INT, idit(i).prefId, "0");
+					else ADD_NT(PARAM_SECOND_INIT, IT::DT_INT, idit(i).prefId, "0");
 					break;
 				}
-				if (isReturn) { Add(nible, setNible(NT::RETURN, IT::DT_INT, idit(i).prefId)); isReturn = false; break; }
+				if (isReturn) {	ADD_NT(RETURN, IT::DT_INT, idit(i).prefId); isReturn = false; break; }
 				while (!stack.empty())
 				{
 					switch (stack.top())
 					{
-					case LEX_FUNCTION: Add(nible, setNible(NT::FUNC, idit(i).iddatatype, idit(i).prefId)); strcpy(funcName, idit(i).prefId); break;
-					case LEX_SOUT: Add(nible, setNible(NT::PRINT, idit(i).iddatatype, idit(i).prefId)); break;
+					case LEX_FUNCTION: ADD_NT(FUNC, idit(i).iddatatype, idit(i).prefId); strcpy(funcName, idit(i).prefId); break;
+					case LEX_SOUT: ADD_NT(PRINT, idit(i).iddatatype, idit(i).prefId); break;
 					case LEX_CONDITION: 
-						_itoa(++conditionCount, buf, 10);
-						Add(nible, setNible(NT::IF, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId, buf)); break;
-					case LEX_CIRCLE: _itoa(++conditionCount, buf, 10);
-						Add(nible, setNible(NT::CIRCLE, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId, buf)); break;
-					case LEX_EQUALLU:Add(nible, setNible(NT::PUSH, IT::DT_NO, idit(i).value.val)); Add(nible, setNible(NT::POP, IT::DT_NO, equallu)); break;
+						circleCount.push(++conditionCount);
+						ADD_NT(IF, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId); break;
+					case LEX_CIRCLE: 
+						circleCount.push(++conditionCount);
+						_itoa(circleCount.top(), buf, 10);
+						ADD_NT(CIRCLE, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId, buf); break;
+					case LEX_EQUALLU:
+						if (Lex.iT.table[Lex.l.table[i - 2].idxTI].iddatatype != IT::DT_STR)
+						{
+							ADD_NT(PUSH, IT::DT_NO, idit(i).prefId); ADD_NT(POP, IT::DT_NO, equallu);
+						}
+						else
+						{
+							ADD_NT(STR_PUSH, IT::DT_STR, idit(i).prefId, equallu);
+						}
+						break;
 					}
 					stack.pop();
 				}
@@ -245,18 +278,7 @@ namespace NT
 			}
 			}
 		}
-		Print(nible);
+		Print(nible, param, log);
 		return nible;
-	}
-
-	Entry setNible(int TN, int TD,const char * p2,const char * p3,const char *p4)
-	{
-		Entry *temp = new Entry;
-		temp->TN = TN;
-		temp->TD = TD;
-		strcpy(temp->p2, p2);
-		strcpy(temp->p3, p3);
-		strcpy(temp->p4, p4);
-		return *temp;
 	}
 }

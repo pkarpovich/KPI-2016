@@ -64,21 +64,17 @@ bool FST::step(FST &fst, short *&rstates)
 
 bool FST::execute(FST &fst)
 {
-	short *rstates;
-	rstates = new short[fst.nstates];
+	short *rstates = new short[fst.nstates];
 	memset(rstates, 0xFF, sizeof(short)*fst.nstates);  // заполняет определённое кол-во байт символом 0xFF
 	short lstring = strlen(fst.string);
 	bool rc = true;
-
 	for (short i = 0; (i < lstring) && rc; i++)
 	{
 		fst.position++;
 		rc = step(fst, rstates);
 	}
-
-//	delete[] rstates;
-
-	if (fst.rstates[fst.nstates - 1] == lstring)
+	return (rc ? (fst.rstates[fst.nstates - 1] == lstring) : rc);
+	/*if (fst.rstates[fst.nstates - 1] == lstring)
 	{
 		rc = true;
 	}
@@ -87,7 +83,7 @@ bool FST::execute(FST &fst)
 		rc = false;
 	}
 
-	return rc;
+	return rc;*/
 }
 
 void FST::newFST(FST & f, char * newStr)
@@ -106,7 +102,7 @@ bool FST::newLexem(FST &fst, char *newLexem, int lineCode, char lexem, LT::Entry
 		e.priority = priority;
 		e.automat = automat;
 		e.braceType = 0;
-		if (lexem == LEX_VARIABLE || lexem == LEX_LITERAL || lexem == LEX_ACTION || lexem == LEX_BOOL_ACTION)
+		if (lexem == LEX_VARIABLE || lexem == LEX_LITERAL)
 		{
 			e.idxTI = iT.size;
 		}

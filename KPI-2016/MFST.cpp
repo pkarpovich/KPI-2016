@@ -245,6 +245,8 @@ namespace MFST
 		{
 			state = storestate._Get_container()[k];
 			rule = grebach.getRule(state.nrule);
+			if(param.R) CON_MFST_TRACE7
+			MFST_TRACE7
 		}
 	}
 

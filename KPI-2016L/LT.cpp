@@ -54,48 +54,24 @@ namespace LT
 	}
 	void ShowLT(LexTable & l, Parm::PARM param, Log::LOG log)
 	{
-		if (param.LT == true)
-		{
-			cout << "Таблица лексем: " << endl;
-			for (int i = 0; i < l.size; i++)	//вывод таблицы лексем
-			{
-				if (l.table[i].lexema != LEX_FORBIDDEN)
-				{
-					if (l.table[i].sn != l.table[i - 1].sn) // Чтобы при выводе выводило на новых строках
-					{
-						cout << std::endl;
-						cout << setfill('0') << setw(2) << l.table[i].sn << " "; //setfill('0') << setw(2) - добавить ноль
-					}
-					cout << l.table[i].lexema;
-					/*if (l.table[i].idxTI != TI_NULLIDX)
-					{
-						if(l.table[i].lexema == LEX_AT)
-							cout << "{" << l.table[i].idxTI << "}";
-						else cout << "" << l.table[i].idxTI << "]";
-					}*/
-				}
-			}
-			cout << endl << endl;
-		}
-		(*log.stream) << "Таблица лексем: " << endl;
+		char *buf = new char[255];
+		DW(param.LT, "\nТаблица лексем: \n")
 		for (int i = 0; i < l.size; i++)	//вывод таблицы лексем
 		{
 			if (l.table[i].lexema != LEX_FORBIDDEN)
 			{
 				if (l.table[i].sn != l.table[i - 1].sn) // Чтобы при выводе выводило на новых строках
 				{
-					(*log.stream) << std::endl;
-					(*log.stream) << setfill('0') << setw(2) << l.table[i].sn << " "; //setfill('0') << setw(2) - добавить ноль
+					sprintf_s(buf, 255, "\n%02d ", l.table[i].sn); DW(param.LT, buf);
 				}
-				(*log.stream) << l.table[i].lexema;
+				sprintf_s(buf, 255, "%c", l.table[i].lexema); DW(param.LT, buf);
 				if (l.table[i].idxTI != TI_NULLIDX)
 				{
-					if (l.table[i].lexema == LEX_AT)
-						(*log.stream) << "[" << l.table[i].idxTI << "]";
-					else (*log.stream) << "{" << l.table[i].idxTI << "}";
+					sprintf_s(buf, 255, "{%d}", l.table[i].idxTI); DW(param.LT, buf);
 				}
 			}
 		}
-		(*log.stream) << endl << endl;
+		DW(param.LT, "\n\n");
+		delete[] buf;
 	}
 }

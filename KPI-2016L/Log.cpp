@@ -37,6 +37,17 @@ namespace Log
 		}
 	}
 
+	void DoubleWrite(LOG log, bool rc, char * c, ...)
+	{
+		char **p = &c;
+		while (*p != "")
+		{
+			(*log.stream) << *p;
+			if(rc)	std::cout << *p;
+			p += sizeof(**p);
+		}
+	}
+
 	void WriteTimplates(LOG log, char * c)
 	{
 		(*log.stream) << c;
@@ -70,13 +81,13 @@ namespace Log
 			<< "\n-log: " << parmLOG << endl;
 	}
 
-	void WriteIn(LOG log, In::IN in)
+	/*void WriteIn(LOG log, In::IN in)
 	{
 		(*log.stream) << "---- Исходные данные ----"
 			<< "\nКолличество символов:" << in.size
 			<< "\nПроигнорировано: " << in.ignor
 			<< "\nКолличество строк: " << in.lines << endl;
-	}
+	}*/
 
 	void WriteErrors(LOG log, Error::ERRORS error)
 	{

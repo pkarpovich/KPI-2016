@@ -9,18 +9,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		Parm::PARM parm = Parm::getparm(argc, argv);
 		log = Log::getlog(parm.log);
-		Log::WriteLine(log, "Тест:", "без ошибок ", "");
+		Log::DoubleWrite(log,false, "Тест:", "без ошибок \n", "");
 		Log::WriteLog(log);
 		Log::WriteParm(log, parm);
 		In::IN_FILE in_file;
 		in_file.in = In::getin(parm.in);
-		in_file.dev = In::DivideWord(in_file.in);
-		Log::WriteIn(log, in_file.in);
+		in_file.dev = In::DivideWord(in_file.in, parm, log);
+		//Log::WriteIn(log, in_file.in);
 		LA::LexAnaliz Lex = LA::LexicalAnaliz(in_file.dev, log, parm);
 		std::stack<MFST::MfstState> storestate;
 		if (SA::syntacticAnalyzer(Lex, storestate, log, parm))
 		{
-			NT::Nible nible = NT::genNible(Lex, log);
+			NT::Nible nible = NT::genNible(Lex, log, parm);
 			Gen::Generator(parm, nible);
 			char *param = new char[255];
 			char *buf = new char[50];

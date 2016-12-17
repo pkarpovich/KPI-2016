@@ -1,33 +1,47 @@
-include KPIlib  \\ include KPI
+include KPIlib
 
-func int mulm(int a, int b)
+func int fact(int n)
 [
-    int mull: a*b;
-    return mull;
+	sout `in function factorial` endl;
+	int res:1;
+	int count:2;
+	n:n+1;
+	while(count<n)
+	[
+		res:res*count;
+		count:count+1;
+	]
+	return res;
 ]
 
-func int sum(int a, int b)
-[
-    int res: a + b + mulm(2,2);
-    return res;
+begin
+[ 
+	str label: "KPI-2016 Translator";
+	sout label endl;
+	label: "andrey";
+	sout label endl;
+	int fac: fact(3);
+	sout `factorial: `;
+	sout fac endl;
+	int exp: fact(7) + (12/12-(41*31-10)*((32-12)*20)/100) + xpow(2,5);
+	sout `exp: `;
+	sout exp endl;
+	int expTwo: sqrt(25); 
+	sout `sqrt(25): `;
+	sout expTwo endl;
+	while(expTwo < 10)
+	[
+		if(expTwo>8)
+		[
+			sout expTwo;
+			sout ` below 8` endl;
+		]
+		else
+		[
+			sout expTwo;
+			sout ` abow 8` endl;
+		]
+		expTwo:expTwo+1;
+	]
+	return 0;
 ]
-    
-    begin
-    [
-        int test: (12/12-(41*31-10)*((32-12)*20)/100) + sum(0,0) + xpow(25,5);
-        int lib: sqrt(4);
-        sout lib endl;
-        sout test endl;
-        int i:0;
-        while(i<10)
-        [
-            sout i endl;
-            i:i+1;
-        ]
-        sout `second if` endl;
-        if(i<test)
-        [
-            sout `if` endl;
-        ]
-        return 0;
-    ]

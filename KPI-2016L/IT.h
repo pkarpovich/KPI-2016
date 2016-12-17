@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "LT.h"
-#define ID_MAXSIZE			5								// макс. кол-во символов в идентификаторе
+#define ID_MAXSIZE			10								// макс. кол-во символов в идентификаторе
 #define ID_PMAXSIZE			255								// макс. кол-во символов в идентификаторе
 #define TI_MAXSIZE			4096							// макс. кол-во строк в таблице идентификаторов
 #define TI_INT_DEFAULT		0x00000000						// значение по умолчанию для типа integer
@@ -10,7 +10,8 @@
 namespace IT												// таблица идетификаторов
 {
 	enum IDDATATYPE { DT_NO, DT_INT, DT_STR, DT_BOOL };					// типы данных идентификатов: integer, stringяяяя
-	enum IDTYPE { T_NO, T_VAR, T_FUNC, T_FUNC_P, T_FUNC_I, T_FUNC_IP, T_LITERAL, T_CONDITION, T_CONDITION_P, T_ELSE, T_CIRCLE, T_CIRCLE_P };				// типы идентификиторов: переменная, функция, параметр, литерал, указатель
+	enum IDTYPE { T_NO, T_VAR, T_FUNC, T_FUNC_P, T_FUNC_I, T_FUNC_IP, T_LITERAL, T_CONDITION, T_CONDITION_P, T_ELSE, T_CIRCLE, T_CIRCLE_P,
+	T_MAINFUNC};				// типы идентификиторов: переменная, функция, параметр, литерал, указатель
 
 	struct Entry											// строка таблицы идентификаторов
 	{

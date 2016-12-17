@@ -6,42 +6,52 @@ x:DWORD
 WaitMsg PROTO
 Crlf PROTO
  WriteInt PROTO
+Str_copy PROTO :DWORD, :DWORD
 SetConsoleTitleA PROTO :DWORD
 WriteString PROTO
 
 .data
 bufmath sdword ?
-mulmmull dword 0 
-sumres dword 0 
-begintest dword 0 
-L03 dword 12 
-L05 dword 41 
-L08 dword 32 
-beginlib dword 0 
-begini dword 0 
+factres dword 0 
+factcount dword 0 
+beginlabel db 0,0 
+beginfac dword 0 
+beginexp dword 0 
+beginexpTwo dword 0 
 
 .const
 
 cname db 'KPI-2016 Compiler RC1',0
-L01 dword 2 
-L02 dword 2 
-L04 dword 12 
-L06 dword 31 
-L07 dword 10 
-L09 dword 12 
-L10 dword 20 
-L11 dword 100 
-L12 dword 0 
-L13 dword 0 
-L14 dword 25 
-L15 dword 5 
-L16 dword 4 
-L17 dword 0 
-L18 dword 10 
-L19 dword 1 
-L20 db 'second if',0 
-L21 db 'if',0 
-L22 dword 0 
+L01 db 'in function factorial',0 
+L02 dword 1 
+L03 dword 2 
+L04 dword 1 
+L05 dword 1 
+L06 db 'KPI-2016 Translator',0 
+L07 db 'andrey',0 
+L08 dword 3 
+L09 db 'factorial: ',0 
+L10 dword 7 
+L11 dword 12 
+L12 dword 12 
+L13 dword 41 
+L14 dword 31 
+L15 dword 10 
+L16 dword 32 
+L17 dword 12 
+L18 dword 20 
+L19 dword 100 
+L20 dword 2 
+L21 dword 5 
+L22 db 'exp: ',0 
+L23 dword 25 
+L24 db 'sqrt(25): ',0 
+L25 dword 10 
+L26 dword 8 
+L27 db ' below 8',0 
+L28 db ' abow 8',0 
+L29 dword 1 
+L30 dword 0 
 
 .code
 xpow PROC USES ebx edx xpowx : SDWORD, xpowy : SDWORD
@@ -71,74 +81,100 @@ fist bufmath
 mov EAX, bufmath
 ret
 sqrt ENDP
-mulm PROC uses ebx ebp esi edi mulma:dword, mulmb:dword
-push mulma
-push mulmb
+fact PROC uses ebx ebp esi edi factn:dword
+mov EDX, offset L01
+invoke WriteString
+invoke Crlf
+push L02
+pop factres
+push L03
+pop factcount
+push factn
+push L04
+pop eax
+pop ebx
+add eax, ebx
+push eax
+pop factn
+@circle1:
+mov eax, factn
+cmp eax, factcount
+jle @if1
+push factres
+push factcount
 pop eax
 pop ebx
 imul eax, ebx
 push eax
-pop mulmmull
-mov EAX, mulmmull
-ret
-mulm ENDP
-
-sum PROC uses ebx ebp esi edi suma:dword, sumb:dword
-push suma
-push sumb
+pop factres
+push factcount
+push L05
 pop eax
 pop ebx
 add eax, ebx
 push eax
-invoke mulm, L01, L02
-push eax
-pop eax
-pop ebx
-add eax, ebx
-push eax
-pop sumres
-mov EAX, sumres
+pop factcount
+jmp @circle1
+@if1:
+mov EAX, factres
 ret
-sum ENDP
+fact ENDP
 
 main PROC
 
 invoke SetConsoleTitleA, offset cname
-
-push L03
-push L04
-pop ebx
-pop eax
-cdq
-div ebx
+invoke Str_copy, offset L06, offset beginlabel
+mov EDX, offset beginlabel
+invoke WriteString
+invoke Crlf
+invoke Str_copy, offset L07, offset beginlabel
+mov EDX, offset beginlabel
+invoke WriteString
+invoke Crlf
+invoke fact, L08
 push eax
-push L05
-push L06
-pop eax
-pop ebx
-imul eax, ebx
-push eax
-push L07
-pop ebx
-pop eax
-sub eax, ebx
-push eax
-push L08
-push L09
-pop ebx
-pop eax
-sub eax, ebx
-push eax
-push L10
-pop eax
-pop ebx
-imul eax, ebx
-push eax
-pop eax
-pop ebx
-imul eax, ebx
+pop beginfac
+mov EDX, offset L09
+invoke WriteString
+mov EAX, beginfac
+invoke WriteInt
+invoke Crlf
+invoke fact, L10
 push eax
 push L11
+push L12
+pop ebx
+pop eax
+cdq
+div ebx
+push eax
+push L13
+push L14
+pop eax
+pop ebx
+imul eax, ebx
+push eax
+push L15
+pop ebx
+pop eax
+sub eax, ebx
+push eax
+push L16
+push L17
+pop ebx
+pop eax
+sub eax, ebx
+push eax
+push L18
+pop eax
+pop ebx
+imul eax, ebx
+push eax
+pop eax
+pop ebx
+imul eax, ebx
+push eax
+push L19
 pop ebx
 pop eax
 cdq
@@ -148,59 +184,60 @@ pop ebx
 pop eax
 sub eax, ebx
 push eax
-invoke sum, L12, L13
+pop eax
+pop ebx
+add eax, ebx
+push eax
+invoke xpow, L20, L21
 push eax
 pop eax
 pop ebx
 add eax, ebx
 push eax
-invoke xpow, L14, L15
-push eax
-pop eax
-pop ebx
-add eax, ebx
-push eax
-pop begintest
-invoke sqrt, L16
-push eax
-pop beginlib
-mov EAX, beginlib
+pop beginexp
+mov EDX, offset L22
+invoke WriteString
+mov EAX, beginexp
 invoke WriteInt
 invoke Crlf
-mov EAX, begintest
-invoke WriteInt
-invoke Crlf
-push 0
-pop begini
-@circle1:
-mov eax, L18
-cmp eax, begini
-jb @if1
-mov EAX, begini
-invoke WriteInt
-invoke Crlf
-push begini
-push L19
-pop eax
-pop ebx
-add eax, ebx
+invoke sqrt, L23
 push eax
-pop begini
-jmp @circle1
-@if1:
-mov EDX, offset L20
+pop beginexpTwo
+mov EDX, offset L24
+invoke WriteString
+mov EAX, beginexpTwo
+invoke WriteInt
+invoke Crlf
+@circle2:
+mov eax, L25
+cmp eax, beginexpTwo
+jle @if2
+mov eax, L26
+cmp eax, beginexpTwo
+jge @if3
+mov EAX, beginexpTwo
+invoke WriteInt
+mov EDX, offset L27
 invoke WriteString
 invoke Crlf
-mov eax, begintest
-cmp eax, begini
-jb @if2
-mov EDX, offset L21
+jmp @endElse3
+@if3:
+mov EAX, beginexpTwo
+invoke WriteInt
+mov EDX, offset L28
 invoke WriteString
 invoke Crlf
-jmp @endElse2
+@endElse3:
+push beginexpTwo
+push L29
+pop eax
+pop ebx
+add eax, ebx
+push eax
+pop beginexpTwo
+jmp @circle2
 @if2:
-@endElse2:
-mov EAX, L22
+mov EAX, L30
 ret
 main ENDP
 END main
