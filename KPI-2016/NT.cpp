@@ -132,27 +132,22 @@ namespace NT
 				switch (it[i].idtype)
 				{
 				case IT::T_LITERAL:
-					if (it[i].iddatatype == IT::DT_INT)
-						ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
-					else if (it[i].iddatatype == IT::DT_STR)
-						ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
+					if (it[i].iddatatype == IT::DT_INT)	ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
+					else if (it[i].iddatatype == IT::DT_STR) ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
 					break;
 				case IT::T_VAR:
-					if (it[i].iddatatype == IT::DT_INT)
-						ADD_NT(INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
-					else if (it[i].iddatatype == IT::DT_STR)
-						ADD_NT(INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
+					if (it[i].iddatatype == IT::DT_INT)	ADD_NT(INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
+					else if (it[i].iddatatype == IT::DT_STR) ADD_NT(INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
 					break;
 				case IT::T_FUNC_IP: case IT::T_CIRCLE_P: case IT::T_CONDITION_P:
-					if (it[i].iddatatype == IT::DT_INT)
-						ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
-						break;
+					if (it[i].iddatatype == IT::DT_INT) ADD_NT(LEX_INIT, it[i].iddatatype, it[i].prefId, it[i].value.val);
+					break;
 				}
 			}
 		}
 		for (int i = 0; i < Lex.l.size; i++)
 		{
-			if (PN::needPN(Lex, log, Lex.l.table[i].sn))
+			if (PN::needPN(Lex, log, lt[i].sn))
 			{
 				bool check = false;
 				int sn = lt[i].sn;
@@ -189,12 +184,13 @@ namespace NT
 					}
 					case LEX_RIGHTTHESIS:	ADD_NT(PUSH_INVOKE, IT::DT_NO); break;
 					}
-					if (Lex.l.table[i].lexema == ';') break;
+					if (lt[i].lexema == ';') break;
 					i++;
 				}
 				Add(nible, setNible(NT::POP, IT::DT_NO, equallu));
 			}
-			switch (Lex.l.table[i].lexema)
+			if(!circleCount.empty())	_itoa(circleCount.top(), buf, 10);
+			switch (lt[i].lexema)
 			{
 			case LEX_CIRCLE: case LEX_SIN: case LEX_CONDITION: case LEX_FUNCTION: case LEX_SOUT:	stack.push(lt[i].lexema); break;
 			case LEX_KPI_LIB: ADD_NT(KPI_LIB, IT::DT_NO); break;
@@ -208,33 +204,20 @@ namespace NT
 					if (strcmp(funcName, "begin") == 0) ADD_NT(END_MAIN_FUNC, IT::DT_NO, funcName);
 					else	ADD_NT(END_FUNC, IT::DT_NO, funcName);
 					break;
-				case IT::T_CIRCLE:
-					_itoa(circleCount.top(), buf, 10);
-					ADD_NT(END_CIRCLE, IT::DT_NO, "null", "null", buf);
-					circleCount.pop();
-					break;
-				case IT::T_ELSE: 
-					ADD_NT(END_ELSE, IT::DT_NO, "null", "null", buf);
-					circleCount.pop();
-					break;
-				case IT::T_CONDITION: 
-					_itoa(circleCount.top(), buf, 10);
-					ADD_NT(END_IF, IT::DT_NO, "null", "null", buf);
-					if (lt[i + 1].lexema != 'e') 
-					{
-						ADD_NT(END_ELSE, IT::DT_NO, "null", "null", buf);
-					circleCount.pop();
-					}
-					break;
-				}
-				break;
+				case IT::T_CIRCLE: ADD_NT(END_CIRCLE, IT::DT_NO, buf); circleCount.pop(); break;
+				case IT::T_ELSE:  ADD_NT(END_ELSE, IT::DT_NO, buf); circleCount.pop(); break;
+				case IT::T_CONDITION: 	ADD_NT(END_IF, IT::DT_NO, buf);
+					if (lt[i + 1].lexema != 'e') { ADD_NT(END_ELSE, IT::DT_NO, buf); circleCount.pop();	}break;
+				} break;
 			}
 			case LEX_ENDL: strcpy(nt[lastNible(nible, NT::PRINT)].p3, "endl"); break;
 			case LEX_BEGIN_FUNCTION: ADD_NT(BEGIN, IT::DT_NO); strcpy(funcName, "begin"); break;
 			case LEX_BOOL_ACTION:
-				_itoa(circleCount.top(), buf, 10);
-				if (lt[i].automat == FST::MORE)	ADD_NT(MORE, IT::DT_NO, "null", "null", buf);
-				else if (lt[i].automat == FST::LESS) ADD_NT(LESS, IT::DT_NO, "null", "null", buf);
+				switch (lt[i].automat)
+				{
+				case FST::MORE: ADD_NT(MORE, IT::DT_NO, buf); break;
+				case FST::LESS: ADD_NT(LESS, IT::DT_NO, buf); break;
+				} 
 				break;
 			case LEX_RETURN: isReturn = true; break;				
 			case LEX_EQUALLU:	stack.push(lt[i].lexema); strcpy(equallu, it[lt[i - 1].idxTI].prefId);	break;
@@ -254,22 +237,16 @@ namespace NT
 					{
 					case LEX_FUNCTION: ADD_NT(FUNC, idit(i).iddatatype, idit(i).prefId); strcpy(funcName, idit(i).prefId); break;
 					case LEX_SOUT: ADD_NT(PRINT, idit(i).iddatatype, idit(i).prefId); break;
-					case LEX_CONDITION: 
-						circleCount.push(++conditionCount);
+					case LEX_CONDITION: circleCount.push(++conditionCount); _itoa(circleCount.top(), buf, 10);
 						ADD_NT(IF, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId); break;
-					case LEX_CIRCLE: 
-						circleCount.push(++conditionCount);
-						_itoa(circleCount.top(), buf, 10);
+					case LEX_CIRCLE: circleCount.push(++conditionCount); _itoa(circleCount.top(), buf, 10);
 						ADD_NT(CIRCLE, IT::DT_NO, idit(i).prefId, it[lt[i].idxTI + 1].prefId, buf); break;
 					case LEX_EQUALLU:
-						if (Lex.iT.table[Lex.l.table[i - 2].idxTI].iddatatype != IT::DT_STR)
+						if (it[lt[i - 2].idxTI].iddatatype != IT::DT_STR)
 						{
 							ADD_NT(PUSH, IT::DT_NO, idit(i).prefId); ADD_NT(POP, IT::DT_NO, equallu);
 						}
-						else
-						{
-							ADD_NT(STR_PUSH, IT::DT_STR, idit(i).prefId, equallu);
-						}
+						else ADD_NT(STR_PUSH, IT::DT_STR, idit(i).prefId, equallu);
 						break;
 					}
 					stack.pop();

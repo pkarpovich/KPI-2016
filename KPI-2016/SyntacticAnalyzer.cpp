@@ -2,8 +2,8 @@
 
 bool SA::syntacticAnalyzer(LA::LexAnaliz &Lex, std::stack<MFST::MfstState>& state, Log::LOG log, Parm::PARM param)
 {
-	MFST_TRACE_START;
-	if(param.SA)	CON_MFST_TRACE_START
+	char buf[255];
+	TRACE_START; DW(param.SA, buf);
 	MFST::Mfst mfst(Lex.l, GRB::getGreibach());
 	if (mfst.start(log, param))
 	{

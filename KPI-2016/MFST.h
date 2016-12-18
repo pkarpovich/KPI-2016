@@ -3,19 +3,26 @@
 #pragma once
 #define MFST_DIAGN_MAXSIZE 2*ERROR_MAXSIZE_MESSAGE
 #define MFST_DIAGN_NUMBER 3
-
 typedef stack<short> MFSTSTSTACK; // стек автомата
-#define MFST_TRACE_START (*log.stream)<<setw(4)<<setfill(' ')<<left<<"\n\nШаг"<<" : "\
-								<<setw(20)<<setfill(' ')<<left<<"Правило"\
-								<<setw(30)<<setfill(' ')<<left<<"Входная лента"\
-								<<setw(20)<<setfill(' ')<<left<<"Стек"\
-								<<endl;
 
-#define CON_MFST_TRACE_START cout<<setw(4)<<setfill(' ')<<left<<"\n\nШаг"<<" : "\
-								<<setw(20)<<setfill(' ')<<left<<"Правило"\
-								<<setw(30)<<setfill(' ')<<left<<"Входная лента"\
-								<<setw(20)<<setfill(' ')<<left<<"Стек"\
-								<<endl;
+#define TRACE_START	sprintf_s(buf, 255, "\n\n%-4s: %-20s%-30s%-20s\n", "Шаг","Правило","Входная лента","Стек")
+
+#define TRACE1 sprintf_s(buf, 255, "%-4d: %-20s%-30s%-20s\n",\
+++FST_TRACE_n, rule.getCRule(rbuf,nrulechain), getCLenta(lbuf,lenta_position),getCSt(sbuf))
+
+#define TRACE2 sprintf_s(buf, 255, "%-4d: %-20s%-30s%-20s\n",\
+FST_TRACE_n," ", getCLenta(lbuf, lenta_position),getCSt(sbuf))
+
+#define TRACE3 sprintf_s(buf, 255, "%-4d: %-20s%-30s%-20s\n",\
+++FST_TRACE_n, " ",  getCLenta(lbuf, lenta_position), getCSt(sbuf))
+
+#define TRACE4(c) sprintf_s(buf, 255, "%-4d: %-20s\n", ++FST_TRACE_n, c)
+
+#define TRACE5(c) sprintf_s(buf, 255, "%-4d: %-20s\n", FST_TRACE_n, c)
+
+#define TRACE6(c, k) sprintf_s(buf, 255, "%-4d: %-20s%d\n", FST_TRACE_n, c, k)
+
+#define TRACE7 sprintf_s(buf, 255, "%-4d: %-20s\n", state.lenta_position, rule.getCRule(rbuf,state.nrulechain))
 
 namespace MFST
 {
@@ -62,6 +69,7 @@ namespace MFST
 			RC_STEP rc_step; // код завершения шага
 			short nrule; // номер правила
 			short nrule_chain; // номер цепочки правила
+			short trace_pos;
 			MfstDiagnosis();
 			MfstDiagnosis( // диагностика
 				short plenta_position, // позиция на ленте

@@ -1,9 +1,5 @@
 #pragma once
-
-#define GEN0(buf, tmpl)			sprintf_s(buf, 1024, tmpl)
-#define GEN1(buf, tmpl, val)		sprintf_s(buf, 1024, tmpl, val)
-#define GEN2(buf, tmpl, valOne, valTwo)	sprintf_s(buf,1024, tmpl, valOne, valTwo)
-#define GEN3(buf, tmpl, valOne, valTwo, valThree) sprintf_s(buf,1024, tmpl, valOne, valTwo, valThree)
+#define GEN(buf, tmpl, ...)		sprintf_s(buf, 1024, tmpl, __VA_ARGS__)
 
 #define ASM_GLOBAL ".586\n.model flat, stdcall\nincludelib kernel32.lib\n"
 
