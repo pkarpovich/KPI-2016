@@ -1,12 +1,12 @@
 ﻿#include "stdafx.h"
-
+extern Error::ErrorTable eT;
 namespace IT
 {
 	IdTable Create(int size)
 	{
 		if (size > TI_MAXSIZE)
 		{
-			throw GET_ERROR(202, 5);
+			throw GET_ERROR(202);
 		}
 		IdTable *New = new IdTable;
 		New->maxsize = size;

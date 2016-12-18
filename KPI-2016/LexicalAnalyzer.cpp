@@ -1,6 +1,5 @@
 ﻿#include "stdafx.h"
 #include "Automatic.h"
-
 void LA::AddID(IT::Entry iT, bool isDecFunction, char pref[255], char word[255], char decFunction[ID_MAXSIZE])
 {
 	if (strlen(decFunction) > ID_MAXSIZE)	decFunction[ID_MAXSIZE] = '\0';	// урезаем имя протатипа функции
@@ -115,6 +114,7 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 	Lex.iT = IT::Create(TI_MAXSIZE);				// создаем таблицу иден.
 	stack<FST::AUTOMAT_NAME> LexStack;				// наш стек, что бы узнавать что было до иден.
 	stack<int> stack;
+	Error::ErrorTable eT(1000);
 
 	bool isInFunction = 0, isDecFunction = 0, isDec = 0, isCircle = 0, isInitialization = 0;		// узнаем мы в функции, или в протатипе функции
 	bool isFuncParam = 0;
@@ -143,15 +143,15 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 					case FN::KPILIB: AddSTF(Lex, "sqrt", i); AddSTF(Lex, "xpow", i);	break;	// подкл. стандартных функций
 					case FN::BEGIN: {strcpy(nameFunction, "begin\0"); beginCount++; break; }	// если у нас main
 					case FN::EQUALLU: isInitialization = true; break;
-					case FN::FALSENUMIDENTETIF: {ADD_ERROR(301, Line, 0, dev.word[i], Error::LA); throw ERROR_THROW_IN}
-					case FN::FIDENTETIF: {ADD_ERROR(300, Line, 0, dev.word[i], Error::LA); throw ERROR_THROW_IN}
+					case FN::FALSENUMIDENTETIF: throw GET_ERROR(301, Line, -1, dev.word[i]);
+					case FN::FIDENTETIF: GET_ERROR(300, Line, -1, dev.word[i]);
 					case FN::IDENTETIF:										// если у нас иден.
 					{
 						IT::Entry *it = new IT::Entry;
 						it->idtype = WhereI(Lex, Lex.l.size - 2);
 						if (strlen(dev.word[i]) > ID_MAXSIZE)		// предупреждение если слишком большой иден. и усечения идент.
 						{
-							ADD_ERROR(302, Line, 0, dev.word[i], Error::LA);
+							throw GET_ERROR(302, Line, -1, dev.word[i]);
 							dev.word[i][ID_MAXSIZE] = '\0';
 						}
 						while (!LexStack.empty())		// смотрим в стек и узнаем что было до ид.
@@ -225,7 +225,7 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 							strcpy(it->value.val, dev.word[i]);
 							if (strcmp(dev.word[i], "0") == 0 && Lex.l.table[Lex.l.size-2].automat == FST::DIRSLASH)
 							{
-								throw GET_ERROR(308, 6)
+//								throw GET_ERROR(308)
 							}
 							switch (FST_ARRAY[k].automatName)
 							{
@@ -256,10 +256,10 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 			}
 		}	
 	}
-	if(beginCount == 0) throw GET_ERROR(306, 6)
-	else if(beginCount > 1) throw GET_ERROR(307, 6);
-	Error::ERRORS error = ERROR_THROW_IN;
-	if (error.count > 0)	Log::WriteErrors(log, error);
+	//if(beginCount == 0) throw GET_ERROR(306, 6)
+	//else if(beginCount > 1) throw GET_ERROR(307, 6);
+	//Error::ERRORS error = ERROR_THROW_IN;
+//	if (error.count > 0)	Log::WriteErrors(log, error);
 	LT::ShowLT(Lex.l, param, log);
 	IT::ShowIT(Lex.iT, Lex.l, param, log);
 	return Lex;

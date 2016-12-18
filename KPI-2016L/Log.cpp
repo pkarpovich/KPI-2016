@@ -10,8 +10,8 @@ namespace Log
 		log.stream = new ofstream;
 		wcscpy_s(log.logfile, logfile);
 		log.stream->open(logfile, ios::out);
-		if (!log.stream->is_open())
-			throw GET_ERROR(112);
+		//if (!log.stream->is_open())
+			//throw GET_ERROR(112);
 		return log;
 	}
 
@@ -88,40 +88,6 @@ namespace Log
 			<< "\nПроигнорировано: " << in.ignor
 			<< "\nКолличество строк: " << in.lines << endl;
 	}*/
-
-	void WriteErrors(LOG log, Error::ERRORS error)
-	{
-		switch (error.type)
-		{
-			case Error::LA:
-				{
-					cout << "Ошибка " << error.id << ": " << error.message << endl;
-					(*log.stream) << "Ошибка " << error.id << ": " << error.message << endl;
-					for (int i = 0; i < error.count; i++)
-					{
-						(*log.stream) << "Строка: " << error.errors[i].line << " идентификатор: " << error.errors[i].word << endl;
-						cout << "Строка: " << error.errors[i].line << " идентификатор: " << error.errors[i].word << endl;
-					}
-					break;
-				}
-			case Error::INN:
-				{
-					cout << "Ошибка " << error.id << ": " << error.message << endl;
-					(*log.stream) << "Ошибка " << error.id << ": " << error.message << endl;
-					for (int i = 0; i < error.count; i++)
-					{
-						(*log.stream) << "Строка: " << error.errors[i].line << " позиция: " << error.errors[i].pos << endl;
-						cout << "Строка: " << error.errors[i].line << " позиция: " << error.errors[i].pos << endl;
-					}
-					break;
-				}
-		}
-	}
-
-	void WriteError(LOG log, Error::ERROR_MESSAGE error)
-	{
-		cout << "Ошибка " << error.id << ": " << error.message << endl;
-	}
 
 	void Close(LOG log)
 	{

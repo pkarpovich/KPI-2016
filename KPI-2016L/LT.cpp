@@ -1,12 +1,12 @@
 ﻿#include "stdafx.h"
-
+extern Error::ErrorTable eT;
 namespace LT
 {
 	LexTable Create(int size)
 	{
 		if (size > LT_MAXSIZE)
 		{
-			throw GET_ERROR(200, 4);
+			throw GET_ERROR(200);
 		}
 		else
 		{

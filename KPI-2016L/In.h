@@ -1,5 +1,4 @@
 ﻿#pragma once
-#include "Log.h"
 #undef IN
 #define IN_MAX_LEN_TEXT		1024*1024
 #define DEV_MAX_WORD		1000		// кол-во слов, в ммассиве слов
@@ -40,9 +39,9 @@ namespace In
 		IN in;
 		Devide dev;
 	};
-	IN getin(wchar_t infile[]);
+	IN getin(wchar_t infile[], Error::ErrorTable eT);
 	void DeleteSymbol(IN &in, int position_del);				// удаление буквы в строке
-	IN DeleteExtraSpace(IN in);									// удаление лишних пробелов
+	IN DeleteExtraSpace(IN in, Error::ErrorTable eT);			// удаление лишних пробелов
 	void AddDevideWord(Devide &dev, int count, char symbol);	// добавление буквы в массив
-	Devide DivideWord(IN in, Parm::PARM param, Log::LOG log);									// разделение in.txt на слова
+	Devide DivideWord(IN in, Parm::PARM param, Log::LOG log, Error::ErrorTable eT);		// разделение in.txt на слова
 }

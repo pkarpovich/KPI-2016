@@ -90,9 +90,6 @@ namespace MFST
 			else if ((st.top() == lenta[lenta_position])) //если текущий символ ленты равен вершине стека
 			{
 				lenta_position++; st.pop(); nrulechain = -1; rc = TS_OK;
-				/*
-				if (param.SA) CON_MFST_TRACE3
-				MFST_TRACE3*/
 				TRACE3; DW(param.SA, buf);
 			}
 			else
@@ -209,6 +206,7 @@ namespace MFST
 
 	char* Mfst::getDiagnosis(short n, char* buf, Log::LOG log, Parm::PARM param)
 	{
+		Error::ErrorTable eT(1000);
 		char *rc = "";
 		int errid = 0;
 		int lpos = -1;
@@ -217,7 +215,7 @@ namespace MFST
 		{
 			pos = diagnosis[n].trace_pos;
 			errid = grebach.getRule(diagnosis[n].nrule).iderror;
-			Error::ERROR_MESSAGE err = Error::getError(errid);
+			Error::Entry err = Error::GetError(eT,errid);
 			sprintf_s(buf, MFST_DIAGN_MAXSIZE, "Ошибка %d: строка %d,позиция в трассировкe: %d, %s",
 				err.id, lex.table[lpos].sn, pos, err.message);
 			rc = buf;

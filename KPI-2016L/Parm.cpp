@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
-
-Parm::PARM Parm::getparm( int argc, _TCHAR *argv[] )
+extern Error::ErrorTable eT;
+Parm::PARM Parm::getparm( int argc, _TCHAR *argv[])
 {
 	Parm::PARM param;
 	wchar_t buf[300];								// временная переменнная

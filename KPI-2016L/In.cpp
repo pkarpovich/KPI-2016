@@ -4,7 +4,7 @@
 using namespace std;
 namespace In
 {
-	IN getin(wchar_t infile[])
+	IN getin(wchar_t infile[], Error::ErrorTable eT)
 	{
 		IN in;
 
@@ -39,7 +39,8 @@ namespace In
 						break;
 					}
 					case in.F: {
-						ADD_ERROR(111, in.lines, position, "", Error::INN);
+						GET_ERROR(111, in.lines, position);
+						//ADD_ERROR(111, in.lines, position, "", Error::INN);
 						count_error++;
 						break;
 					}
@@ -64,11 +65,11 @@ namespace In
 			in.text[in.size] = '\0';
 			in.size--;
 			if (count_error > 0) {
-				throw ERROR_THROW_IN
+				throw GET_ERROR(111)
 			}
 			inFile.close();
 		}
-		in = DeleteExtraSpace(in);
+		in = DeleteExtraSpace(in, eT);
 		return in;
 	}
 	void DeleteSymbol(IN & in, int position_del)
@@ -79,7 +80,7 @@ namespace In
 		}
 		in.size--;
 	}
-	IN DeleteExtraSpace(IN in)
+	IN DeleteExtraSpace(IN in, Error::ErrorTable eT)
 	{
 		int ql_space = 0;
 		for (int i = 0; i < in.size; i++)
@@ -126,7 +127,7 @@ namespace In
 				{
 					while (in.code[in.text[++i]] != in.Q)	// пропускаем все пробелы в "...."
 					{
-						if (in.code[in.text[i]] == in.N) throw GET_ERROR(115, 1);
+						if (in.code[in.text[i]] == in.N) throw GET_ERROR(115);
 					}
 					break;
 				}
@@ -141,7 +142,7 @@ namespace In
 		buf[1] = '\0';
 		strcpy(&dev.word[dev.count_word][count], buf);
 	}
-	Devide DivideWord(IN in, Parm::PARM param, Log::LOG log)
+	Devide DivideWord(IN in, Parm::PARM param, Log::LOG log, Error::ErrorTable eT)
 	{
 		In::Devide dev;
 		int Word_position = 0, position = 0;
@@ -226,14 +227,14 @@ namespace In
 				}
 				default:
 				{
-					ADD_ERROR(113, dev.lines, position, "", Error::INN);
+					GET_ERROR(113, dev.lines, position);
 					dev.count_error++;
 				}
 			}
 		}
 		if (dev.count_error > 0)
 		{
-			throw ERROR_THROW_IN
+			throw GET_ERROR(113);
 		}
 		if (param.DT)
 		{
