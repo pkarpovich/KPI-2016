@@ -23,7 +23,7 @@ begin
 	int fac: fact(3);
 	sout `factorial: `;
 	sout fac endl;
-	int exp: fact(7) + (12/12-(41*31-10)*((32-12)*20)/100) + xpow(2,5);
+	int exp: fact(7) + (12/12-(41*31-10)*((32-12)*20)/100) + xpow(2,5) + "fsdfds";
 	sout `exp: `;
 	sout exp endl;
 	int expTwo: sqrt(25); 
@@ -33,6 +33,7 @@ begin
 	[
 		if(expTwo>8)
 		[
+		int i:10;
 			sout expTwo;
 			sout ` below 8` endl;
 		]

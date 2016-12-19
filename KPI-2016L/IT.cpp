@@ -20,6 +20,7 @@ namespace IT
 		strcpy(this->id, "null");
 		strcpy(this->prefId, "null");
 		this->idfirstLE = 0xffffffff;
+		this->paramCount = 0;
 		this->idtype = IT::T_NO;
 		this->pointer = false;
 		strcpy(this->value.val, "0");

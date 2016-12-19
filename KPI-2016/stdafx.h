@@ -29,6 +29,7 @@ using namespace std;
 #include "../KPI-2016L/LT.h"
 #include "FST.h"
 #include "LexicalAnalyzer.h"
+#include "Semantics.h"
 #include "GRB.h"
 #include "MFST.h"
 #include "PolishNotation.h"

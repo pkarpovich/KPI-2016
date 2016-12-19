@@ -21,6 +21,7 @@ namespace IT												// таблица идетификаторов
 		bool		pointer = false;
 		int			iddatatype;								// тип данных
 		int			idtype;									// тип идентификатора
+		int			paramCount;
 		struct 
 		{
 			char *val = new char[255];						// значение integer

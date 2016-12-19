@@ -32,6 +32,13 @@ namespace Error
 		ET(306, "[MA] Точка входа begin должна быть задана");
 		ET(307, "[MA] Недолжно быть более одной точки входа");
 		ET(308, "[MA] Деление на ноль запрещенно");
+		ET(309, "[MA] Тип данных STR запрещен в функции");
+		ET(310, "[MA] Запрещенно возращать тип данных STR из функции");
+		ET(311, "[MA] Запрещенно использовать тип данных STR в параметрах функции");
+		ET(312, "[MA] Неверный тип параметра вызываемой функции");
+		ET(313, "[MA] Стандартную библиотеку можно подключить только один раз");
+		ET(314, "[MA] Неверное число передаваемых параметров");
+		ET(315, "[MA] Вычисления могут производится над литералами/идентификаторами данных типа int.")
 		ET(600, "[SA] Неверная структура программы");
 		ET(601, "[SA] Парметры функции составленны неверно");
 		ET(602, "[SA] Структура цикла или условия составленна неверно");
@@ -46,6 +53,7 @@ namespace Error
 			}
 		}
 		*this = temp;
+		//delete[] &temp;
 	};
 
 	void Add(ErrorTable& et, int id, char *message)
@@ -88,7 +96,7 @@ namespace Error
 		{
 			temp = eT.errors[i];
 			sprintf_s(buf, 255, "Ошибка №%d: %s", temp.id, temp.message); DW(true, buf);
-			if (temp.line != -1) { sprintf_s(buf, 255, ", линия: %d", temp.line); DW(true, buf); }
+			if (temp.line != -1) { sprintf_s(buf, 255, ", строка: %d", temp.line); DW(true, buf); }
 			if (temp.pos != -1) { sprintf_s(buf, 255, ", позиция: %d", temp.pos); DW(true, buf); }
 			if (strlen(temp.word) != 0) { sprintf_s(buf, 255, ", слово: %s", temp.word); DW(true, buf); }
 			DW(true, "\n");

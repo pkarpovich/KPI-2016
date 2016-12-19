@@ -7,7 +7,6 @@
 
 namespace Error
 {
-	
 	struct Entry
 	{
 		int id;

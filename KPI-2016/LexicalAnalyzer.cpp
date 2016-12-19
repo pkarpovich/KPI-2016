@@ -26,12 +26,14 @@ void LA::AddID(IT::Entry iT, bool isDecFunction, char pref[255], char word[255],
 	
 }
 
-void LA::AddSTF(LexAnaliz &Lex, char *name, int i)
+void LA::AddSTF(LexAnaliz &Lex, char *name, int i, int paramCount)
 {
 	IT::Entry *it = new IT::Entry;
 	AddID(*it, false, "", name, "");
 	it->idfirstLE = i;
 	it->idtype = IT::T_FUNC;
+	it->paramCount = paramCount;
+	it->iddatatype = IT::DT_INT;
 	IT::Add(Lex.iT, *it);	// добавляем временную таблицу в таблицу иден.
 	delete[] it;			// очищаем память
 }
@@ -57,10 +59,19 @@ int LA::WhereBrace(LexAnaliz Lex, int i)
 		case LEX_ELSE: return IT::T_ELSE;
 		case LEX_CIRCLE: return IT::T_CIRCLE;
 		case LEX_RETURN: return IT::T_FUNC;
-		case LEX_VARIABLE: if (Lex.iT.table[Lex.l.table[i].idxTI].idtype == IT::T_FUNC_I) return IT::T_FUNC_I;
+		case LEX_VARIABLE: if (Lex.iT.table[Lex.l.table[k].idxTI].idtype == IT::T_FUNC_I || Lex.iT.table[Lex.l.table[k].idxTI].idtype == IT::T_FUNC_IP) return IT::T_FUNC_I;
+		case LEX_LITERAL: if (Lex.iT.table[Lex.l.table[k].idxTI].idtype == IT::T_FUNC_IP) return IT::T_FUNC_I;
 		}
 	}
 	return 0;
+}
+
+void LA::funcParamCount(LexAnaliz &Lex)
+{
+	int i = Lex.iT.size, count = 0;
+	while (Lex.iT.table[i--].idtype != IT::T_FUNC)
+		if (Lex.iT.table[i].idtype == IT::T_FUNC_P)	count++;
+	Lex.iT.table[i+1].paramCount = count;
 }
 
 int LA::WhereI(LexAnaliz lex, int k)
@@ -121,7 +132,8 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 
 	int Line = 1,									// номер строки
 		count_literal = 1,							// счетчик литералов
-		beginCount = 0;								// проверка на begin
+		beginCount = 0,								// проверка на begin
+		libCount = 0;
 
 	char *nameFunction = new char[ID_MAXSIZE];	// имя функции
 	char *decFunction = new char[ID_MAXSIZE];	// имя протатипа функции
@@ -139,8 +151,14 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 						LexStack.push(FST_ARRAY[k].automatName);break;
 					case FN::LBRACE: case FN::LTHESIS: case FN::RBRACE: case FN::RTHESIS:
 						LexStack.push(FST_ARRAY[k].automatName);
-						Lex.l.table[Lex.l.size - 1].braceType = WhereBrace(Lex, Lex.l.size - 2); break;
-					case FN::KPILIB: AddSTF(Lex, "sqrt", i); AddSTF(Lex, "xpow", i);	break;	// подкл. стандартных функций
+						Lex.l.table[Lex.l.size - 1].braceType = WhereBrace(Lex, Lex.l.size - 2);
+						if (Lex.l.table[Lex.l.size - 1].braceType == IT::T_FUNC_I && FST_ARRAY[k].automatName == FN::RTHESIS)
+							MA::isTrueParamCount(Lex);
+						if (Lex.l.table[Lex.l.size - 1].braceType == IT::T_FUNC && FST_ARRAY[k].automatName == FN::LBRACE)
+							LA::funcParamCount(Lex);
+						break;
+					case FN::KPILIB:libCount++; if (libCount > 1)	throw GET_ERROR(313);
+						AddSTF(Lex, "sqrt", i, 1); AddSTF(Lex, "xpow", i, 2); break;	// подкл. стандартных функций
 					case FN::BEGIN: {strcpy(nameFunction, "begin\0"); beginCount++; break; }	// если у нас main
 					case FN::EQUALLU: isInitialization = true; break;
 					case FN::FALSENUMIDENTETIF: throw GET_ERROR(301, Line, -1, dev.word[i]);
@@ -149,11 +167,10 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 					{
 						IT::Entry *it = new IT::Entry;
 						it->idtype = WhereI(Lex, Lex.l.size - 2);
-						if (strlen(dev.word[i]) > ID_MAXSIZE)		// предупреждение если слишком большой иден. и усечения идент.
-						{
-							throw GET_ERROR(302, Line, -1, dev.word[i]);
-							dev.word[i][ID_MAXSIZE] = '\0';
-						}
+						
+						MA::isBigId(Line, dev.word[i]);
+						MA::isIndef(Lex, dev.word[i], nameFunction);
+						MA::isRedefinition(Lex, dev.word[i], nameFunction);
 						while (!LexStack.empty())		// смотрим в стек и узнаем что было до ид.
 						{
 							switch (LexStack.top())
@@ -166,11 +183,6 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 						}
 							if (IT::IsId(Lex.iT, isDecFunction, dev.word[i], nameFunction) != TI_NULLIDX)	// проверяем на указатель
 							{
-								/*if(Lex.l.table[Lex.l.size - 2].lexema == LEX_INTEGER)
-								{
-									ADD_ERROR(304, Line, 0, dev.word[i], Error::LA);
-									throw ERROR_THROW_IN
-								}*/
 								int pointerID = IT::IsId(Lex.iT, isDecFunction, dev.word[i], nameFunction);
 								if (it->idtype == IT::T_CIRCLE_P)
 								{
@@ -197,15 +209,11 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 							}
 							else // если у нас новая переменная
 							{
-								/*if(Lex.l.table[Lex.l.size - 2].lexema != LEX_INTEGER && it->iddatatype != IT::T_FUNC)
-								{
-									ADD_ERROR(305, Line, 0, dev.word[i], Error::LA);
-									throw ERROR_THROW_IN
-								}*/
 								AddID(*it, isDecFunction, nameFunction, dev.word[i], decFunction);
 								it->idfirstLE = i;
 							}
 							IT::Add(Lex.iT, *it);	// добавляем временную таблицу в таблицу иден.
+							MA::isStrFunc(Lex);
 							delete[] it;			// очищаем память
 							isDec = 0;
 							break;
@@ -213,7 +221,9 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 					case FN::LITERAL: case FN::INTLITERAL:	case FN::FALSELITERAL: case FN::TRUELITERAL:		// если у нас литерал
 						{
 							IT::Entry *it = new IT::Entry;
-							char literal[] = { 'L', '0' + (count_literal / 10), '0' + (count_literal++ % 10), '\0' };	// счетчик(имя) литерала
+							char literal[255];	sprintf_s(literal, 10, "L%02d", count_literal++);
+							MA::isZeroDivision(Lex, dev.word[i]);
+							MA::isStrAction(Lex);
 							AddID(*it, false, "", literal, "");
 							it->idfirstLE = i;
 							if ((Lex.l.table[Lex.l.size - 2].lexema == '(' && Lex.l.table[Lex.l.size-2].braceType == IT::T_FUNC_I) || Lex.l.table[Lex.l.size - 2].lexema == ',' ||
@@ -223,23 +233,16 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 							}
 							else	it->idtype = IT::T_LITERAL;
 							strcpy(it->value.val, dev.word[i]);
-							if (strcmp(dev.word[i], "0") == 0 && Lex.l.table[Lex.l.size-2].automat == FST::DIRSLASH)
-							{
-//								throw GET_ERROR(308)
-							}
 							switch (FST_ARRAY[k].automatName)
 							{
 							case FN::INTLITERAL: it->iddatatype = IT::DT_INT; break;
 							case FN::LITERAL:	
 								it->iddatatype = IT::DT_STR;	
 								it->value.len = strlen(dev.word[i]);
-								/*if (Lex.l.table[Lex.l.size - 2].lexema == LEX_EQUALLU)
-								{
-									strcpy(Lex.iT.table[Lex.iT.size - 1].value.val, dev.word[i]);
-								}*/
 								break;
 							}
 							IT::Add(Lex.iT, *it);
+							MA::isStrFunc(Lex);
 							delete[] it;
 							break;
 						}
@@ -256,10 +259,8 @@ LA::LexAnaliz LA::LexicalAnaliz(In::Devide dev, Log::LOG log, Parm::PARM param)
 			}
 		}	
 	}
-	//if(beginCount == 0) throw GET_ERROR(306, 6)
-	//else if(beginCount > 1) throw GET_ERROR(307, 6);
-	//Error::ERRORS error = ERROR_THROW_IN;
-//	if (error.count > 0)	Log::WriteErrors(log, error);
+	if(beginCount == 0) throw GET_ERROR(306)
+	else if(beginCount > 1) throw GET_ERROR(307);
 	LT::ShowLT(Lex.l, param, log);
 	IT::ShowIT(Lex.iT, Lex.l, param, log);
 	return Lex;
