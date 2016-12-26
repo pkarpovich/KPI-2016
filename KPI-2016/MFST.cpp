@@ -1,6 +1,10 @@
 ﻿#include "stdafx.h"
 int FST_TRACE_n = -1;
-char rbuf[205], sbuf[205], lbuf[1024], buf[255]; // печать
+
+char *sbuf = new char[205];
+char *rbuf = new char[205];
+char *lbuf = new char[1024];
+char *buf = new char[255];
 
 namespace MFST
 {
@@ -45,7 +49,8 @@ namespace MFST
 	Mfst::Mfst(LT::LexTable plex, GRB::Greibach pgrebach) //(результат работы лексического анализатора, грамматика Грейбах)
 	{
 		grebach = pgrebach;
-		lex = plex;
+		//plex.table[plex.size++].lexema = '$';
+		lex = plex;		
 		lenta = new short[lenta_size = plex.size];
 		for (int k(0); k < lenta_size; k++) lenta[k] = TS(lex.table[k].lexema); //заносит в ленту терминалы
 		lenta_position = 0;
@@ -67,15 +72,11 @@ namespace MFST
 					GRB::Rule::Chain chain;
 					if ((nrulechain = rule.getNextChain(lenta[lenta_position], chain, nrulechain + 1)) >= 0)
 					{								//получаем следующую цепочку и выводим её номер, илбо возвращаем -1
-						//if(param.SA) CON_MFST_TRACE1
-						//MFST_TRACE1 //вывод
 						TRACE1;	DW(param.SA, buf);
 						savestate(log, param); //сохранить состояние автомата
 						st.pop(); //извлекаем верхушку стека
 						push_chain(chain); //поместить цепочку правила в стек
 						rc = NS_OK; //найдено правило и цепочка... цепочка записана в стек
-						//if (param.SA) CON_MFST_TRACE2
-						//MFST_TRACE2 //вывод
 						TRACE2; DW(param.SA, buf);
 					}
 					else
@@ -174,9 +175,9 @@ namespace MFST
 		case NS_NORULE:
 			DW(param.SA, "------>NS_NORULE\n");
 			sprintf_s(buf, 255, "%s\n", std::string(40, '-').c_str());	DW(param.SA, buf);
-			DW(param.SA, getDiagnosis(0, buf, log, param), "\n");
-			DW(param.SA, getDiagnosis(1, buf, log, param), "\n");
-			DW(param.SA, getDiagnosis(2, buf, log, param), "\n");
+			DW(true, getDiagnosis(0, buf, log, param), "\n");
+			DW(true, getDiagnosis(1, buf, log, param), "\n");
+			DW(true, getDiagnosis(2, buf, log, param), "\n");
 			break;
 		case NS_NORULECHAIN: TRACE4("------>NS_NORULENORULECHAIN"); DW(param.SA, buf); break;
 		case NS_ERROR: TRACE4("------>NS_ERROR"); DW(param.SA, buf); break;
@@ -206,7 +207,7 @@ namespace MFST
 
 	char* Mfst::getDiagnosis(short n, char* buf, Log::LOG log, Parm::PARM param)
 	{
-		Error::ErrorTable eT(1000);
+		Error::ErrorTable eT(ERROR_MAX_ENTRY);
 		char *rc = "";
 		int errid = 0;
 		int lpos = -1;
@@ -223,11 +224,10 @@ namespace MFST
 		return rc;
 	}
 
-	void Mfst::printrules(Log::LOG log, Parm::PARM param, std::stack<MFST::MfstState>& nstate)
+	void Mfst::printrules(Log::LOG log, Parm::PARM param)
 	{
 		DW(param.R,"\nПравила:\n")
 		MfstState state;
-		nstate = storestate;
 		GRB::Rule rule;
 		for (unsigned short k = 0; k < storestate.size(); k++)
 		{

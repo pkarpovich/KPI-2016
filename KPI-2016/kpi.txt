@@ -1,29 +1,27 @@
 include KPIlib
-
 func int fact(int n)
 [
 	sout `in function factorial` endl;
 	int res:1;
-	int count:2;
+	int count:25;
 	n:n+1;
 	while(count<n)
 	[
 		res:res*count;
-		count:count+1;
+		count++;
 	]
 	return res;
 ]
-
 begin
 [ 
 	str label: "KPI-2016 Translator";
 	sout label endl;
-	label: "andrey";
+	label: "new label";
 	sout label endl;
 	int fac: fact(3);
 	sout `factorial: `;
 	sout fac endl;
-	int exp: fact(7) + (12/12-(41*31-10)*((32-12)*20)/100) + xpow(2,5) + "fsdfds";
+	int exp: -1 * (xpow(2,5) + (12/12-(41*31-10)*((32-12)*20)/100) + xpow(2,5));
 	sout `exp: `;
 	sout exp endl;
 	int expTwo: sqrt(25); 
@@ -33,7 +31,6 @@ begin
 	[
 		if(expTwo>8)
 		[
-		int i:10;
 			sout expTwo;
 			sout ` below 8` endl;
 		]
@@ -42,7 +39,7 @@ begin
 			sout expTwo;
 			sout ` abow 8` endl;
 		]
-		expTwo:expTwo+1;
+		expTwo++;
 	]
 	return 0;
 ]

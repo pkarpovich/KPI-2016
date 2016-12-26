@@ -1,6 +1,5 @@
 ﻿#pragma once
-#pragma comment(lib,"C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\Debug\\KPI-2016L.lib")
-#define _CRT_SECURE_NO_WARNINGS
+#pragma comment(lib,"..\\Debug\\KPI-2016L.lib")
 #undef IN
 
 #include <iostream>
@@ -24,9 +23,11 @@ using namespace std;
 #include "../KPI-2016L/Log.h"
 #include "../KPI-2016L/Error.h"
 #include "../KPI-2016L/Parm.h"
-#include "../KPI-2016L/In.h"
-#include "../KPI-2016L/IT.h"
 #include "../KPI-2016L/LT.h"
+#include "../KPI-2016L/In.h"
+#include "../KPI-2016L/Divide.h"
+#include "../KPI-2016L/File.h"
+#include "../KPI-2016L/IT.h"
 #include "FST.h"
 #include "LexicalAnalyzer.h"
 #include "Semantics.h"

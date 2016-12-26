@@ -10,25 +10,30 @@
 #define ASM_INT "%s dword %s \n"
 
 #define ASM_SPRINT "mov EDX, offset %s\ninvoke WriteString\n"
-#define ASM_IPRINT "mov EAX, %s\ninvoke WriteInt\n"
-#define ASM_ENDL "invoke Crlf\n"
+#define ASM_IPRINT "push %s\ncall WriteInt\n"
+#define ASM_ENDL "call Crlf\n"
 
 #define ASM_MAIN ".code\n "
 #define ASM_BEGIN "main PROC\n\ninvoke SetConsoleTitleA, offset cname\n"
-
 
 #define ASM_INIT "push %s\n"
 #define ASM_INITE "pop %s\n"
 #define ASM_STR_INIT "invoke Str_copy, offset %s, offset %s\n"
 
+#define ASM_INC "pop eax\ninc eax\npush eax\n"
+#define ASM_DEC "pop eax\ndec eax\npush eax\n"
 #define ASM_PLUS "pop eax\npop ebx\nadd eax, ebx\npush eax\n"
 #define ASM_MINUS "pop ebx\npop eax\nsub eax, ebx\npush eax\n"
 #define ASM_MUL "pop eax\npop ebx\nimul eax, ebx\npush eax\n"
-#define ASM_DIV "pop ebx\npop eax\ncdq\ndiv ebx\npush eax\n"
+#define ASM_DIV "pop ebx\npop eax\ncdq\nidiv ebx\npush eax\n"
 
 #define ASM_IF "mov eax, %s\ncmp eax, %s\n"
 #define ASM_LESS "jle @if%s\n"
+#define ASM_LESS_OR_EQUALLY "jl @if%s\n"
 #define ASM_MORE "jge @if%s\n"
+#define ASM_MORE_OR_EQUALLY "jg @if%s\n"
+#define ASM_EQUALITY "jne @if%s\n"
+#define ASM_NO_EQUALITY "je @if%s\n"
 #define ASM_ENDIF "jmp @endElse%s\n@if%s:\n"
 #define ASM_ENDELSE "@endElse%s:\n"
 
@@ -41,10 +46,10 @@
 #define ASM_FUNC_START "\n"
 #define ASM_FUNC_RETURN "mov EAX, %s\nret\n"
 #define ASM_FUNC_END "%s ENDP\n\n"
-#define ASM_MAIN_FUNC_END "main ENDP\nEND main"
+#define ASM_MAIN_FUNC_END "invoke Crlf\ncall waitMsg\ncall ExitProcess\nmain ENDP\nEND main"
 
-#define ASM_INVOKE_FUNC "invoke %s"
-#define ASM_INVOKE_PARAM ", %s"
+#define ASM_INVOKE_FUNC "call %s\npush eax\n"
+#define ASM_INVOKE_PARAM "push %s\n"
 #define ASM_PUSH_INVOKE "\npush eax\n"
 
 #define ASM_END "invoke WaitMsg\ninvoke ExitProcess, 0\nretinvoke WaitMsg\ninvoke ExitProcess, 0\n"
@@ -55,21 +60,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#define ASM_SOUT_CHAR(literalValue) "mov EDX, offset "<<literalValue<< "\ninvoke WriteString\ninvoke Crlf\n"
-#define ASM_SOUT_INT(literalValue) "pop eax\n\ninvoke WriteDec\n"
-
-#define ASM_SIN_INT(literalValue) "invoke ReadDec\nmov "<<literalValue<<", eax\n"
-
-#define ASM_FIRST_IF_PARAM(literalValue) "mov eax, "<<literalValue<<"\n"
-#define ASM_SECOND_IF_PARAM_ABOVE(literalValue) "cmp eax, "<<literalValue<<"\njb @if\n"
-#define ASM_SECOND_IF_PARAM_BELOW(literalValue) "cmp eax, "<<literalValue<<"\nja @if\n"
-#define ASM_CONDITION_END "jmp @endElse\n@if:\n"
-#define ASM_ELSE_END "@endElse:\n"
-#define ASM_FIRST_VAL(iden) "mov eax, "<<iden<<"\n"
-#define ASM_RETURN "invoke WaitMsg\ninvoke ExitProcess, 0\n"
-
-
-#define ASM_KPI_LIB "xpow PROC USES ebx edx xpowx : SDWORD, xpowy : SDWORD\n\
+#define ASM_KPI_LIB "kpixpow PROC USES ebx edx xpowx : SDWORD, xpowy : SDWORD\n\
 mov bufmath, 0\n\
 fild xpowy\n\
 fild xpowx\n\
@@ -85,9 +76,9 @@ fscale\n\
 fistp bufmath\n\
 mov eax, bufmath\n\
 ret\n\
-xpow ENDP\n\
+kpixpow ENDP\n\
 \n\
-sqrt PROC USES ebx edx sqrtx : SDWORD\n\
+kpisqrt PROC USES ebx edx sqrtx : SDWORD\n\
 mov bufmath, 0\n\
 finit\n\
 fild sqrtx\n\
@@ -95,4 +86,4 @@ fsqrt\n\
 fist bufmath\n\
 mov EAX, bufmath\n\
 ret\n\
-sqrt ENDP\n"
+kpisqrt ENDP\n"

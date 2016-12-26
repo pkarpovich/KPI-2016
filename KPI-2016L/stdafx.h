@@ -5,13 +5,15 @@
 #include <tchar.h>
 #include <time.h>
 #include <vector>
+#include <iterator>
 
 #undef IN
 
 #include "Log.h"
 #include "Error.h"
-//extern Error::ErrorTable eT;
 #include "Parm.h"
-#include "In.h"
 #include "LT.h"
+#include "In.h"
+#include "Divide.h"
+#include "File.h"
 #include "IT.h"

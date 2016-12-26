@@ -10,8 +10,6 @@ namespace Log
 		log.stream = new ofstream;
 		wcscpy_s(log.logfile, logfile);
 		log.stream->open(logfile, ios::out);
-		//if (!log.stream->is_open())
-			//throw GET_ERROR(112);
 		return log;
 	}
 
@@ -22,18 +20,6 @@ namespace Log
 		{
 			(*log.stream) << *p;
 			p += sizeof(**p);
-		}
-	}
-
-	void WriteLine(LOG log, wchar_t * c, ...)
-	{
-		char buf[50];
-		wchar_t **p = &c;
-		while (*p != L"")
-		{
-			wcstombs(buf, *p, sizeof(buf));
-			(*log.stream) << buf;
-			p += sizeof(**p) / 2;
 		}
 	}
 
@@ -48,46 +34,15 @@ namespace Log
 		}
 	}
 
-	void WriteTimplates(LOG log, char * c)
-	{
-		(*log.stream) << c;
-	}
-
 	void WriteLog(LOG log)
 	{
 		char buf[255];
-
-		time_t ravtime;
-		struct tm* timeinfo;
-
-		time(&ravtime);
-		timeinfo = localtime(&ravtime); 
-
-		strftime(buf, PARM_MAX_SIZE, "Дата: %d.%m.%y %H:%M:%S", timeinfo);
-		(*log.stream) << "\n---- Протокол ---- \n" << buf << endl;
+		struct tm newtime;
+		time_t now = time(0);
+		localtime_s(&newtime, &now);
+		strftime(buf, PARM_MAX_SIZE, "Дата: %d.%m.%y %H:%M:%S", &newtime);
+		DW(false, "---- Протокол ---- \n", buf, "\n");
 	}
-
-	void WriteParm(LOG log, Parm::PARM parm)
-	{
-		char parmIN[PARM_MAX_SIZE], parmOUT[PARM_MAX_SIZE], parmLOG[PARM_MAX_SIZE];
-
-		wcstombs(parmIN, parm.in, sizeof(parmIN));
-		wcstombs(parmOUT, parm.out, sizeof(parmOUT));
-		wcstombs(parmLOG, parm.log, sizeof(parmLOG));
-
-		(*log.stream) << "---- Параметры ----"
-			<< "\n-in: " << parmIN
-			<< "\n-out: " << parmOUT
-			<< "\n-log: " << parmLOG << endl;
-	}
-
-	/*void WriteIn(LOG log, In::IN in)
-	{
-		(*log.stream) << "---- Исходные данные ----"
-			<< "\nКолличество символов:" << in.size
-			<< "\nПроигнорировано: " << in.ignor
-			<< "\nКолличество строк: " << in.lines << endl;
-	}*/
 
 	void Close(LOG log)
 	{

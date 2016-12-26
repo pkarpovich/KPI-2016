@@ -66,24 +66,14 @@ bool FST::execute(FST &fst)
 {
 	short *rstates = new short[fst.nstates];
 	memset(rstates, 0xFF, sizeof(short)*fst.nstates);  // заполняет определённое кол-во байт символом 0xFF
-	short lstring = strlen(fst.string);
+	size_t lstring = strlen(fst.string);
 	bool rc = true;
-	for (short i = 0; (i < lstring) && rc; i++)
+	for (size_t i = 0; (i < lstring) && rc; i++)
 	{
 		fst.position++;
 		rc = step(fst, rstates);
 	}
 	return (rc ? (fst.rstates[fst.nstates - 1] == lstring) : rc);
-	/*if (fst.rstates[fst.nstates - 1] == lstring)
-	{
-		rc = true;
-	}
-	else
-	{
-		rc = false;
-	}
-
-	return rc;*/
 }
 
 void FST::newFST(FST & f, char * newStr)

@@ -16,15 +16,15 @@ namespace IT												// таблица идетификаторов
 	struct Entry											// строка таблицы идентификаторов
 	{
 		int			idfirstLE;								// индекс первой строки в таблице лексем
-		char		*id = new char[ID_MAXSIZE];				// идентификатор (автомат. усекаеться до ID_MAXSIZE)
-		char		*prefId = new char[ID_MAXSIZE];
+		char		*id = new char[ID_MAXSIZE+20];				// идентификатор (автомат. усекаеться до ID_MAXSIZE)
+		char		*prefId = new char[ID_MAXSIZE+20];
 		bool		pointer = false;
 		int			iddatatype;								// тип данных
 		int			idtype;									// тип идентификатора
 		int			paramCount;
 		struct 
 		{
-			char *val = new char[255];						// значение integer
+			char *val = new char[TI_STR_MAXSIZE];						// значение integer
 			int len;
 		}value;												// значение идентификатора
 		Entry();
@@ -59,5 +59,5 @@ namespace IT												// таблица идетификаторов
 	
 
 	void Delete(IdTable& ittable);							// удалить таблицу лексем (освободить память)
-	void ShowIT(IdTable& iT, LT::LexTable l, Parm::PARM param, Log::LOG log);
+	void ShowIT(IdTable iT, LT::LexTable l, Parm::PARM param, Log::LOG log);
 }

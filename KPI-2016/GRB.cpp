@@ -2,8 +2,6 @@
 #include "Rule.h"
 namespace GRB
 {
-#define NS(n) Rule::Chain::N(n)
-#define TS(n) Rule::Chain::T(n)
 	Rule::Chain::Chain(short psize, GRBALPHABET s, ...)
 	{			//конструктор цепочки - правой части правила(кол-во символов в цепочке, терминал или нетерминал...)
 		nt = new GRBALPHABET[size = psize]; //цепочка терминалов
@@ -57,7 +55,7 @@ namespace GRB
 		b[2] = '>';
 		b[3] = 0x00; //терминал -> 
 		chains[nchain].getCChain(bchain); //получает правую сторонц правила
-		strcat(b, bchain); //добавляем строку 
+		strcat_s(b, 255, bchain); //добавляем строку 
 		return b;
 	};
 

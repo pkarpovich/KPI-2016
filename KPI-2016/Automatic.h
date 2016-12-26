@@ -101,8 +101,26 @@ FST::FST fstKPI("", 7,
 	FST::NODE()
 );
 
+FST::FST fstInc("", 3,
+	FST::NODE(1, FST::RELATION('+', 1)),
+	FST::NODE(1, FST::RELATION('+', 2)),
+	FST::NODE()
+);
+
+FST::FST fstDec("", 3,
+	FST::NODE(1, FST::RELATION('-', 1)),
+	FST::NODE(1, FST::RELATION('-', 2)),
+	FST::NODE()
+);
+
 FST::FST fstMore("", 2,
 	FST::NODE(1, FST::RELATION('>', 1)),
+	FST::NODE()
+);
+
+FST::FST fstMoreOrEqually("", 3,
+	FST::NODE(1, FST::RELATION('>', 1)),
+	FST::NODE(1, FST::RELATION('=', 2)),
 	FST::NODE()
 );
 
@@ -111,8 +129,9 @@ FST::FST fstLess("", 2,
 	FST::NODE()
 );
 
-FST::FST fstBoolActio("", 2,
-	FST::NODE(3, FST::RELATION('>', 1), FST::RELATION('<', 1), FST::RELATION('=', 1)),
+FST::FST fstLessOrEqually("", 3,
+	FST::NODE(1, FST::RELATION('<', 1)),
+	FST::NODE(1, FST::RELATION('=', 2)),
 	FST::NODE()
 );
 
@@ -136,6 +155,18 @@ FST::FST fstDirslash("", 2,
 
 FST::FST fstEqually("", 2,
 	FST::NODE(1, FST::RELATION(':', 1)),
+	FST::NODE()
+);
+
+FST::FST fstEquality("", 3,
+	FST::NODE(1, FST::RELATION('=', 1)),
+	FST::NODE(1, FST::RELATION('=', 2)),
+	FST::NODE()
+);
+
+FST::FST fstNotEquality("", 3,
+	FST::NODE(1, FST::RELATION('!', 1)),
+	FST::NODE(1, FST::RELATION('=', 2)),
 	FST::NODE()
 );
 
@@ -388,7 +419,8 @@ FST::FST fstFalseNumIdentif("", 2,
 
 
 FST::FST fstIntegerLiteral("", 2,
-	FST::NODE(21,
+	FST::NODE(23,
+		FST::RELATION('-', 0), FST::RELATION('-', 1),
 		FST::RELATION('0', 0), FST::RELATION('0', 1),
 		FST::RELATION('1', 0), FST::RELATION('1', 1),
 		FST::RELATION('2', 0), FST::RELATION('2', 1),
@@ -499,13 +531,19 @@ FST::Automatic FST_ARRAY[] = {
 	{ fstProvisionElse, LEX_ELSE, FN::CONDITIONELSE, LT::PN_DEF },
 	{ fstKeySout , LEX_SOUT, FN::SOUT, LT::PN_DEF },
 	{ fstKeyReturn, LEX_RETURN, FN::RETURN, LT::PN_DEF },
+	{ fstInc, LEX_INC, FN::INC, LT::PN_PLUS},
+	{ fstDec, LEX_INC, FN::DEC, LT::PN_MINUS},
 	{ fstPlus, LEX_ACTION, FN::PLUS, LT::PN_PLUS},
 	{ fstMinus, LEX_ACTION, FN::MINUS, LT::PN_MINUS },
 	{ fstStar, LEX_ACTION, FN::STAR, LT::PN_STAR },
 	{ fstDirslash, LEX_ACTION, FN::DIRSLASH, LT::PN_DIRSLASH },
 	{ fstMore, LEX_MORE , FN::MORE, LT::PN_DEF },
+	{ fstMoreOrEqually, LEX_MORE , FN::MORE_OR_EQUALLY, LT::PN_DEF },
 	{ fstLess, LEX_MORE , FN::LESS, LT::PN_DEF },
+	{ fstLessOrEqually, LEX_MORE , FN::LESS_OR_EQUALLY, LT::PN_DEF },
 	{ fstEqually, LEX_EQUALLU, FN::EQUALLU, LT::PN_DEF },
+	{ fstEquality, LEX_MORE, FN::EQUALITY, LT::PN_DEF },
+	{ fstNotEquality, LEX_MORE, FN::NO_EQUALITY, LT::PN_DEF },
 	{ fstLeftThesis, LEX_LEFTTHESIS, FN::LTHESIS , LT::PN_LEFTTHESIS },
 	{ fstRightThesis, LEX_RIGHTTHESIS,FN::RTHESIS , LT::PN_LEFTTHESIS },
 	{ fstSemiColon, LEX_SEMICOLON,FN::SEMILICON, LT::PN_DEF },

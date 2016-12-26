@@ -36,6 +36,7 @@
 #define LEX_STAR			'v'				// лексема для *
 #define LEX_DIRSLASH		'v'				// лексема для /
 #define LEX_EQUALLU			':'				// лексема для =
+#define LEX_INC				'd'
 #define LEX_FORBIDDEN		'#'				// запрещенная лексема (ей будет заполняться пустое место в таблице лексем)
 #define LEX_AT				'@'				// функция в польской записи
 
@@ -75,5 +76,5 @@ namespace LT								// таблица лексем
 					);
 	void Swap(LexTable &oldLexTable, int nomber, Entry newTable);		// заменить Entry
 	void Delete(LexTable& lextable);		// удалить таблицу лексем
-	void ShowLT(LexTable&l, Parm::PARM param, Log::LOG log);
+	void ShowLT(LexTable l, Parm::PARM param, Log::LOG log);
 }

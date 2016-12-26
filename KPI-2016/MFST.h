@@ -106,11 +106,11 @@ namespace MFST
 		bool savediagnosis(
 			RC_STEP pprc_step // код завершения шага
 		);
-		void printrules(Log::LOG log, Parm::PARM param, std::stack<MFST::MfstState>& state); // ввести последовательность правил
+		void printrules(Log::LOG log, Parm::PARM param); // ввести последовательность правил
 
 		struct Deducation // вывод
 		{
-			short size; // количество шагов в выводе
+			size_t size; // количество шагов в выводе
 			short* nrules; // номер правил грамматики
 			short* nrulechains; // номера цепочек правил грамматики (nrules)
 			Deducation() { size = 0; nrules = 0; nrulechains = 0; };

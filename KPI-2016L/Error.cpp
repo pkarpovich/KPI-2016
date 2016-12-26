@@ -23,7 +23,7 @@ namespace Error
 		ET(201, "[LA] Таблица лексем переполненна");
 		ET(202, "[LA] Превышен максимальный размер таблицы идентификаторов");
 		ET(203, "[LA] Таблица идентификаторов переполненна");
-		ET(300, "[MA] Идентификатор не должен начинаться с заглавной буквы");
+		ET(300, "[MA] Идентификатор не должен начинаться с большой буквы");
 		ET(301, "[MA] Идентификатор не должен содержать цифру");
 		ET(302, "[MA] Идентификатор не должен превышать 10 символов");
 		ET(303, "[MA] Повторное наименование функции");
@@ -38,7 +38,8 @@ namespace Error
 		ET(312, "[MA] Неверный тип параметра вызываемой функции");
 		ET(313, "[MA] Стандартную библиотеку можно подключить только один раз");
 		ET(314, "[MA] Неверное число передаваемых параметров");
-		ET(315, "[MA] Вычисления могут производится над литералами/идентификаторами данных типа int.")
+		ET(315, "[MA] Вычисления могут производится над литералами/идентификаторами данных типа int");
+		ET(316, "[MA] Слишком большое значение");
 		ET(600, "[SA] Неверная структура программы");
 		ET(601, "[SA] Парметры функции составленны неверно");
 		ET(602, "[SA] Структура цикла или условия составленна неверно");
@@ -53,7 +54,6 @@ namespace Error
 			}
 		}
 		*this = temp;
-		//delete[] &temp;
 	};
 
 	void Add(ErrorTable& et, int id, char *message)
@@ -61,8 +61,8 @@ namespace Error
 		et.table[et.size].id = id;
 		et.table[et.size].line = -1;
 		et.table[et.size].pos = -1;
-		strcpy(et.table[et.size].message, message);
-		strcpy(et.table[et.size].word, "null");
+		strcpy_s(et.table[et.size].message, 255, message);
+		strcpy_s(et.table[et.size].word, 255, "null");
 		et.size++;
 	}
 
@@ -74,32 +74,36 @@ namespace Error
 
 	ErrorTable CompleteError(ErrorTable & et, int id, const int line, const int pos, const char * word)
 	{
+		if (id == -1)	return et;
 		for (int i = 0; i < et.size; i++)
 		{
 			if (et.table[i].id == id)
 			{
 				et.table[i].line = line;
 				et.table[i].pos = pos;
-				strcpy(et.table[i].word, word);
+				strcpy_s(et.table[i].word, 255, word);
 				et.errors.push_back(et.table[i]);
 				return et;
 			}
 		}
+		et.errors.push_back(et.table[id]);
+		return et;
 	};
 
 	void PrintErrors(ErrorTable eT, Log::LOG log)
 	{
-		int id; char buf[255];
-		Error::Entry temp;
+		char buf[255];
+		Entry *temp = new Entry;
 		if (log.stream == NULL)	log = Log::getlog(L"KPI.log");
-		for (int i = 0; i < eT.errors.size(); i++)
+		for (size_t i = 0; i < eT.errors.size(); i++)
 		{
-			temp = eT.errors[i];
-			sprintf_s(buf, 255, "Ошибка №%d: %s", temp.id, temp.message); DW(true, buf);
-			if (temp.line != -1) { sprintf_s(buf, 255, ", строка: %d", temp.line); DW(true, buf); }
-			if (temp.pos != -1) { sprintf_s(buf, 255, ", позиция: %d", temp.pos); DW(true, buf); }
-			if (strlen(temp.word) != 0) { sprintf_s(buf, 255, ", слово: %s", temp.word); DW(true, buf); }
+			*temp = eT.errors[i];
+			sprintf_s(buf, 255, "Ошибка №%d: %s", temp->id, temp->message); DW(true, buf);
+			if (temp->line != -1) { sprintf_s(buf, 255, ", строка: %d", temp->line); DW(true, buf); }
+			if (temp->pos != -1) { sprintf_s(buf, 255, ", позиция: %d", temp->pos); DW(true, buf); }
+			if (strlen(temp->word) != 0) { sprintf_s(buf, 255, ", слово: %s", temp->word); DW(true, buf); }
 			DW(true, "\n");
 		}
+		delete[] temp;
 	}
 }

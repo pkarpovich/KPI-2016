@@ -11,7 +11,6 @@
 #define PARM_IT					L"-IT"				// ключ для вывода таблицы индентификаторов
 #define PARM_SA					L"-SA"
 #define PARM_NT					L"-NT"
-#define PARM_DT					L"-DT"
 #define PARM_RULE				L"-R"
 
 namespace Parm
@@ -24,10 +23,10 @@ namespace Parm
 		bool IT = false;							// нужнен ли вывод таблицы индентификаторов
 		bool LT = false;							// нужен ли вывод таблицы лексем
 		bool SA = false;
-		bool DT = false;
 		bool NT = false;
 		bool R = false;
 	};
 
-	PARM getparm(int argc, _TCHAR* argv[]);
+	PARM getparm(int argc, _TCHAR* argv[], Log::LOG &log);
+	void WriteParm(Log::LOG log, PARM parm);
 }

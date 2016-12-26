@@ -1,13 +1,10 @@
 ﻿#include "stdafx.h"
-extern Error::ErrorTable eT;
 namespace IT
 {
 	IdTable Create(int size)
 	{
-		if (size > TI_MAXSIZE)
-		{
-			throw GET_ERROR(202);
-		}
+		Error::ErrorTable eT(ERROR_MAX_ENTRY);
+		if (size > TI_MAXSIZE)		throw GET_ERROR(202)
 		IdTable *New = new IdTable;
 		New->maxsize = size;
 		New->size = 0;
@@ -17,13 +14,13 @@ namespace IT
 
 	Entry::Entry()
 	{
-		strcpy(this->id, "null");
-		strcpy(this->prefId, "null");
+		strcpy_s(this->id, ID_MAXSIZE, "null");
+		strcpy_s(this->prefId, ID_MAXSIZE, "null");
+		strcpy_s(this->value.val, TI_STR_MAXSIZE, "0");
 		this->idfirstLE = 0xffffffff;
 		this->paramCount = 0;
 		this->idtype = IT::T_NO;
 		this->pointer = false;
-		strcpy(this->value.val, "0");
 		this->value.len = 0;
 	}
 
@@ -40,16 +37,18 @@ namespace IT
 	int IsId(IdTable & idTable, bool isDecFunction, char word[ID_MAXSIZE], char nameFunction[ID_MAXSIZE])
 	{
 		char *prefId = new char[255];
+		char *buf = new char[255];
 		prefId[0] = '\0';
-		strcpy(prefId, nameFunction);
-		strcat(prefId, word);
+		strcpy_s(prefId, 255, nameFunction);
+		strcat_s(prefId, 255, word);
+		strcpy_s(buf, 255, "kpi"); strcat_s(buf, 255, word);
 		if (!isDecFunction)
 		{
 			for (int i = 0; i < idTable.size; i++)
 			{
 				if (idTable.table[i].idtype == IT::T_FUNC)
 				{
-					if (strcmp(word, idTable.table[i].prefId) == 0)
+					if (strcmp(buf, idTable.table[i].prefId) == 0)
 					{
 						return i;
 					}
@@ -71,7 +70,7 @@ namespace IT
 		delete &ittable;
 	}
 
-	void ShowIT(IdTable & iT, LT::LexTable l, Parm::PARM param, Log::LOG log)
+	void ShowIT(IdTable iT, LT::LexTable l, Parm::PARM param, Log::LOG log)
 	{
 		char *buf = new char[255];
 		DW(param.IT, "Таблица идентификаторов: \n");

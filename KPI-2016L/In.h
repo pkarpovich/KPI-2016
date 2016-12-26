@@ -14,6 +14,15 @@
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::K, IN::S, IN::T, IN::T,\
 	IN::Q, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T,\
 	IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::T, IN::S, IN::T, IN::S, IN::T, IN::T,\
+																												\
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, \
+	IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F, IN::F\
 }
 namespace In
 {
@@ -27,21 +36,10 @@ namespace In
 		unsigned char* text;
 		int code[256] = IN_CODE_TABLE;
 	};
-	struct Devide
-	{
-		char word[DEV_MAX_WORD][DEV_WORD_SIZE];			// массив слов
-		int count_word = 0,				// колличество слов
-			count_error = 0,			// колличество ошибок (нераспознанное слово)
-			lines = 1;					// строка
-	};
-	struct IN_FILE
-	{
-		IN in;
-		Devide dev;
-	};
-	IN getin(wchar_t infile[], Error::ErrorTable eT);
+	
+
+	IN getin(wchar_t infile[], Log::LOG log);
 	void DeleteSymbol(IN &in, int position_del);				// удаление буквы в строке
-	IN DeleteExtraSpace(IN in, Error::ErrorTable eT);			// удаление лишних пробелов
-	void AddDevideWord(Devide &dev, int count, char symbol);	// добавление буквы в массив
-	Devide DivideWord(IN in, Parm::PARM param, Log::LOG log, Error::ErrorTable eT);		// разделение in.txt на слова
+	IN DeleteExtraSpace(IN in);			// удаление лишних пробелов
+	void WriteIn(Log::LOG log, In::IN in);
 }

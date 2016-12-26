@@ -2,7 +2,7 @@
 
 #define ET(id,message) Add(temp, id, message);
 #define GET_ERROR(id, ...) Error::CompleteError(eT, id, __VA_ARGS__);
-#define ERROR_MAXSIZE_MESSAGE 200
+#define ERROR_MAXSIZE_MESSAGE 255
 #define ERROR_MAX_ENTRY 1000
 
 namespace Error
@@ -13,7 +13,7 @@ namespace Error
 		char *message = new char[ERROR_MAXSIZE_MESSAGE];
 		int line;
 		int pos;
-		char *word = new char[255];
+		char *word = new char[ERROR_MAXSIZE_MESSAGE];
 	};
 
 	struct ErrorTable
