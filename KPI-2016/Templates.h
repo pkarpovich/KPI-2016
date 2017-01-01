@@ -3,15 +3,12 @@
 
 #define ASM_GLOBAL ".586\n.model flat, stdcall\nincludelib kernel32.lib\n"
 
-#define ASM_INCLUDE_SPRINT "WriteString PROTO\n"
-#define ASM_INCLUDE_IPRINT "WriteDec PROTO\n"
-
 #define ASM_STR "%s db %s,0 \n"
 #define ASM_INT "%s dword %s \n"
 
 #define ASM_SPRINT "mov EDX, offset %s\ninvoke WriteString\n"
-#define ASM_IPRINT "push %s\ncall WriteInt\n"
-#define ASM_ENDL "call Crlf\n"
+#define ASM_IPRINT "mov EAX, %s\ninvoke WriteInt\n"
+#define ASM_ENDL "invoke Crlf\n"
 
 #define ASM_MAIN ".code\n "
 #define ASM_BEGIN "main PROC\n\ninvoke SetConsoleTitleA, offset cname\n"

@@ -37,11 +37,8 @@ void CodeEditor::updateLineNumberAreaWidth(int /* newBlockCount */)
 
 void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 {
-	if (dy)
-		lineNumberArea->scroll(0, dy);
-	else
-		lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
-
+	if (dy)		lineNumberArea->scroll(0, dy);
+	else		lineNumberArea->update(0, rect.y(), lineNumberArea->width(), rect.height());
 	if (rect.contains(viewport()->rect()))
 		updateLineNumberAreaWidth(0);
 }
@@ -56,35 +53,54 @@ void CodeEditor::resizeEvent(QResizeEvent *e)
 	lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
 }
 
+QString CodeEditor::setIndent(int size)
+{
+	QString buf("");
+	int count = size / 4;
+	for (int i = 0; i < count; i++)		buf.push_back("    ");
+	return buf;
+}
 
-
-void CodeEditor::keyReleaseEvent(QKeyEvent * e){
-	QPlainTextEdit::keyReleaseEvent(e);
-	QString buf = QPlainTextEdit::toPlainText();
-	if (e->key() == Qt::Key_Return || e->key() == Qt::Key_Enter) {
-		
-		if (QString::compare(buf.right(2), "[\n") == 0)
-		{
-			tab.append("    ");
-		}
-		/*else if (QString::compare(buf.right(2), "]\n") == 0)
-		{
-			QPlainTextEdit::textCursor().deletePreviousChar();
-			QPlainTextEdit::textCursor().deletePreviousChar();
-			tab.truncate(4);
-		}*/
-		QPlainTextEdit::insertPlainText(tab);
-	}
-	if (e->key() == Qt::Key_BracketRight)
+int CodeEditor::getIndent(int line)
+{
+	if (line == 0)	return 0;
+	for (int i = 1; i < this->lineNumberIndent.size() + 1; i++)
 	{
-		QPlainTextEdit::textCursor().deletePreviousChar();
-		QPlainTextEdit::textCursor().deletePreviousChar();
-		QPlainTextEdit::textCursor().deletePreviousChar();
-		QPlainTextEdit::textCursor().deletePreviousChar();
-		QPlainTextEdit::textCursor().deletePreviousChar();
-		QPlainTextEdit::insertPlainText("]");
-		tab.truncate(4);
+		if (i == line)	return this->lineNumberIndent[i - 1];
 	}
+	return 0;
+}
+
+void CodeEditor::keyPressEvent(QKeyEvent *event)
+{
+	int ident;
+	switch (event->key())
+	{
+	case Qt::Key_BracketRight:
+	{
+		if (this->prevKey == Qt::Key_Enter || this->prevKey == Qt::Key_Return)
+		{
+			for (int i = 0; i < 4; i++)	QPlainTextEdit::textCursor().deletePreviousChar();
+			this->insertPlainText("]");
+		}
+		else this->insertPlainText("]"); break;
+	}
+	case Qt::Key_Enter: case Qt::Key_Return:
+	{
+		this->insertPlainText("\n");
+		auto it = this->lineNumberIndent.begin() + (this->currentPosssition);
+		if (this->prevKey == Qt::Key_BracketLeft)	ident = getIndent(this->currentPosssition) + 4;
+		else if (this->prevKey == Qt::Key_BracketRight && this->currentPosssition - 1 == this->lastPossition)
+			ident = getIndent(this->currentPosssition) - 4;
+		else	ident = getIndent(this->currentPosssition);
+		this->lineNumberIndent.insert(it, ident);
+		this->insertPlainText(setIndent(ident));
+		break;
+	}
+	default:QPlainTextEdit::keyPressEvent(event);
+	}
+	this->prevKey = event->key();
+	this->lastPossition = this->currentPosssition;
 }
 
 void CodeEditor::highlightCurrentLine()
@@ -100,6 +116,7 @@ void CodeEditor::highlightCurrentLine()
 		selection.format.setProperty(QTextFormat::FullWidthSelection, true);
 		selection.cursor = textCursor();
 		selection.cursor.clearSelection();
+		this->currentPosssition = textCursor().block().blockNumber() - 1;
 		extraSelections.append(selection);
 	}
 

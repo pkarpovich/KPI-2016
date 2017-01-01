@@ -12,20 +12,35 @@ WriteString PROTO
 
 .data
 bufmath sdword ?
+begina dword 0 
 
 .const
 
 cname db 'KPI-2016 Compiler',0
-L01 db 'fsdfdsfs',0 
-L02 dword 0 
+L01 dword 99 
+L02 dword 110 
+L03 dword 0 
 
 .code
 main PROC
 
 invoke SetConsoleTitleA, offset cname
-mov EDX, offset L01
-invoke WriteString
-call Crlf
+push L01
+pop begina
+@circle1:
+mov eax, L02
+cmp eax, begina
+jle @if1
+mov EAX, begina
+invoke WriteInt
+invoke Crlf
+push begina
+pop eax
+inc eax
+push eax
+pop begina
+jmp @circle1
+@if1:
 invoke Crlf
 call waitMsg
 call ExitProcess

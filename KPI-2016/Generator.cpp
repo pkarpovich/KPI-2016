@@ -93,7 +93,7 @@ namespace Gen
 		char *param = new char[255];
 		char *buf = new char[50];
 		size_t i;
-		strcpy_s(param, 255, "..\\KPI-2016\\make.bat ");
+		strcpy_s(param, 255, "make.bat ");
 		wcstombs_s(&i, buf, 50, parm.out, sizeof(parm.out));
 		strcat_s(param, 255, buf);
 		WinExec(param, 1);

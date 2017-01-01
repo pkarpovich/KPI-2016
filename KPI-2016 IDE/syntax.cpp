@@ -5,40 +5,44 @@ Syntax::Syntax(QTextDocument *parent)
 {
 	highlightRule rulee;
 
+
+	// ключевые слова
 	keywordFormat.setForeground(Qt::darkBlue);
 	keywordFormat.setFontWeight(QFont::Bold);
 	QStringList keywordPatterns;
-	keywordPatterns << "\\bif\\b" << "\\belse\\b" << "\\bwhile\\b"
-		<< "\\bbegin\\b" << "\\breturn\\b";
+	keywordPatterns << "\\bint\\b" << "\\bstr\\b" << "\\bfunc\\b"
+		<< "\\bif\\b" << "\\bwhile\\b" << "\\bbegin\\b"
+		<< "\\breturn\\b" << "\\binclude\\b";
 	foreach(const QString &pattern, keywordPatterns) {
 		rulee.pattern = QRegExp(pattern);
 		rulee.format = keywordFormat;
 		rule.append(rulee);
 	}
 
-	classFormat.setFontWeight(QFont::Bold);
-	classFormat.setForeground(Qt::darkMagenta);
-	rulee.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
+	// строчные литералы
+	classFormat.setForeground(Qt::darkCyan);
+	classFormat.setFontWeight(QFont::ExtraLight);
+	rulee.pattern = QRegExp("\".*\"");
 	rulee.format = classFormat;
-	rule.append(rule);
+	rule.append(rulee);
 
-	classFormat.setForeground(Qt::darkYellow);
-	rulee.pattern = QRegExp("([^\"] + )\"/gi");
+	classFormat.setForeground(Qt::darkCyan);
+	classFormat.setFontWeight(QFont::ExtraLight);
+	rulee.pattern = QRegExp("`.*`");
 	rulee.format = classFormat;
-	rule.append(rule);
+	rule.append(rulee);
 
-	singleLineCommentFormat.setForeground(Qt::red);
-	rulee.pattern = QRegExp("//[^\n]*");
+	classFormat.setForeground(Qt::darkCyan);
+	classFormat.setFontWeight(QFont::ExtraLight);
+	rulee.pattern = QRegExp("'.*'");
+	rulee.format = classFormat;
+	rule.append(rulee);
+
+	// однострочный комментарий
+	singleLineCommentFormat.setForeground(Qt::darkGreen);
+	rulee.pattern = QRegExp("\\\\\\\\[^\n]*");
 	rulee.format = singleLineCommentFormat;
-	rule.append(rule);
-
-	multiLineCommentFormat.setForeground(Qt::red);
-
-	functionFormat.setFontItalic(true);
-	functionFormat.setForeground(Qt::blue);
-	rulee.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
-	rulee.format = functionFormat;
-	rule.append(rule);
+	rule.append(rulee);
 }
 
 void Syntax::highlightBlock(const QString &text)
@@ -57,9 +61,9 @@ void Syntax::highlightBlock(const QString &text)
 
 	QTextCharFormat multiLineCommentFormat;
 	multiLineCommentFormat.setForeground(Qt::darkGreen);
-
-	QRegExp startExpression("/\\*");
-	QRegExp endExpression("\\*/");
+	// Многостроынй комментарий
+	QRegExp startExpression("\\\\\\*");
+	QRegExp endExpression("\\*\\\\");
 
 	setCurrentBlockState(0);
 

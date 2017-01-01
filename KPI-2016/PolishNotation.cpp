@@ -8,7 +8,7 @@ namespace PN
 		{
 			if (Lex.l.table[i].sn == sn)
 			{
-				while (Lex.l.table[i++].sn == sn)
+				while (Lex.l.table[i].sn == sn)
 				{
 					if (Lex.iT.table[Lex.l.table[i].idxTI].idtype == IT::T_FUNC_I)
 					{
@@ -21,6 +21,8 @@ namespace PN
 						return true;
 					}
 					else if (Lex.iT.table[Lex.l.table[i].idxTI].idtype == IT::DT_STR)	return false;
+					else if (Lex.l.table[i].lexema == LEX_SOUT) return false;
+					i++;
 				}
 				return false;
 			}

@@ -22,6 +22,7 @@
 #include <qsettings.h>
 #include <QLabel>
 #include <QCheckBox>
+#include <vector>
 
 #include "setting.hpp"
 #include "syntax.hpp"

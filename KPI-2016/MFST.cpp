@@ -178,6 +178,7 @@ namespace MFST
 			DW(true, getDiagnosis(0, buf, log, param), "\n");
 			DW(true, getDiagnosis(1, buf, log, param), "\n");
 			DW(true, getDiagnosis(2, buf, log, param), "\n");
+			system("pause");
 			break;
 		case NS_NORULECHAIN: TRACE4("------>NS_NORULENORULECHAIN"); DW(param.SA, buf); break;
 		case NS_ERROR: TRACE4("------>NS_ERROR"); DW(param.SA, buf); break;

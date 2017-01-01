@@ -15,7 +15,7 @@ IDE::IDE(QWidget *parent)
 	this->_searchShow = new QPushButton("Search");
 	this->_replaceShow = new QPushButton("Replace");
 	this->_settingShow = new QPushButton("Setting");
-	this->_textEdit = new CodeEditor;
+	this->_textEdit = new CodeEditor(0);
 	syntax = new Syntax(this->_textEdit->document());
 	setting = new Setting;
 
@@ -23,7 +23,7 @@ IDE::IDE(QWidget *parent)
 	menu->addWidget(this->_open);	menu->addWidget(this->_save);
 	menu->addWidget(this->_undo);	menu->addWidget(this->_redo);
 	menu->addWidget(this->_compil); menu->addWidget(this->_searchShow);
-	menu->addWidget(this->_replaceShow);
+	//menu->addWidget(this->_replaceShow);
 	menu->addWidget(this->_settingShow);
 	menu->addWidget(this->_close); 
 	QVBoxLayout *layout = new QVBoxLayout;
@@ -53,7 +53,6 @@ IDE::IDE(QWidget *parent)
 	layout->addWidget(_replaceBar);
 	//layout->addWidget(this->_close);
 	setLayout(layout);
-	
 
 	connect(this->_searchShow, SIGNAL(clicked()), this, SLOT(searchBar()));
 	connect(this->_replaceShow, SIGNAL(clicked()), this, SLOT(replaceBar()));
@@ -97,7 +96,7 @@ void IDE::compil()
 {
 	Setting setting = new Setting;
 	QString inPath = QTextCodec::codecForLocale()->toUnicode(
-		"C:\\Users\\taller\\OneDrive\\Документы\\Visual Studio 2015\\Projects\\KPI-2016\\KPI-2016\\in.txt");
+		"in.txt");
 	QFile inFile(inPath);
 	if (!inFile.open(QIODevice::WriteOnly))
 	{
@@ -110,10 +109,12 @@ void IDE::compil()
 	QProcess *process = new QProcess(this);
 	QString path = setting._kpiPatch;
 	QStringList *param = new QStringList;
-	*param << "-in:../KPI-2016/in.txt" << "-out:"+setting._exePatch;
+	*param << "-in:in.txt" << "-out:"+setting._exePatch;
 	if (setting.isLT) *param << "-LT";
 	if (setting.isIT) *param << "-IT";
 	if (setting.isSA) *param << "-SA";
+	if (setting.isR) *param << "-R";
+	if (setting.isNT) *param << "-NT";
 	process->startDetached(path,*param);
 }
 

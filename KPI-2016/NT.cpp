@@ -160,16 +160,10 @@ namespace NT
 				int sn = lt[i].sn;
 				while (!check)
 				{
-					if (lt[++i].lexema == LEX_EQUALLU)
+					switch (lt[++i].lexema)
 					{
-						strcpy_s(equallu, NIBLE_MAX_SIZE, it[lt[i - 1].idxTI].prefId);
-						check = true;	// доходим до начала строки
-					}
-					else if (lt[i].lexema == LEX_INC)
-					{
-						strcpy_s(equallu, NIBLE_MAX_SIZE, it[lt[i - 1].idxTI].prefId);
-						check = true;	// доходим до начала строки
-						i--;
+					case LEX_EQUALLU: strcpy_s(equallu, NIBLE_MAX_SIZE, it[lt[i - 1].idxTI].prefId); check = true; break;
+					case LEX_INC: strcpy_s(equallu, NIBLE_MAX_SIZE, it[lt[i - 1].idxTI].prefId); check = true; i--; break;
 					}
 				}
 				while (lt[i].sn == sn)
@@ -177,6 +171,7 @@ namespace NT
 					switch (lt[i].lexema)
 					{
 					case LEX_VARIABLE: case LEX_LITERAL:
+					{
 						switch (idit(i).idtype)
 						{
 						case IT::T_FUNC_I: ADD_NT(FUNC_INVOKE, IT::DT_INT, idit(i).prefId); break;
@@ -184,6 +179,7 @@ namespace NT
 						default: ADD_NT(PUSH, IT::DT_NO, idit(i).prefId); break;
 						}
 						break;
+					}
 					case LEX_ACTION:
 					{
 						switch (lt[i].automat)
@@ -196,17 +192,18 @@ namespace NT
 						break;
 					}
 					case LEX_INC:
+					{
 						switch (lt[i].automat)
 						{
-						case FST::INC: ADD_NT(INC); break;
-						case FST::DEC: ADD_NT(DEC); break;
+						case FST::INC: ADD_NT(INC, IT::DT_NO, idit(i - 1).prefId); break;
+						case FST::DEC: ADD_NT(DEC, IT::DT_NO, idit(i - 1).prefId); break;
 						}
 						break;
 					}
-					if (lt[i].lexema == ';') break;
+					}
 					i++;
 				}
-				Add(nible, setNible(NT::POP, IT::DT_NO, equallu));
+				Add(nible, setNible(NT::POP, IT::DT_NO, equallu)); i--; continue;
 			}
 			if (!circleCount.empty())	_itoa_s(circleCount.top(), buf, 10, 10);
 			switch (lt[i].lexema)
@@ -268,7 +265,8 @@ namespace NT
 					case LEX_EQUALLU:
 						if (it[lt[i - 2].idxTI].iddatatype != IT::DT_STR)
 						{
-							ADD_NT(PUSH, IT::DT_NO, idit(i).prefId); ADD_NT(POP, IT::DT_NO, equallu);
+							ADD_NT(PUSH, IT::DT_NO, idit(i).prefId); 
+							ADD_NT(POP, IT::DT_NO, equallu);
 						}
 						else ADD_NT(STR_PUSH, IT::DT_STR, idit(i).prefId, equallu);
 						break;

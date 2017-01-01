@@ -79,14 +79,18 @@ namespace Error
 		{
 			if (et.table[i].id == id)
 			{
-				et.table[i].line = line;
-				et.table[i].pos = pos;
-				strcpy_s(et.table[i].word, 255, word);
-				et.errors.push_back(et.table[i]);
+				Entry *error = new Entry;
+				error->id = id;
+				error->line = line;
+				error->pos = pos;
+				strcpy_s(error->message, 255, et.table[i].message);
+				strcpy_s(error->word, 255, word);
+				et.errors.push_back(*error);
+				delete[] error;
 				return et;
 			}
 		}
-		et.errors.push_back(et.table[id]);
+		et.errors.push_back(et.table[0]);
 		return et;
 	};
 

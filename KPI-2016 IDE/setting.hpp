@@ -9,7 +9,7 @@ public:
 	~Setting();
 	QString _kpiPatch;
 	QString _exePatch;
-	bool isLT; bool isIT; bool isSA;
+	bool isLT, isIT; bool isSA; bool isR; bool isNT;
 	bool isLineNumber; bool isHighlightLine;
 private slots:
 	void setKpiPatch();
@@ -28,6 +28,8 @@ private:
 	QCheckBox *_checkLT;
 	QCheckBox *_checkIT;
 	QCheckBox *_checkSA;
+	QCheckBox *_checkR;
+	QCheckBox *_checkNT;
 
 	QCheckBox *_checkLine;
 	QCheckBox *_checkHighLine;
